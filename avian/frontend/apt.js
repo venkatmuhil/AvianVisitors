@@ -798,7 +798,11 @@
   }
   function liRow(yr, label, ct, sci) {
     var attr = sci ? ' data-sci="' + sci.replace(/"/g, '&quot;') + '"' : '';
-    return '<li' + attr + '><span class="yr">' + yr + '</span><span>' + label + '</span><span class="ct">' + (ct == null ? '-' : ct) + '</span></li>';
+    var thumb = sci
+      ? '<span class="thumb"><img loading="lazy" decoding="async" src="./avian/api/cutout.php?sci='
+        + encodeURIComponent(sci) + '&v=' + SKETCH_VERSION + '" alt=""></span>'
+      : '<span class="thumb"></span>';
+    return '<li' + attr + '>' + thumb + '<span class="yr">' + yr + '</span><span>' + label + '</span><span class="ct">' + (ct == null ? '-' : ct) + '</span></li>';
   }
   function pad(n) { return n < 10 ? '0' + n : '' + n; }
   function fmtN(n) {
