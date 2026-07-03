@@ -932,10 +932,7 @@
     // Square fills its column so adjacent squares touch at the shared
     // gridline; capped so a few species don't render as giant blocks.
     var sq = Math.max(6, Math.min(colW, isMobile ? 60 : 48));
-    var THUMB = isMobile ? 28 : 22; // px diameter of the thumbnail above each bar - keep in
-                                    // sync with the .stats-tl-thumb size in the mobile media query
-    var THUMB_GAP = 5;       // px between a square's top and the thumbnail
-    var LABEL_GAP = 6;       // px between a thumbnail's top and its label
+    var LABEL_GAP = 6;       // px between a square's top and its label
     var SPAN = 0.55;         // squares occupy the bottom this fraction of
                              // the plot by count (y = quantity); the
                              // rotated label floats just above each square.
@@ -978,9 +975,10 @@
       var thumbSrc = './avian/api/cutout.php?sci=' + encodeURIComponent(s.sci) + '&v=' + SKETCH_VERSION;
       cols += ''
         + '<div class="stats-tl-col" data-sci="' + s.sci + '" style="left:' + centerPct.toFixed(3) + '%;width:' + colW.toFixed(2) + 'px">'
-        +   '<div class="stats-tl-square" style="bottom:' + bottomPct.toFixed(1) + '%;width:' + sq.toFixed(1) + 'px;height:' + sq.toFixed(1) + 'px"></div>'
-        +   '<div class="stats-tl-thumb" style="bottom:calc(' + bottomPct.toFixed(1) + '% + ' + (sq + THUMB_GAP) + 'px)"><img loading="lazy" decoding="async" src="' + thumbSrc + '" alt=""></div>'
-        +   '<div class="stats-tl-label" style="bottom:calc(' + bottomPct.toFixed(1) + '% + ' + (sq + THUMB_GAP + THUMB + LABEL_GAP) + 'px)"><span class="com">' + (s.com || s.sci) + '</span><span class="sci">' + s.sci + '</span></div>'
+        +   '<div class="stats-tl-square" style="bottom:' + bottomPct.toFixed(1) + '%;width:' + sq.toFixed(1) + 'px;height:' + sq.toFixed(1) + 'px">'
+        +     '<img loading="lazy" decoding="async" src="' + thumbSrc + '" alt="">'
+        +   '</div>'
+        +   '<div class="stats-tl-label" style="bottom:calc(' + bottomPct.toFixed(1) + '% + ' + (sq + LABEL_GAP) + 'px)"><span class="com">' + (s.com || s.sci) + '</span><span class="sci">' + s.sci + '</span></div>'
         + '</div>';
       var lab = fmtTs(parseTs(s.last_seen));
       if (lab) xaxis += '<span class="stats-tl-xtick" style="left:' + centerPct.toFixed(3) + '%">' + lab + '</span>';
