@@ -617,6 +617,7 @@
     .stats-tl-label { font-size: 11px; }
     .stats-tl-label .sci { font-size: 9px; }
     .stats-tl-xtick { font-size: 8px; }
+    .stats-tl-thumb { width: 28px; height: 28px; }
   }
   /* Desktop two-column: size the grid to the side panel's content height
      (the timeline stretches to match it) and centre it vertically, so the
@@ -681,6 +682,21 @@
     transition: background 140ms ease, transform 140ms ease;
   }
   .stats-tl-col { cursor: pointer; }
+  /* Small round species portrait sitting at the top of each bar, between
+     the square and the rotated label. Fixed size regardless of the bar's
+     own height, so tiny (low-count) bars still carry a legible portrait. */
+  .stats-tl-thumb {
+    position: absolute; left: 50%;
+    width: 22px; height: 22px;
+    transform: translateX(-50%);
+    border-radius: 50%; overflow: hidden;
+    background: var(--paper-2);
+    box-shadow: 0 0 0 1px var(--paper), 0 0 0 2px var(--hairline);
+    transition: transform 140ms ease, box-shadow 140ms ease;
+  }
+  .stats-tl-thumb img {
+    width: 100%; height: 100%; object-fit: contain; display: block;
+  }
   /* Cross-highlight: hovering a square or a table row lights up the
      matching species on the other side - the square scales up and its
      label scales + shifts to the accent ink, so the whole column reads
@@ -688,6 +704,10 @@
   .stats-tl-col.sync-hi .stats-tl-square {
     background: var(--accent);
     transform: translateX(-50%) scale(1.18);
+  }
+  .stats-tl-col.sync-hi .stats-tl-thumb {
+    transform: translateX(-50%) scale(1.18);
+    box-shadow: 0 0 0 1px var(--paper), 0 0 0 2px var(--accent);
   }
   .stats-tl-col.sync-hi .stats-tl-label {
     transform: rotate(-90deg) translateY(55%) scale(1.1);
