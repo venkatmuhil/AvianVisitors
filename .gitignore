@@ -57,3 +57,6 @@ whitelist_species_list.txt
 avian/assets/references/
 # Superseded assets retained locally
 avian/assets/_legacy/
+# API keys / local secrets - never commit these
+.env
+*.env
