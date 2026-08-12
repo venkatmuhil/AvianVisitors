@@ -2,7 +2,7 @@
   var PLACEHOLDER = [{ "sci": "Calypte anna", "com": "Anna's Hummingbird", "featured": true }, { "sci": "Passer domesticus", "com": "House Sparrow" }, { "sci": "Haemorhous mexicanus", "com": "House Finch" }, { "sci": "Turdus migratorius", "com": "American Robin" }, { "sci": "Zenaida macroura", "com": "Mourning Dove" }, { "sci": "Spinus psaltria", "com": "Lesser Goldfinch" }, { "sci": "Zonotrichia leucophrys", "com": "White-crowned Sparrow" }, { "sci": "Aphelocoma californica", "com": "California Scrub-Jay" }, { "sci": "Mimus polyglottos", "com": "Northern Mockingbird" }, { "sci": "Sayornis nigricans", "com": "Black Phoebe" }, { "sci": "Larus occidentalis", "com": "Western Gull" }, { "sci": "Corvus brachyrhynchos", "com": "American Crow" }];
   // Bumped whenever the offline sketch build changes, so the browser
   // doesn't keep a stale cache after we regenerate the sketches.
-  var SKETCH_VERSION = 'r23'; // r22: merged upstream r12 (84 eastern NA birds)
+  var SKETCH_VERSION = 'r24'; // r22: merged upstream r12 (84 eastern NA birds)
   // with our 554 photo-cutout-only masks for Karnataka species that have no
   // bundled illustration. Tables now live in dims.json / masks.json.
   // Cache-bust for /api/img - bump whenever a bird gets re-rendered via
@@ -11,7 +11,7 @@
   // equivalent to a global cache purge for /api/img. (caches.default
   // .delete() in the worker only affects ONE colo at a time, so a
   // versioned URL is the only reliable way to invalidate everywhere.)
-  var IMG_VERSION = 'r23'; // r22: merged upstream r12 (84 eastern NA birds)
+  var IMG_VERSION = 'r24'; // r22: merged upstream r12 (84 eastern NA birds)
   // with our 554 photo-cutout-only species, so drop every cached copy.
 
   // ---- Sliding pill helper ----
