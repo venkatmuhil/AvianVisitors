@@ -1428,7 +1428,16 @@
   var locked  = document.getElementById('dd-locked');
   var items   = document.getElementById('dd-items');
   var lockHint= document.getElementById('lockHint');
-  function openDd()  { dd.classList.add('open'); dd.setAttribute('aria-hidden','false'); setTimeout(function () { document.getElementById('lockPass').focus(); }, 100); }
+  var autoUnlockAttempted = false;
+  function openDd()  {
+    dd.classList.add('open');
+    dd.setAttribute('aria-hidden','false');
+    // Only probe menu.php once the drawer is actually opened, not on page
+    // load - otherwise the browser's native basic-auth popup fires the
+    // instant the page is visited, before the user touches the menu button.
+    if (!autoUnlockAttempted) { autoUnlockAttempted = true; tryAutoUnlock(); }
+    setTimeout(function () { document.getElementById('lockPass').focus(); }, 100);
+  }
   function closeDd() { dd.classList.remove('open'); dd.setAttribute('aria-hidden','true'); }
   function toggleDd(){ dd.classList.contains('open') ? closeDd() : openDd(); }
   menuBtn.addEventListener('click', function (e) { e.stopPropagation(); toggleDd(); });
@@ -1448,7 +1457,6 @@
       }
     }).catch(function () {});
   }
-  tryAutoUnlock();
 
   document.getElementById('unlockForm').addEventListener('submit', function (e) {
     e.preventDefault();

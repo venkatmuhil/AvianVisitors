@@ -1,0 +1,259 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>AvianVisitors — species image sync</title>
+<style>
+  :root { --bg:#faf7f0; --ink:#2a2a2a; --accent:#8a5a3b; --line:#ddd6c8; }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, "Helvetica Neue", sans-serif; background:var(--bg); color:var(--ink); margin:0; padding:2rem; }
+  h1 { font-size:1.3rem; margin:0 0 1rem; }
+  h2 { font-size:1.05rem; margin:0 0 .6rem; }
+  .search-box { width:100%; max-width:560px; padding:.6rem .8rem; font-size:1rem; border:1px solid var(--line); border-radius:8px; }
+  .results { max-width:560px; margin-top:.5rem; border:1px solid var(--line); border-radius:8px; overflow:hidden; }
+  .results:empty { display:none; }
+  .result-row { padding:.5rem .8rem; display:flex; justify-content:space-between; align-items:center; gap:.6rem; cursor:pointer; border-bottom:1px solid var(--line); }
+  .result-row:last-child { border-bottom:none; }
+  .result-row:hover { background:#f1ece0; }
+  .badge { font-size:.72rem; padding:.15rem .55rem; border-radius:99px; white-space:nowrap; }
+  .badge.has { background:#dcecdc; color:#256a25; }
+  .badge.missing { background:#f4d9d9; color:#8a2b2b; }
+  .hint { color:#888; font-size:.85rem; margin-top:.4rem; max-width:560px; }
+  .panel { max-width:760px; margin-top:1.5rem; border:1px solid var(--line); border-radius:12px; padding:1.2rem; background:#fff; }
+  .imgs { display:flex; gap:1rem; margin:1rem 0; }
+  .imgbox { flex:1; text-align:center; }
+  .imgbox .frame {
+    background-image: linear-gradient(45deg,#ccc 25%,transparent 25%), linear-gradient(-45deg,#ccc 25%,transparent 25%),
+                       linear-gradient(45deg,transparent 75%,#ccc 75%), linear-gradient(-45deg,transparent 75%,#ccc 75%);
+    background-size:16px 16px; background-position:0 0,0 8px,8px -8px,-8px 0;
+    border:1px solid var(--line); border-radius:8px; min-height:220px;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .imgbox img { max-width:100%; max-height:260px; }
+  .imgbox .label { margin-top:.4rem; font-size:.85rem; color:#666; }
+  .dropzone { border:2px dashed var(--line); border-radius:8px; padding:1.5rem; text-align:center; color:#888; cursor:pointer; }
+  .dropzone.drag { border-color:var(--accent); color:var(--accent); }
+  button { font:inherit; padding:.5rem 1rem; border-radius:8px; border:1px solid var(--accent); background:var(--accent); color:#fff; cursor:pointer; }
+  button.secondary { background:#fff; color:var(--accent); }
+  button:disabled { opacity:.5; cursor:default; }
+  .row { display:flex; gap:.6rem; align-items:center; margin:.6rem 0; flex-wrap:wrap; }
+  pre { background:#f5f2ea; padding:.7rem; border-radius:8px; overflow:auto; font-size:.8rem; }
+  .status { font-size:.85rem; color:#666; }
+</style>
+</head>
+<body>
+<h1>AvianVisitors — species image sync</h1>
+<input class="search-box" id="search" placeholder="Search by common or scientific name… (leave empty to see this site's detections)" autocomplete="off">
+<div class="results" id="results"></div>
+<div class="hint" id="hint">Showing species detected at this site. Type a name to search the full ~7,000-species catalog and update any of them.</div>
+
+<div class="panel" id="detail" style="display:none">
+  <h2 id="detail-title"></h2>
+  <div class="imgs">
+    <div class="imgbox">
+      <div class="frame" id="current-frame"><span style="color:#999">no current image</span></div>
+      <div class="label">Current</div>
+    </div>
+    <div class="imgbox">
+      <div class="frame" id="candidate-frame"><span style="color:#999">nothing generated yet</span></div>
+      <div class="label">After replace</div>
+    </div>
+  </div>
+
+  <div class="dropzone" id="dropzone">Drag a photo here, or click to choose a file</div>
+  <input type="file" id="file-input" accept="image/*" style="display:none">
+  <div class="row">
+    <button class="secondary" id="fetch-wiki">Fetch from Wikipedia</button>
+    <span class="status" id="cutout-status"></span>
+  </div>
+</div>
+
+<div class="panel">
+  <h2>Publish changes</h2>
+  <div class="row">
+    <button class="secondary" id="rebuild-btn">Rebuild masks</button>
+    <span class="status" id="rebuild-status"></span>
+  </div>
+  <div class="row">
+    <button class="secondary" id="preview-btn">Preview deploy diff</button>
+    <button id="deploy-btn" disabled>Push + deploy to Pi</button>
+  </div>
+  <pre id="diff-preview" style="display:none"></pre>
+  <div class="status" id="deploy-status"></div>
+</div>
+
+<script>
+let current = null; // {slug, sci, com}
+
+const searchEl = document.getElementById('search');
+const resultsEl = document.getElementById('results');
+const hintEl = document.getElementById('hint');
+const detailEl = document.getElementById('detail');
+const titleEl = document.getElementById('detail-title');
+const currentFrame = document.getElementById('current-frame');
+const candidateFrame = document.getElementById('candidate-frame');
+const dropzone = document.getElementById('dropzone');
+const fileInput = document.getElementById('file-input');
+const cutoutStatus = document.getElementById('cutout-status');
+
+let searchTimer = null;
+searchEl.addEventListener('input', () => {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(runSearch, 200);
+});
+
+async function runSearch() {
+  const q = searchEl.value.trim();
+  hintEl.textContent = q
+    ? `Searching the full species catalog for "${q}"…`
+    : "Showing species detected at this site. Type a name to search the full ~7,000-species catalog and update any of them.";
+  let items;
+  try {
+    const res = await fetch('/api/species?q=' + encodeURIComponent(q));
+    if (!res.ok) throw new Error(`server returned ${res.status}`);
+    items = await res.json();
+  } catch (e) {
+    hintEl.textContent = 'Could not reach the backend (' + e.message + '). Is ./run.sh running?';
+    resultsEl.innerHTML = '';
+    return;
+  }
+  resultsEl.innerHTML = '';
+  if (!items.length) {
+    hintEl.textContent = q ? `No species matched "${q}".` : hintEl.textContent;
+  }
+  for (const item of items) {
+    const row = document.createElement('div');
+    row.className = 'result-row';
+    const name = item.com || item.sci || item.slug;
+    const sub = item.sci && item.com ? item.sci : '';
+    row.innerHTML = `<span>${name}${sub ? ' <i style="color:#999">(' + sub + ')</i>' : ''}</span>
+      <span class="badge ${item.has_image ? 'has' : 'missing'}">${item.has_image ? 'has image' : 'missing'}</span>`;
+    row.onclick = () => selectSpecies(item);
+    resultsEl.appendChild(row);
+  }
+}
+
+async function selectSpecies(item) {
+  current = item;
+  detailEl.style.display = 'block';
+  titleEl.textContent = item.com ? `${item.com} (${item.sci || item.slug})` : (item.sci || item.slug);
+  candidateFrame.innerHTML = '<span style="color:#999">nothing generated yet</span>';
+  cutoutStatus.textContent = '';
+  await refreshCurrent();
+  detailEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+async function refreshCurrent() {
+  try {
+    const imgRes = await fetch('/api/image/' + current.slug + '?_=' + Date.now());
+    if (imgRes.ok) {
+      const blob = await imgRes.blob();
+      currentFrame.innerHTML = `<img src="${URL.createObjectURL(blob)}">`;
+    } else {
+      currentFrame.innerHTML = '<span style="color:#999">no current image</span>';
+    }
+  } catch (e) {
+    currentFrame.innerHTML = '<span style="color:#a33">backend unreachable</span>';
+  }
+}
+
+dropzone.onclick = () => fileInput.click();
+fileInput.onchange = () => { if (fileInput.files[0]) uploadCutout(fileInput.files[0]); };
+['dragover', 'dragleave', 'drop'].forEach(evt => dropzone.addEventListener(evt, e => {
+  e.preventDefault();
+  dropzone.classList.toggle('drag', evt === 'dragover');
+  if (evt === 'drop' && e.dataTransfer.files[0]) uploadCutout(e.dataTransfer.files[0]);
+}));
+
+async function uploadCutout(file) {
+  if (!current) return;
+  cutoutStatus.textContent = 'Processing (background removal + crop)…';
+  try {
+    const fd = new FormData();
+    fd.append('sci', current.sci || current.slug);
+    fd.append('source', 'upload');
+    fd.append('file', file);
+    const res = await fetch('/api/cutout', { method: 'POST', body: fd });
+    const data = await res.json();
+    if (!res.ok) { cutoutStatus.textContent = 'Failed: ' + (data.detail || res.statusText); return; }
+    cutoutStatus.textContent = `Saved ${data.path} (${data.bytes} bytes)`;
+    await showCandidate();
+  } catch (e) {
+    cutoutStatus.textContent = 'Could not reach the backend: ' + e.message;
+  }
+}
+
+document.getElementById('fetch-wiki').onclick = async () => {
+  if (!current) return;
+  if (!current.sci) { cutoutStatus.textContent = 'No scientific name known for this entry.'; return; }
+  cutoutStatus.textContent = 'Fetching photo from Wikipedia…';
+  try {
+    const fd = new FormData();
+    fd.append('sci', current.sci);
+    fd.append('source', 'wikipedia');
+    const res = await fetch('/api/cutout', { method: 'POST', body: fd });
+    const data = await res.json();
+    if (!res.ok) { cutoutStatus.textContent = 'Failed: ' + (data.detail || res.statusText); return; }
+    cutoutStatus.textContent = `Saved ${data.path} (${data.bytes} bytes)`;
+    await showCandidate();
+  } catch (e) {
+    cutoutStatus.textContent = 'Could not reach the backend: ' + e.message;
+  }
+};
+
+async function showCandidate() {
+  const imgRes = await fetch('/api/image/' + current.slug + '?_=' + Date.now());
+  if (imgRes.ok) {
+    const blob = await imgRes.blob();
+    const url = URL.createObjectURL(blob);
+    candidateFrame.innerHTML = `<img src="${url}">`;
+    currentFrame.innerHTML = `<img src="${url}">`;
+  }
+}
+
+document.getElementById('rebuild-btn').onclick = async () => {
+  const statusEl = document.getElementById('rebuild-status');
+  statusEl.textContent = 'Rebuilding DIMS/MASKS + bumping version…';
+  try {
+    const res = await fetch('/api/rebuild', { method: 'POST' });
+    const data = await res.json();
+    statusEl.textContent = res.ok ? `Done — now at ${data.new_version}` : 'Failed: ' + (data.detail || '');
+  } catch (e) {
+    statusEl.textContent = 'Could not reach the backend: ' + e.message;
+  }
+};
+
+document.getElementById('preview-btn').onclick = async () => {
+  const pre = document.getElementById('diff-preview');
+  try {
+    const res = await fetch('/api/deploy/preview');
+    const data = await res.json();
+    pre.style.display = 'block';
+    pre.textContent = data.diff && data.diff.trim() ? data.diff : '(no pending changes to deploy)';
+    document.getElementById('deploy-btn').disabled = !(data.diff && data.diff.trim());
+  } catch (e) {
+    pre.style.display = 'block';
+    pre.textContent = 'Could not reach the backend: ' + e.message;
+  }
+};
+
+document.getElementById('deploy-btn').onclick = async () => {
+  const statusEl = document.getElementById('deploy-status');
+  statusEl.textContent = 'Pushing to GitHub, then deploying on the Pi…';
+  try {
+    const res = await fetch('/api/deploy', { method: 'POST' });
+    const data = await res.json();
+    if (!res.ok) { statusEl.textContent = 'Failed: ' + (data.detail || res.statusText); return; }
+    statusEl.textContent = data.message === 'nothing to deploy'
+      ? 'Nothing to deploy.'
+      : 'Deployed. Pi output:\n' + (data.pi_output || '(none)');
+    document.getElementById('deploy-btn').disabled = true;
+  } catch (e) {
+    statusEl.textContent = 'Could not reach the backend: ' + e.message;
+  }
+};
+
+runSearch();
+</script>
+</body>
+</html>
