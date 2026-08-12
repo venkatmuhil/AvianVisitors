@@ -54,6 +54,15 @@
   var btns = [].slice.call(slider.querySelectorAll('button'));
   var winPick = document.getElementById('winPick');
 
+  // Site identity - drives both the header's location line and the weather
+  // lookup. Hardcoded on purpose: the live values live in birdnet.conf, but
+  // the only endpoint that exposes them (avian/api/config.php) sits behind
+  // admin basic-auth on forwarded deploys, so a public visitor gets a 401.
+  // NOTHING SYNCS THESE. If the Pi moves, or SITE_NAME / LATITUDE /
+  // LONGITUDE change in Settings, edit them here to match or the header
+  // will keep confidently naming the old place.
+  var SITE = { name: 'Karwar', lat: 14.8022, lon: 74.1297 };
+
   // Each view's title text. The shared static-head shows one of these
   // based on the current view; identical adjacent values mean the title
   // stays put with no fade (collage and stats both say Heard Recently).
@@ -1439,6 +1448,93 @@
   winBtns.forEach(function (b) {
     b.addEventListener('click', function () { refreshRecent(true); });
   });
+
+  // ---- Header: location + current conditions ----
+  // The location line is static (see SITE at the top). Weather goes straight
+  // from the visitor's browser to Open-Meteo - free, no API key, and no
+  // server hop, so there's nothing extra running on the Pi. The flip side
+  // is that a blocked request is entirely ordinary here (ad blockers, a LAN
+  // client with no route out), so every failure path just leaves the line
+  // hidden rather than showing an error the visitor can't act on. Kept out
+  // of refreshAll()'s Promise.all deliberately: a third party being down
+  // must never delay or disturb the collage.
+  var siteWhereEl = document.getElementById('siteWhere');
+  var wxLineEl = document.getElementById('wxLine');
+  var WX_TTL_MS = 15 * 60 * 1000;
+  var WX_CACHE_KEY = 'av-wx';
+
+  function fmtCoord(v, pos, neg) {
+    return Math.abs(v).toFixed(2) + '°' + (v >= 0 ? pos : neg);
+  }
+
+  if (siteWhereEl && SITE.name) {
+    siteWhereEl.textContent = ' at ' + SITE.name + ' · ' +
+      fmtCoord(SITE.lat, 'N', 'S') + ', ' + fmtCoord(SITE.lon, 'E', 'W');
+  }
+
+  // WMO weather codes -> short lowercase text, terse enough to sit on one
+  // line next to the temperature. An unlisted code degrades to just the
+  // temperature rather than printing a bare number at the visitor.
+  var WMO_TEXT = {
+    0: 'clear', 1: 'mostly clear', 2: 'partly cloudy', 3: 'overcast',
+    45: 'fog', 48: 'freezing fog',
+    51: 'light drizzle', 53: 'drizzle', 55: 'heavy drizzle',
+    56: 'freezing drizzle', 57: 'freezing drizzle',
+    61: 'light rain', 63: 'rain', 65: 'heavy rain',
+    66: 'freezing rain', 67: 'freezing rain',
+    71: 'light snow', 73: 'snow', 75: 'heavy snow', 77: 'snow grains',
+    80: 'light showers', 81: 'showers', 82: 'heavy showers',
+    85: 'snow showers', 86: 'snow showers',
+    95: 'thunderstorm', 96: 'thunderstorm with hail', 99: 'thunderstorm with hail',
+  };
+
+  function renderWx(cur) {
+    if (!wxLineEl || !cur || typeof cur.temperature_2m !== 'number') return;
+    var desc = WMO_TEXT[cur.weather_code];
+    wxLineEl.textContent = Math.round(cur.temperature_2m) + '°C' +
+      (desc ? ' · ' + desc : '');
+    wxLineEl.hidden = false;
+  }
+
+  function readWxCache() {
+    try {
+      var raw = localStorage.getItem(WX_CACHE_KEY);
+      if (!raw) return null;
+      var c = JSON.parse(raw);
+      // Coords are cached alongside the reading so editing SITE (moving the
+      // Pi) invalidates stale weather for the old location automatically.
+      if (c.lat !== SITE.lat || c.lon !== SITE.lon) return null;
+      if (Date.now() - c.at > WX_TTL_MS) return null;
+      return c.current;
+    } catch (e) { return null; }
+  }
+
+  function loadWeather() {
+    var cached = readWxCache();
+    if (cached) { renderWx(cached); return Promise.resolve(); }
+    var url = 'https://api.open-meteo.com/v1/forecast' +
+      '?latitude=' + encodeURIComponent(SITE.lat) +
+      '&longitude=' + encodeURIComponent(SITE.lon) +
+      '&current=temperature_2m,weather_code&timezone=auto';
+    return fetchJson(url).then(function (j) {
+      var cur = j && j.current;
+      if (!cur) return;
+      renderWx(cur);
+      try {
+        localStorage.setItem(WX_CACHE_KEY, JSON.stringify({
+          lat: SITE.lat, lon: SITE.lon, at: Date.now(), current: cur,
+        }));
+      } catch (e) { /* private mode or quota - caching is best-effort */ }
+    }).catch(function () {
+      // Blocked, offline, or upstream down. Leave the line hidden.
+    });
+  }
+
+  loadWeather();
+  setInterval(function () {
+    if (document.hidden) return;
+    loadWeather();
+  }, WX_TTL_MS);
 
   // ---- Realtime polling ----
   // Every POLL_MS the page refetches the live data set so the collage,

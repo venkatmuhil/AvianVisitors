@@ -10,7 +10,7 @@
 <!-- Apply the saved theme before first paint so dark mode doesn't flash
      light on load. The full switcher lives in Settings (writes bird:theme). -->
 <script>try{if(localStorage.getItem('bird:theme')==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}</script>
-<link rel="stylesheet" href="./styles.css?v=r22">
+<link rel="stylesheet" href="./styles.css?v=r23">
 </head>
 <body class="av-local">
 <!-- Pill in the top-left slot, only visible on admin overlays
@@ -49,8 +49,9 @@
 
 <main class="stage">
   <header class="static-head">
-    <button type="button" class="pre" id="aboutLink">your birds</button>
+    <button type="button" class="pre" id="aboutLink">your birds<span id="siteWhere"></span></button>
     <h1 id="staticTitle">Heard Recently</h1>
+    <p class="wx" id="wxLine" hidden></p>
   </header>
   <div class="views" id="views">
 
@@ -217,6 +218,6 @@
   </div>
 </section>
 
-<script src="./apt.js?v=r22"></script>
+<script src="./apt.js?v=r23"></script>
 </body>
 </html>

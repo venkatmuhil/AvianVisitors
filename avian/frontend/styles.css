@@ -83,6 +83,17 @@
     transition: opacity 240ms cubic-bezier(.7,.05,.2,1);
   }
   .static-head.swap-out h1 { opacity: 0; }
+  /* Single-line current conditions, sits under the title. Deliberately
+     quieter than the h1 and matched to .pre so the header reads as one
+     block. The explicit [hidden] rule guards the UA default: if a display
+     is ever added above, it would otherwise beat [hidden] and the line
+     would show empty whenever the weather lookup fails. */
+  .static-head .wx {
+    margin: 8px 0 0; padding: 0;
+    font: 400 clamp(11px, 1.1vw, 14px)/1.2 ui-serif, "Iowan Old Style", Georgia, serif;
+    color: var(--ink-2); letter-spacing: 0.06em;
+  }
+  .static-head .wx[hidden] { display: none; }
   @media (max-width: 700px) {
     .static-head { padding: 96px 18px 22px; }
   }
