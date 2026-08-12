@@ -36,7 +36,12 @@ REPO = Path(__file__).resolve().parents[3]  # .../AvianVisitors
 AVIAN = REPO / "avian"
 ILLUS_DIR = AVIAN / "assets" / "illustrations"
 CUTOUTS_DIR = AVIAN / "assets" / "cutouts"
-APT_JS = AVIAN / "frontend" / "apt.js"
+APT_JS = AVIAN / "frontend" / "apt.js"        # still holds SKETCH_VERSION/IMG_VERSION
+DIMS_JSON = AVIAN / "frontend" / "dims.json"  # written by build_masks.py
+MASKS_JSON = AVIAN / "frontend" / "masks.json"
+# Everything the mask rebuild can touch, for git add / diff --stat.
+TRACKED_PATHS = ["avian/assets", "avian/frontend/apt.js",
+                 "avian/frontend/dims.json", "avian/frontend/masks.json"]
 SCRIPTS_DIR = AVIAN / "scripts"
 LABELS_EN = REPO / "model" / "l18n" / "labels_en.json"
 
@@ -67,11 +72,16 @@ def sci_to_com() -> dict:
 
 
 def load_dims() -> dict:
-    src = APT_JS.read_text()
-    m = re.search(r"var DIMS = (\{.*?\});", src)
-    if not m:
-        raise RuntimeError("could not find DIMS in apt.js")
-    return json.loads(m.group(1))
+    """Slugs the collage can actually draw.
+
+    These used to be inlined in apt.js as `var DIMS = {...}`; upstream moved
+    them into dims.json so species-adds stop colliding on every merge. A slug
+    missing here still gets dropped by the frontend even if cutout.php can
+    serve an image for it.
+    """
+    if not DIMS_JSON.is_file():
+        raise RuntimeError(f"{DIMS_JSON} missing - run avian/scripts/build_masks.py")
+    return json.loads(DIMS_JSON.read_text())
 
 
 def resolve_current_image(slug: str) -> Optional[Path]:
@@ -258,9 +268,9 @@ def api_rebuild():
 
 
 def _pending_diff() -> str:
-    subprocess.run(["git", "add", "-N", "avian/assets", "avian/frontend/apt.js"], cwd=REPO)
+    subprocess.run(["git", "add", "-N", *TRACKED_PATHS], cwd=REPO)
     diff = subprocess.run(
-        ["git", "diff", "--stat", "--", "avian/assets", "avian/frontend/apt.js"],
+        ["git", "diff", "--stat", "--", *TRACKED_PATHS],
         cwd=REPO, capture_output=True, text=True,
     ).stdout
     return diff
@@ -277,7 +287,7 @@ def api_deploy(commit_message: str = Form("Update bird cutouts via species-sync 
     if not diff.strip():
         return {"diff": "", "pi_output": "", "message": "nothing to deploy"}
 
-    subprocess.run(["git", "add", "avian/assets", "avian/frontend/apt.js"], cwd=REPO, check=True)
+    subprocess.run(["git", "add", *TRACKED_PATHS], cwd=REPO, check=True)
     subprocess.run(["git", "commit", "-m", commit_message], cwd=REPO, check=True)
     subprocess.run(["git", "push", "origin", "avian-visitors"], cwd=REPO, check=True)
 

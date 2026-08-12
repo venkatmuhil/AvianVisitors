@@ -4,7 +4,7 @@
 Step 1 of the illustration pipeline:
     1. pregen.py       render each bird on a uniform cream ground
     2. cutout.py       remove the ground (BiRefNet) and crop to the bird
-    3. build_masks.py  refresh the collage silhouette masks in apt.js
+    3. build_masks.py  refresh the collage silhouette masks (dims.json + masks.json)
 
 Reads a species list (BirdNET-Pi's labels.txt, eBird, or stdin),
 fetches a Wikipedia reference photo for each species, and generates an
@@ -85,7 +85,7 @@ JAY_GENERA = {
 # deeply forked tail) unless we attach a Barn Swallow anti-reference.
 # Hirundo rustica is itself the Barn Swallow so it's excluded.
 SWALLOW_GENERA = {
-    "Tachycineta", "Riparia", "Progne", "Petrochelidon", "Stelgidopteryx",
+    "Tachycineta", "Riparia", "Progne", "Petrochelidon", "Stelgidopteryx", "Chaetura"
 }
 
 # Genera where Gemini's prior collapses to American Robin (gray back,

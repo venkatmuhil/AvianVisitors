@@ -14,11 +14,45 @@ FPM_SOCK=${FPM_SOCK:-/run/php/php-fpm.sock}
 if [ -f /etc/caddy/Caddyfile ];then
   cp /etc/caddy/Caddyfile{,.original}
 fi
+# AvianVisitors admin gate, generated rather than hand-added.
+#
+# This script overwrites the whole Caddyfile, so a hand-edited auth block is
+# silently lost the next time anything calls it (clear_all_data.sh,
+# install_services.sh, advanced.php, backup_data.sh) - which is exactly how a
+# forwarded deploy ends up with an open settings drawer without anyone
+# noticing.
+#
+# Only the endpoints that can mutate state sit behind auth. The read-only
+# endpoints the public collage depends on (birdnet-api.php, cutout.php,
+# recording.php, wiki.php) stay open, so this deliberately does NOT cover the
+# whole /avian/api/ path.
+#
+# This is load-bearing: the PHP shims only check that an Authorization header
+# EXISTS (AV_REQUIRE_AUTH), never that it is valid, so Caddy is the only thing
+# actually validating credentials.
+AVIAN_ADMIN_PWD="${AVIAN_ADMIN_PWD:-${CADDY_PWD}}"
+ADMIN_BLOCK=""
+if [ -n "${AVIAN_ADMIN_PWD}" ] && [ -d "${EXTRACTED}/avian" ]; then
+  ADMIN_HASH=$(caddy hash-password --plaintext "${AVIAN_ADMIN_PWD}")
+  ADMIN_BLOCK=$(cat << EOF
+  @avian_admin path /avian/api/menu.php* /avian/api/config.php* /avian/api/birdnet-status.php*
+  basic_auth @avian_admin {
+    birdnet ${ADMIN_HASH}
+  }
+EOF
+)
+fi
+
 if ! [ -z ${CADDY_PWD} ];then
 HASHWORD=$(caddy hash-password --plaintext ${CADDY_PWD})
 cat << EOF > /etc/caddy/Caddyfile
 http:// ${BIRDNETPI_URL} {
   root * ${EXTRACTED}
+  # The HTML shell must always revalidate so UI deploys and re-rendered
+  # illustrations show up on the next load; versioned assets (?v=) keep
+  # caching normally.
+  @shell path / /index.html
+  header @shell Cache-Control "no-cache"
   file_server browse
   handle /By_Date/* {
     file_server browse
@@ -44,6 +78,7 @@ http:// ${BIRDNETPI_URL} {
   basicauth /terminal* {
     birdnet ${HASHWORD}
   }
+${ADMIN_BLOCK}
   reverse_proxy /stream localhost:8000
   # AvianVisitors overlay drops an index.html alongside BirdNET-Pi's
   # index.php. The default try_files for php_fastcgi prefers index.php
@@ -61,6 +96,11 @@ else
   cat << EOF > /etc/caddy/Caddyfile
 http:// ${BIRDNETPI_URL} {
   root * ${EXTRACTED}
+  # The HTML shell must always revalidate so UI deploys and re-rendered
+  # illustrations show up on the next load; versioned assets (?v=) keep
+  # caching normally.
+  @shell path / /index.html
+  header @shell Cache-Control "no-cache"
   file_server browse
   handle /By_Date/* {
     file_server browse
@@ -68,6 +108,7 @@ http:// ${BIRDNETPI_URL} {
   handle /Charts/* {
     file_server browse
   }
+${ADMIN_BLOCK}
   reverse_proxy /stream localhost:8000
   # AvianVisitors overlay drops an index.html alongside BirdNET-Pi's
   # index.php. The default try_files for php_fastcgi prefers index.php

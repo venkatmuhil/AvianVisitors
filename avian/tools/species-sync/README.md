@@ -30,11 +30,12 @@ Opens a server at http://127.0.0.1:8787. Uses `.venv-rembg` (already has
   other cutout rather than being a raw upload. The result is written
   straight to `avian/assets/cutouts/<slug>.png` (git-tracked, so an unwanted
   replacement can just be `git checkout`ed away before deploying).
-- **Rebuild masks**: runs `avian/scripts/build_masks.py` to patch the
-  `DIMS`/`MASKS` tables into `avian/frontend/apt.js`, then bumps
-  `SKETCH_VERSION`/`IMG_VERSION` (the one step `build_masks.py` reminds you
-  to do but doesn't do itself).
-- **Push + deploy to Pi**: commits the changed assets + `apt.js`, pushes to
+- **Rebuild masks**: runs `avian/scripts/build_masks.py`, which writes the
+  `DIMS`/`MASKS` tables to `avian/frontend/dims.json` + `masks.json` (fetched
+  by `apt.js` at load), then bumps `SKETCH_VERSION`/`IMG_VERSION` in `apt.js`
+  (the one step `build_masks.py` reminds you to do but doesn't do itself).
+- **Push + deploy to Pi**: commits the changed assets, `apt.js`, and the two
+  JSON tables, pushes to
   `origin avian-visitors` on GitHub, then SSHes to the Pi and runs a plain
   `git fetch && git reset --hard origin/avian-visitors` — deliberately
   **not** the full `scripts/update_birdnet.sh` (that also runs

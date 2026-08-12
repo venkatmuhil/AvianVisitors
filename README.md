@@ -12,7 +12,7 @@ See it running at [bird.onethreenine.net](https://bird.onethreenine.net).
 
 | Qty | Description | Price | Link | Notes |
 |-----|-------------|-------|------| ----- |
-| 1 | Raspberry Pi (4B / 5 / Zero 2W) | ~$35-80 | [Amazon](https://amzn.to/43yLDZJ) | [See note for RPi20](https://github.com/mcguirepr89/BirdNET-Pi/wiki/RPi0W2-Installation-Guide) |
+| 1 | Raspberry Pi (4B / 5 / 3A+ / Zero 2W) | ~$25-80 | [Amazon](https://amzn.to/43yLDZJ) | [See note for 512 MB Pis](https://github.com/mcguirepr89/BirdNET-Pi/wiki/RPi0W2-Installation-Guide) |
 | 1 | Micro SD Card (≥32 GB) | ~$10 | [Amazon](https://amzn.to/4eGy7te) | |
 | 1 | USB lavalier microphone | $16.95 | [Amazon](https://amzn.to/4vLSaMK) | |
 | 1 | Pi power supply | ~$10 | - | |
@@ -58,7 +58,7 @@ Collage: `http://birdnet.local/`. Stock BirdNET-Pi UI: `http://birdnet.local/ind
 
 ## 3. (Optional) Restyle the illustrations
 
-The repo ships with 498 bundled illustrations (249 species, perched + flight). To restyle them or generate a set for your own region:
+The repo ships with 666 bundled illustrations (333 species, perched + flight). To restyle them or generate a set for your own region:
 
 ```bash
 pip install -r ~/BirdNET-Pi/avian/scripts/requirements.txt
@@ -71,6 +71,8 @@ python3 ~/BirdNET-Pi/avian/scripts/build_masks.py
 ```
 
 Filter to your region with `--ebird-region US-CA` (needs `EBIRD_API_KEY`). The full pipeline, prompt, reference images, and per-species tuning live in [`avian/scripts/README.md`](avian/scripts/README.md). Style lives in [`prompt.template.md`](avian/scripts/prompt.template.md).
+
+See [illustration bundles](illustration-bundles.md) for pregenerated bundles shared by other folks in the community, or share your own for others to use!
 
 ---
 
@@ -89,7 +91,7 @@ See [`avian/forwarding/`](avian/forwarding/) for three independent recipes:
 ```
 avian/                  # everything we add to BirdNET-Pi
 ├── frontend/           # static HTML/JS/CSS for the collage
-├── assets/             # 498 bundled illustrations + photo-cutout fallbacks
+├── assets/             # 666 bundled illustrations + photo-cutout fallbacks
 ├── api/                # PHP shims served by BirdNET-Pi's PHP-FPM
 ├── scripts/            # generate -> cutout -> masks pipeline + prompt
 └── forwarding/         # optional HA / MQTT / Cloudflare configs
