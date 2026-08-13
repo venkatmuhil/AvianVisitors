@@ -1557,7 +1557,8 @@
   function renderWx(cur) {
     if (!wxLineEl || !cur || typeof cur.temperature_2m !== 'number') return;
     var desc = WMO_TEXT[cur.weather_code];
-    wxLineEl.textContent = Math.round(cur.temperature_2m) + '°C' +
+    var today = new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+    wxLineEl.textContent = today + ' · ' + Math.round(cur.temperature_2m) + '°C' +
       (desc ? ' · ' + desc : '');
     wxLineEl.hidden = false;
   }
