@@ -282,10 +282,19 @@
   var GRID_STRIDE = 4; // viewport px per occupancy cell; smaller = slower
   var COLLAGE_PAD = 3; // breathing room (grid cells) around each bird;
   // eased on narrow screens where birds are smaller.
-  var FLY_PROB = 0.15; // chance a bird shows in its flight pose (rare); perched
-  // otherwise. Rolled once per window appearance.
-  var collagePose = {}; // sci -> 1 perched | 2 flight, persisted across polls;
-  // cleared when a bird leaves the window so it rerolls.
+  var FLY_PROB = 0.30; // chance a bird shows in its flight pose; perched
+  // otherwise. Rerolled on a per-species timer, not once per appearance.
+  // Each species holds a pose for a jittered 5-10min, so expiries de-phase
+  // instead of the whole flock coming due together.
+  var POSE_TTL_MIN_MS = 5 * 60 * 1000;
+  var POSE_TTL_MAX_MS = 10 * 60 * 1000;
+  // A pose change alters the tile's aspect, which shifts maskPack's area
+  // sort and desyncs its seeded PRNG for every tile after it - so ONE flip
+  // reshuffles the whole collage. Admit at most this many real changes per
+  // render, and bloom the entrance so the reshuffle reads as intentional.
+  var POSE_MAX_FLIPS = 1;
+  var collagePose = {}; // sci -> { pose: 1 perched | 2 flight, exp, pinned },
+  // persisted across polls; dropped when a bird leaves the window.
 
   // Decode and cache each mask once. Sparse cell-list form (only "on"
   // cells) makes collision tests linear in opaque area, not total area.
@@ -310,11 +319,63 @@
   function slugify(sci) {
     return sci.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
   }
-  function aspect(sci) {
-    var d = DIMS[slugify(sci)];
-    return d ? d[0] / d[1] : 1.4;
+
+  // performance.now(), not Date.now(): this page runs unattended for weeks on
+  // the e-ink frame, and an NTP step backwards would freeze every expiry.
+  function poseExpiry() {
+    return performance.now() + POSE_TTL_MIN_MS +
+      Math.random() * (POSE_TTL_MAX_MS - POSE_TTL_MIN_MS);
+  }
+  function rollPose(base) {
+    return (DIMS[base + '-2'] && Math.random() < FLY_PROB) ? 2 : 1;
   }
 
+  // Seed newcomers, drop departures, and - when allowReroll - flip at most
+  // POSE_MAX_FLIPS expired species. Returns the number of tiles that actually
+  // changed pose. Must run inside the tablesReady guard: it reads DIMS to
+  // decide who is even eligible to fly.
+  function updateCollagePoses(items, allowReroll) {
+    var now = performance.now();
+
+    // Forget species no longer in the window, so a returning bird rerolls.
+    var present = {};
+    items.forEach(function (s) { present[s.sci] = 1; });
+    Object.keys(collagePose).forEach(function (k) {
+      if (!present[k]) delete collagePose[k];
+    });
+
+    // Seed newcomers; collect flight-capable species whose hold has lapsed.
+    var due = [];
+    items.forEach(function (s) {
+      var base = slugify(s.sci);
+      var rec = collagePose[s.sci];
+      if (!rec) {
+        collagePose[s.sci] = { pose: rollPose(base), exp: poseExpiry(), pinned: false };
+        return;
+      }
+      // Perched-only species never enter the candidate list, so they can
+      // never churn the layout for a pose that does not exist.
+      if (rec.pinned || !DIMS[base + '-2']) return;
+      if (rec.exp <= now) due.push({ base: base, rec: rec });
+    });
+    if (!allowReroll) return 0;
+
+    // Oldest expiry first, so a species starved by the cap wins the next
+    // render instead of the API's ordering always favouring the same birds.
+    due.sort(function (a, b) { return a.rec.exp - b.rec.exp; });
+    var flips = 0;
+    for (var i = 0; i < due.length; i++) {
+      var next = rollPose(due[i].base);
+      // Rolling the same pose costs nothing to lay out, so it is free:
+      // refresh the hold without spending the flip budget on it.
+      if (next === due[i].rec.pose) { due[i].rec.exp = poseExpiry(); continue; }
+      if (flips >= POSE_MAX_FLIPS) break; // stays due; retried next poll
+      due[i].rec.pose = next;
+      due[i].rec.exp = poseExpiry();
+      flips++;
+    }
+    return flips;
+  }
   // Mask-aware nester. tiles: { fullW, fullH, mask, data }. Returns the
   // same tiles with .x, .y assigned (top-left in viewport coords).
   function maskPack(tiles, W, H, xBias, yBias, pad) {
@@ -440,7 +501,7 @@
     return placed;
   }
 
-  function renderCollage(items, animate) {
+  function renderCollage(items, animate, reroll) {
     collage.innerHTML = '';
     // Drop the previous render's hit-test tiles up front so a click or hover on
     // the empty-nest state (or a collage that hasn't laid out yet) resolves to
@@ -470,9 +531,9 @@
     // Silhouettes (DIMS/MASKS) load async from dims.json/masks.json; until
     // they arrive we cannot pack. Defer and retry, like the !W/!H case below.
     // (The empty-nest path above needs no silhouettes and already returned.)
-    if (!tablesReady) { setTimeout(function () { renderCollage(items, animate); }, 80); return; }
+    if (!tablesReady) { setTimeout(function () { renderCollage(items, animate, reroll); }, 80); return; }
     var W = collage.clientWidth, H = collage.clientHeight;
-    if (!W || !H) { setTimeout(function () { renderCollage(items, animate); }, 80); return; }
+    if (!W || !H) { setTimeout(function () { renderCollage(items, animate, reroll); }, 80); return; }
 
     // Tuning depends on bird count - same viewport, very different
     // pack densities for 6 vs 48 birds.
@@ -485,19 +546,22 @@
     // final area yet). area-from-count uses a sub-linear exponent so
     // a 400-detection bird is visibly larger than a 30-detection bird
     // without dwarfing it.
+    // Seed/expire poses first, so the map below only reads decisions.
+    var poseFlips = updateCollagePoses(items, reroll);
     var tiles = items.map(function (s) {
       var base = slugify(s.sci);
-      // Pose: perched by default, rarely flight (FLY_PROB), and only if a
-      // flight render exists. Flight uses the <slug>-2 mask/aspect/image so
-      // the wings-spread silhouette nests correctly.
-      var pose = collagePose[s.sci];
-      if (pose === undefined) {
-        pose = (DIMS[base + '-2'] && Math.random() < FLY_PROB) ? 2 : 1;
-        collagePose[s.sci] = pose;
-      }
+      // Flight uses the <slug>-2 mask/aspect/image so the wings-spread
+      // silhouette nests correctly.
+      var rec = collagePose[s.sci];
+      var pose = rec ? rec.pose : 1;
       var slug = pose === 2 ? base + '-2' : base;
       var mask = loadMask(slug);
-      if (!mask && pose === 2) { pose = 1; slug = base; mask = loadMask(slug); collagePose[s.sci] = 1; }
+      // DIMS carries a -2 key but MASKS does not: downgrade and pin, so the
+      // hold timer never rerolls back into the same broken state.
+      if (!mask && pose === 2) {
+        pose = 1; slug = base; mask = loadMask(slug);
+        if (rec) { rec.pose = 1; rec.pinned = true; }
+      }
       if (!mask) return null;
       var d = DIMS[slug];
       var n = +s.n; if (!n || isNaN(n)) n = 1;
@@ -507,9 +571,6 @@
         score: Math.pow(Math.max(1, n), T.countExp),
       };
     }).filter(Boolean);
-    // Reroll on re-entry: forget pose choices for species no longer in window.
-    var present = {}; items.forEach(function (s) { present[s.sci] = 1; });
-    Object.keys(collagePose).forEach(function (k) { if (!present[k]) delete collagePose[k]; });
 
     // Step 2: normalise so sum(area) ≈ budget. Then floor each tile
     // at minArea so even a 1-call bird stays legible.
@@ -631,10 +692,12 @@
     // resolve which silhouette the cursor is actually over.
     collagePlaced = placed.filter(function (t) { return t.x > -1000; });
 
-    // Bloom the birds in from the centre outward, but only when asked
-    // (first load, window change, view switch) - never on the silent 30s
-    // poll or a resize, which render without the animate flag.
-    if (animate) playCollageEntrance();
+    // Bloom the birds in from the centre outward when asked (first load,
+    // window change, view switch), and also whenever a pose flip landed:
+    // a flip re-packs every tile, so without the bloom the silent 30s poll
+    // would snap the whole flock to new positions. A resize still renders
+    // without either flag.
+    if (animate || poseFlips > 0) playCollageEntrance();
   }
 
   // Staggered centre-out entrance: each tile fades + scales in, delayed by
@@ -833,9 +896,9 @@
   // Collage renders whatever is in DATA.recent.species. When the picker
   // changes, refreshRecent() refetches and re-renders. Empty state shows
   // a "no detections in this window" message.
-  function renderCollageFromData(animate) {
+  function renderCollageFromData(animate, reroll) {
     var items = (DATA.recent && DATA.recent.species) || [];
-    renderCollage(items, animate);
+    renderCollage(items, animate, reroll);
   }
   var rTimer;
   window.addEventListener('resize', function () {
@@ -1391,7 +1454,8 @@
     // renderStatsLists runs BEFORE drawHistograms so the stats entrance
     // (fired at the end of drawHistograms) can stagger the side-panel rows
     // that were just built, in tandem with the graph populating.
-    renderCollageFromData(animate);
+    // reroll: a window change is a data event, so poses may age out here.
+    renderCollageFromData(animate, true);
     renderStatsLists();
     drawHistograms(animate);
     renderAtlas(animate);
@@ -1434,7 +1498,9 @@
       if (forHours === currentHours && parts[4]) DATA.recent = parts[4];
       recomputeDerived();
       renderTimeIndependent(animate);
-      renderCollageFromData(animate);
+      // reroll: the 30s poll is the heartbeat that ages poses out. Resize
+      // renders deliberately pass no flag, so dragging never moves a bird.
+      renderCollageFromData(animate, true);
     });
   }
 

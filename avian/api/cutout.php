@@ -1,11 +1,16 @@
 <?php
 // AvianVisitors - bird image resolver.
 //
-// Lookup chain for /avian/api/cutout.php?sci=Calypte+anna:
-//   1. ../assets/illustrations/<slug>.png   (450+ bundled kachō-e renders)
-//   2. ../assets/cutouts/<slug>.png         (background-removed photo)
+// Lookup chain for /avian/api/cutout.php?sci=Calypte+anna[&pose=2]:
+//   1. ../assets/illustrations/<slug>[-N].png (450+ bundled kachō-e renders)
+//   2. ../assets/cutouts/<slug>[-N].png       (background-removed photo)
 //   3. cached rembg of a Wikipedia photo at $HOME/BirdSongs/Extracted/cutouts/
 //   4. fresh Wikipedia -> rembg -> cache (skipped gracefully if rembg unset)
+//
+// pose=1 (perched, the default) resolves the bare slug; pose=2 (flight)
+// resolves <slug>-2 and NEVER falls back to perched - the caller has
+// already laid out the tile against the flight silhouette. Steps 1-3
+// honour the pose; step 4 is pose-1 only, so pose=2 404s after step 3.
 //
 // The frontend's <img src> points here for every species - bundled
 // hits return instantly; cold misses fall through to the dynamic path.
@@ -47,32 +52,39 @@ function serve_png(string $path): void {
     exit;
 }
 
-// 1. Bundled illustration with pose suffix (the kachō-e PNG the repo
-//    ships with). 450+ species cover both perched + flight.
-$bundled = dirname(__DIR__) . "/assets/illustrations/{$slug}{$poseSuffix}.png";
-if (is_file($bundled) && filesize($bundled) > 1024) {
-    serve_png($bundled);
-}
-// Pose-2 missing? Fall back to pose-1 so the flight tab still shows
-// the perched render instead of breaking to the photo fallback.
-if ($pose !== 1) {
-    $fallback = dirname(__DIR__) . "/assets/illustrations/$slug.png";
-    if (is_file($fallback) && filesize($fallback) > 1024) {
-        serve_png($fallback);
-    }
-}
-// 2. Bundled cutout (background-removed photo, fallback for species
-//    without an illustration).
-$cutout = dirname(__DIR__) . "/assets/cutouts/$slug.png";
-if (is_file($cutout) && filesize($cutout) > 1024) {
-    serve_png($cutout);
-}
-
-// 3. Dynamic cache from a previous Wikipedia + rembg run.
+// Phase 1: resolve the EXACT pose asked for. Never falls back across
+// poses - the collage sizes and mask-packs each tile against the pose it
+// requested, so serving a perched bird for pose=2 would stretch it into
+// a wings-spread box. A pose-2 miss is a hard 404 below instead.
 $cacheDir = dirname(__DIR__, 3) . '/BirdSongs/Extracted/cutouts';
 $cachePath = "$cacheDir/$slug.png";
-if (is_file($cachePath) && filesize($cachePath) > 1024) {
-    serve_png($cachePath);
+$candidates = [
+    // 1. Bundled illustration (the kachō-e PNG the repo ships with).
+    //    450+ species cover both perched + flight.
+    dirname(__DIR__) . "/assets/illustrations/{$slug}{$poseSuffix}.png",
+    // 2. Bundled cutout (background-removed photo, for species without
+    //    an illustration). species-sync writes flight uploads here as
+    //    <slug>-2.png, so the pose suffix applies to this tier too.
+    dirname(__DIR__) . "/assets/cutouts/{$slug}{$poseSuffix}.png",
+    // 3. Dynamic cache from a previous Wikipedia + rembg run.
+    "$cacheDir/{$slug}{$poseSuffix}.png",
+];
+foreach ($candidates as $candidate) {
+    if (is_file($candidate) && filesize($candidate) > 1024) {
+        serve_png($candidate);
+    }
+}
+
+// Everything below is pose-1 only. Wikipedia's summary endpoint returns
+// one representative photo with no pose control, so fetching for pose 2
+// would cache a perched bird under a -2 filename and poison that slug
+// permanently. The collage only requests pose 2 when DIMS carries a -2
+// key - generated from the same files scanned above - so reaching here
+// means dims.json is stale, which is worth surfacing rather than hiding.
+if ($pose !== 1) {
+    http_response_code(404);
+    echo 'no pose-' . $pose . ' image bundled for ' . htmlspecialchars($sci);
+    exit;
 }
 
 // 4. Fresh Wikipedia fetch + rembg. Skipped if rembg-cli isn't on

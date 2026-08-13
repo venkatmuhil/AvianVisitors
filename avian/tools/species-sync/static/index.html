@@ -18,6 +18,9 @@
   .badge { font-size:.72rem; padding:.15rem .55rem; border-radius:99px; white-space:nowrap; }
   .badge.has { background:#dcecdc; color:#256a25; }
   .badge.missing { background:#f4d9d9; color:#8a2b2b; }
+  /* A species with no flight variant is the normal case, not a defect -
+     keep it neutral so it doesn't read as an error across hundreds of rows. */
+  .badge.neutral { background:#eee; color:#777; }
   .hint { color:#888; font-size:.85rem; margin-top:.4rem; max-width:560px; }
   .panel { max-width:760px; margin-top:1.5rem; border:1px solid var(--line); border-radius:12px; padding:1.2rem; background:#fff; }
   .imgs { display:flex; gap:1rem; margin:1rem 0; }
@@ -37,6 +40,12 @@
   button.secondary { background:#fff; color:var(--accent); }
   button:disabled { opacity:.5; cursor:default; }
   .row { display:flex; gap:.6rem; align-items:center; margin:.6rem 0; flex-wrap:wrap; }
+  /* Segmented pose switch: one shared border, rounded only on the ends. */
+  .seg { display:inline-flex; }
+  .seg .seg-btn { border-radius:0; border-left-width:0; background:#fff; color:var(--accent); }
+  .seg .seg-btn:first-child { border-radius:8px 0 0 8px; border-left-width:1px; }
+  .seg .seg-btn:last-child { border-radius:0 8px 8px 0; }
+  .seg .seg-btn[aria-pressed="true"] { background:var(--accent); color:#fff; }
   pre { background:#f5f2ea; padding:.7rem; border-radius:8px; overflow:auto; font-size:.8rem; }
   .status { font-size:.85rem; color:#666; }
 </style>
@@ -49,6 +58,13 @@
 
 <div class="panel" id="detail" style="display:none">
   <h2 id="detail-title"></h2>
+  <div class="row">
+    <div class="seg" id="pose-toggle" role="group" aria-label="Pose">
+      <button type="button" class="seg-btn" data-pose="1" aria-pressed="true">Perched</button>
+      <button type="button" class="seg-btn" data-pose="2" aria-pressed="false">Flight</button>
+    </div>
+    <span class="status" id="pose-note"></span>
+  </div>
   <div class="imgs">
     <div class="imgbox">
       <div class="frame" id="current-frame"><span style="color:#999">no current image</span></div>
@@ -83,7 +99,8 @@
 </div>
 
 <script>
-let current = null; // {slug, sci, com}
+let current = null;   // {slug, sci, com}
+let currentPose = 1;  // 1 perched | 2 flight - drives both preview and upload
 
 const searchEl = document.getElementById('search');
 const resultsEl = document.getElementById('results');
@@ -95,6 +112,15 @@ const candidateFrame = document.getElementById('candidate-frame');
 const dropzone = document.getElementById('dropzone');
 const fileInput = document.getElementById('file-input');
 const cutoutStatus = document.getElementById('cutout-status');
+const poseToggle = document.getElementById('pose-toggle');
+const poseNote = document.getElementById('pose-note');
+const wikiBtn = document.getElementById('fetch-wiki');
+
+// The flight variant lives at <slug>-2, matching the dims.json keys and the
+// on-disk filenames, so the pose never needs a separate query parameter.
+function poseSlug() {
+  return current.slug + (currentPose === 2 ? '-2' : '');
+}
 
 let searchTimer = null;
 searchEl.addEventListener('input', () => {
@@ -127,11 +153,39 @@ async function runSearch() {
     const name = item.com || item.sci || item.slug;
     const sub = item.sci && item.com ? item.sci : '';
     row.innerHTML = `<span>${name}${sub ? ' <i style="color:#999">(' + sub + ')</i>' : ''}</span>
-      <span class="badge ${item.has_image ? 'has' : 'missing'}">${item.has_image ? 'has image' : 'missing'}</span>`;
+      <span>
+        <span class="badge ${item.has_perched ? 'has' : 'missing'}">${item.has_perched ? 'perched' : 'no perched'}</span>
+        <span class="badge ${item.has_flight ? 'has' : 'neutral'}">${item.has_flight ? 'flight' : 'no flight'}</span>
+      </span>`;
     row.onclick = () => selectSpecies(item);
     resultsEl.appendChild(row);
   }
 }
+
+// Applying the pose keeps the buttons, the Wikipedia gate and the note in
+// sync. Wikipedia is disabled rather than relabelled in Flight mode: a
+// relabelled button invites a click that writes to the pose you are not
+// looking at.
+function applyPose(pose) {
+  currentPose = pose;
+  poseToggle.querySelectorAll('.seg-btn').forEach(b => {
+    b.setAttribute('aria-pressed', String(+b.dataset.pose === pose));
+  });
+  wikiBtn.disabled = pose === 2;
+  poseNote.textContent = pose === 2
+    ? 'Wikipedia returns one representative photo (almost always perched) — upload a flight photo instead.'
+    : '';
+}
+
+poseToggle.querySelectorAll('.seg-btn').forEach(b => {
+  b.onclick = async () => {
+    if (+b.dataset.pose === currentPose) return;
+    applyPose(+b.dataset.pose);
+    candidateFrame.innerHTML = '<span style="color:#999">nothing generated yet</span>';
+    cutoutStatus.textContent = '';
+    if (current) await refreshCurrent();
+  };
+});
 
 async function selectSpecies(item) {
   current = item;
@@ -139,13 +193,16 @@ async function selectSpecies(item) {
   titleEl.textContent = item.com ? `${item.com} (${item.sci || item.slug})` : (item.sci || item.slug);
   candidateFrame.innerHTML = '<span style="color:#999">nothing generated yet</span>';
   cutoutStatus.textContent = '';
+  // Always land on Perched, so switching species never leaves you
+  // silently uploading into the flight slot.
+  applyPose(1);
   await refreshCurrent();
   detailEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
 async function refreshCurrent() {
   try {
-    const imgRes = await fetch('/api/image/' + current.slug + '?_=' + Date.now());
+    const imgRes = await fetch('/api/image/' + poseSlug() + '?_=' + Date.now());
     if (imgRes.ok) {
       const blob = await imgRes.blob();
       currentFrame.innerHTML = `<img src="${URL.createObjectURL(blob)}">`;
@@ -172,6 +229,7 @@ async function uploadCutout(file) {
     const fd = new FormData();
     fd.append('sci', current.sci || current.slug);
     fd.append('source', 'upload');
+    fd.append('pose', String(currentPose));
     fd.append('file', file);
     const res = await fetch('/api/cutout', { method: 'POST', body: fd });
     const data = await res.json();
@@ -202,7 +260,7 @@ document.getElementById('fetch-wiki').onclick = async () => {
 };
 
 async function showCandidate() {
-  const imgRes = await fetch('/api/image/' + current.slug + '?_=' + Date.now());
+  const imgRes = await fetch('/api/image/' + poseSlug() + '?_=' + Date.now());
   if (imgRes.ok) {
     const blob = await imgRes.blob();
     const url = URL.createObjectURL(blob);

@@ -22,14 +22,26 @@ Opens a server at http://127.0.0.1:8787. Uses `.venv-rembg` (already has
 - Pick a result to see the **current image** (whatever `cutout.php` would
   serve for it — bundled illustration or photo cutout), or "no current
   image" if it isn't covered yet.
+- **Perched / Flight**: each species has two poses. Perched is the default
+  and lives at the bare slug; flight lives at `<slug>-2`. The toggle drives
+  both the preview and where an upload lands, and each row carries a badge
+  per pose. A species with no flight variant is the normal case — the
+  collage just always draws it perched.
 - **Replace or add**: drag in a photo, or click "Fetch from Wikipedia."
   Either way the image goes through the same normalization the rest of the
   asset set uses (`rembg` `u2net` background removal, crop to the alpha
   bbox with a small margin, downscale to an 800px max edge — matching
   `gen_cutouts.py` / `cutout.py`), so it matches the framing/style of every
   other cutout rather than being a raw upload. The result is written
-  straight to `avian/assets/cutouts/<slug>.png` (git-tracked, so an unwanted
-  replacement can just be `git checkout`ed away before deploying).
+  straight to `avian/assets/cutouts/<slug>.png` — or `<slug>-2.png` in
+  Flight mode (git-tracked, so an unwanted replacement can just be
+  `git checkout`ed away before deploying). Wikipedia is disabled in Flight
+  mode: its summary endpoint returns one representative photo with no pose
+  control, and it is almost always a perched bird.
+- **Keep both poses in the same medium.** If a species has a bundled
+  kachō-e illustration perched, adding a *photo* flight variant makes the
+  collage alternate between two art styles for that bird every few minutes.
+  Upload flight photos for photo-cutout species.
 - **Rebuild masks**: runs `avian/scripts/build_masks.py`, which writes the
   `DIMS`/`MASKS` tables to `avian/frontend/dims.json` + `masks.json` (fetched
   by `apt.js` at load), then bumps `SKETCH_VERSION`/`IMG_VERSION` in `apt.js`

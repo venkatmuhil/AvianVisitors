@@ -84,7 +84,16 @@ def load_dims() -> dict:
     return json.loads(DIMS_JSON.read_text())
 
 
+# Slugs may carry a pose suffix (`turdus-migratorius-2` is the flight
+# variant), matching the dims.json keys and the on-disk filenames.
+SLUG_RE = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*")
+
+
 def resolve_current_image(slug: str) -> Optional[Path]:
+    # Starlette routes on the raw path, so a percent-encoded separator can
+    # reach here; without this guard it would escape the assets directory.
+    if not SLUG_RE.fullmatch(slug):
+        return None
     p = ILLUS_DIR / f"{slug}.png"
     if p.is_file() and p.stat().st_size > 1024:
         return p
@@ -105,7 +114,11 @@ def fetch_lifelist() -> list:
 @app.get("/api/species")
 def api_species(q: str = ""):
     dims = load_dims()
-    covered = {s for s in dims if not s.endswith("-2")}
+    # Coverage is per-pose: a species can have a perched image, a flight
+    # image, or both. Flight keys carry the -2 suffix, so strip it to get
+    # back to the species slug the UI works in.
+    perched = {s for s in dims if not s.endswith("-2")}
+    flight = {s[:-2] for s in dims if s.endswith("-2")}
 
     try:
         detected = {slugify(e["sci"]) for e in fetch_lifelist()}
@@ -125,9 +138,12 @@ def api_species(q: str = ""):
             slug = slugify(e["sci"])
             results.append({
                 "slug": slug, "sci": e["sci"], "com": e.get("com"),
-                "has_image": slug in covered, "detected_here": True,
+                "has_perched": slug in perched, "has_flight": slug in flight,
+                "detected_here": True,
             })
-        results.sort(key=lambda r: (r["has_image"], r["com"] or r["sci"]))
+        # Perched coverage still decides whether a bird can be drawn at all,
+        # so it stays the primary sort: uncovered species surface first.
+        results.sort(key=lambda r: (r["has_perched"], r["com"] or r["sci"]))
         return results
 
     # Named search across the full global label catalog (~7000 species),
@@ -141,9 +157,10 @@ def api_species(q: str = ""):
             slug = slugify(sci)
             results.append({
                 "slug": slug, "sci": sci, "com": com,
-                "has_image": slug in covered, "detected_here": slug in detected,
+                "has_perched": slug in perched, "has_flight": slug in flight,
+                "detected_here": slug in detected,
             })
-    results.sort(key=lambda r: (not r["detected_here"], not r["has_image"], r["com"] or r["sci"]))
+    results.sort(key=lambda r: (not r["detected_here"], not r["has_perched"], r["com"] or r["sci"]))
     return results[:40]
 
 
@@ -210,8 +227,17 @@ def normalize_photo_bytes(img_bytes: bytes) -> bytes:
 async def api_cutout(
     sci: str = Form(...),
     source: str = Form("upload"),
+    pose: int = Form(1),
     file: Optional[UploadFile] = File(None),
 ):
+    if pose not in (1, 2):
+        raise HTTPException(422, "pose must be 1 (perched) or 2 (flight)")
+    # Wikipedia's summary endpoint returns one representative photo with no
+    # pose control - it is almost always a perched bird, so accepting this
+    # would file a perched photo under the flight slug.
+    if pose == 2 and source == "wikipedia":
+        raise HTTPException(400, "Wikipedia returns a single representative photo "
+                                 "with no pose control; upload a flight photo instead")
     slug = slugify(sci)
 
     if source == "wikipedia":
@@ -238,9 +264,14 @@ async def api_cutout(
         raise HTTPException(500, f"cutout processing failed: {e}")
 
     CUTOUTS_DIR.mkdir(parents=True, exist_ok=True)
-    out_path = CUTOUTS_DIR / f"{slug}.png"
+    # Pose 2 lands at <slug>-2.png. build_masks.py keys dims/masks off the
+    # bare filename stem, so it picks the flight variant up with no change,
+    # and cutout.php serves it for ?pose=2.
+    out_slug = f"{slug}-2" if pose == 2 else slug
+    out_path = CUTOUTS_DIR / f"{out_slug}.png"
     out_path.write_bytes(out_bytes)
-    return {"slug": slug, "path": str(out_path.relative_to(REPO)), "bytes": len(out_bytes)}
+    return {"slug": out_slug, "pose": pose,
+            "path": str(out_path.relative_to(REPO)), "bytes": len(out_bytes)}
 
 
 @app.post("/api/rebuild")
