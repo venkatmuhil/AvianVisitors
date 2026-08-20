@@ -37,6 +37,18 @@ not a bug. One that `styleFor()` can return *will* blank a species. Only the
 latter fails the run; the former is reported as a note. `field` is currently
 in that harmless state, and the check is what keeps it there.
 
+**4. False taxonomy.** A few family issues hardcode their own family name in
+the artwork — `raptor` prints `ACCIPITRIDAE`. That is correct for the family
+it is assigned to and wrong for everyone else, so such a design must never
+enter the unknown-genus fallback pool. A wrong stamp is worse than a plain
+one, and nothing about it looks broken.
+
+Note that pool membership is probed *independently* of `GROUP_STYLE`. A design
+can be both family-assigned and pooled — `flock`, `geo`, `mono`, `kieler`,
+`linescreen` and `opart` all are. An earlier cut of this script reported the
+first match only, so it skipped every family-assigned design, which is exactly
+the set check 4 exists for; it passed with `raptor` pooled.
+
 The script discovers its file list from `index.html`'s own `<script>`/`<link>`
 tags, so it cannot drift out of sync with what the page actually loads.
 
