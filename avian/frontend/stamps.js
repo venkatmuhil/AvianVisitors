@@ -2365,7 +2365,13 @@ document.documentElement.setAttribute('data-stamps-stage', 'fx-ready');
     'Hawks':'raptor',
     'Warblers & Vireos':'field'
   };
-  var ORDERED_STYLES = ['field','flock','dither','geo','mono','bundespost','zurichpink',
+  /* 'field' is deliberately absent. Upstream retired the Field Guide design as a
+     family style - every GROUP_STYLE entry that pointed at it is reassigned by a
+     stamp batch - but left it in this fallback pool while its .fld-* CSS stopped
+     shipping. An unknown genus that hashed onto it therefore drew an unstyled
+     face: the cutout laid out at its natural size, overflowed the 188px plate
+     and was clipped away, leaving blank paper. Re-add it only with its CSS. */
+  var ORDERED_STYLES = ['flock','dither','geo','mono','bundespost','zurichpink',
     'mexico','kieler','linescreen','terraplana','opart','nzplate','editorial','minimal'];
 
   function groupFor(sci) {
@@ -2684,8 +2690,19 @@ document.documentElement.setAttribute('data-stamps-stage', 'fx-ready');
       .replace(/\{\{MONO_NAME_SIZE\}\}/g, monoNameSize)
       .replace(/\{\{WAX_ROTATE\}\}/g, waxRotate)
       .replace(/\{\{TRIENNALE_NAME\}\}/g, triennaleName(commonName))
-      .replace(/\{\{PROJECT_STACK\}\}/g, stackProject('AvianVisitors'))
-      .replace(/\{\{PROJECT\}\}/g, 'AvianVisitors');
+      .replace(/\{\{PROJECT_STACK\}\}/g, stackProject('Karwar Birdie'))
+      .replace(/\{\{PROJECT\}\}/g, 'Karwar Birdie')
+      /* Local carry - this station issues under its own name. Upstream also
+         bakes its wordmark straight into ~20 template strings across five
+         spellings, which {{PROJECT}} never reaches; rewriting each one in
+         place would conflict on every merge, so the rename happens here
+         instead - the single point every template's HTML passes through.
+         Keep these four lines together when resolving a merge. */
+      .replace(/Avian<br>Visitors/g, 'Karwar<br>Birdie')
+      .replace(/AVIAN \u00b7 VISITORS \u00b7 AVIAN \u00b7 VISITORS \u00b7/g,
+        'KARWAR \u00b7 BIRDIE \u00b7 KARWAR \u00b7 BIRDIE \u00b7')
+      .replace(/AVIAN ?VISITORS/g, 'KARWAR BIRDIE')
+      .replace(/Avian ?Visitors/g, 'Karwar Birdie');
     var perf = (t.perf === 'pearl' || t.perf === 'flat' || t.perf === 'saw') ? t.perf : 'scallop';
     var fringe = fringeGeometry(t.id, t.ar);
     var placeholderAttr = placeholderArt ? ' data-placeholder-art="true"' : '';
