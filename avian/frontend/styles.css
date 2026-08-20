@@ -1361,7 +1361,7 @@ body.postcard-open { overflow: hidden; }
   background-color: var(--card-stock);
   background-image:
     linear-gradient(var(--card-stock-wash), var(--card-stock-wash)),
-    url('./assets/stamp/paper-texture-grey.png');
+    url('./assets/stamp/paper-texture-grey.webp');
   background-position: 0 0, center;
   background-size: auto, 680px 510px;
   background-repeat: repeat;
@@ -1427,7 +1427,7 @@ body.postcard-open { overflow: hidden; }
   background-image:
     radial-gradient(circle at 48% 43%, var(--card-halo), transparent 56%),
     linear-gradient(var(--card-panel-wash), var(--card-panel-wash)),
-    url('./assets/stamp/paper-texture-grey.png'),
+    url('./assets/stamp/paper-texture-grey.webp'),
     linear-gradient(145deg,
       color-mix(in srgb, var(--card-panel) 94%, var(--card-stock) 6%),
       var(--card-panel) 62%,
@@ -1556,7 +1556,7 @@ body.postcard-open { overflow: hidden; }
   background-color: var(--card-panel);
   background-image:
     linear-gradient(var(--card-panel-wash), var(--card-panel-wash)),
-    url('./assets/stamp/paper-texture-grey.png');
+    url('./assets/stamp/paper-texture-grey.webp');
   background-position: 0 0, center;
   background-size: auto, 680px 510px;
   background-repeat: repeat;
@@ -1645,7 +1645,7 @@ body.postcard-open { overflow: hidden; }
   background-color: var(--card-panel);
   background-image:
     linear-gradient(var(--card-panel-wash), var(--card-panel-wash)),
-    url('./assets/stamp/paper-texture-grey.png');
+    url('./assets/stamp/paper-texture-grey.webp');
   background-position: 0 0, center;
   background-size: auto, 680px 510px;
   background-repeat: repeat;
@@ -3390,7 +3390,8 @@ body.av-local #dd-items  { display: block; }
    ./fonts/... path resolves through the production webroot link. */
 @font-face {
   font-family: 'Hand';
-  src: url('./fonts/Caveat.ttf') format('truetype');
+  src: url('./fonts/Caveat.woff2') format('woff2'),
+       url('./fonts/Caveat.ttf') format('truetype');
   font-weight: 400 700;
   font-display: swap;
 }

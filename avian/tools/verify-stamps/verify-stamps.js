@@ -65,7 +65,9 @@ function assetsFromIndex() {
     while ((m = re.exec(html))) out.push(m[1]);
     return out;
   };
-  const js = grab(/<script src="\.\/((?:stamps|stamp-batch-[a-z]+)\.js)\?/g);
+  // Tolerate attributes between <script and src= (the bundles carry defer),
+  // so adding one does not read as "the stamp system vanished".
+  const js = grab(/<script\b[^>]*?\ssrc="\.\/((?:stamps|stamp-batch-[a-z]+)\.js)\?/g);
   const css = grab(/<link rel="stylesheet" href="\.\/((?:stamps|stamp-batch-[a-z]+)\.css)\?/g);
   return { js, css, html };
 }

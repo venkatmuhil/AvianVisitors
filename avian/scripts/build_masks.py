@@ -47,8 +47,11 @@ MASK_MAX = 93   # long side of the stored silhouette
 ALPHA_ON = 127  # opaque above this -> silhouette bit set
 
 
-def build_tables(dirs: list[Path], only=None):
-    """Return (dims, masks) dicts keyed by slug, in sorted order.
+SLUG_RE = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*")
+
+
+def iter_source_pngs(dirs: list[Path], only=None):
+    """Yield (slug, path) for each bundled PNG, highest-priority dir first.
 
     Dirs are processed in priority order: once a slug has been seen,
     later dirs are skipped for that slug (so a bundled illustration
@@ -57,36 +60,47 @@ def build_tables(dirs: list[Path], only=None):
     `only` (a set of slugs) restricts the scan for incremental --add runs.
     The filter is applied per-dir, before the seen-check, so an --add of a
     slug that exists in both dirs still resolves by the same priority.
+
+    build_webp.py consumes this too, so the mask tables and the .webp set
+    the frontend loads are guaranteed to cover exactly the same slugs -
+    the invariant apt.js relies on to pick a static URL without probing.
     """
-    from PIL import Image
-    dims, masks = {}, {}
     seen = set()
-    for illus_dir in dirs:
-        pngs = sorted(p for p in illus_dir.glob("*.png")
-                      if re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", p.stem))
+    for src_dir in dirs:
+        pngs = sorted(p for p in src_dir.glob("*.png") if SLUG_RE.fullmatch(p.stem))
         if only is not None:
             pngs = [p for p in pngs if p.stem in only]
         for p in pngs:
-            slug = p.stem
-            if slug in seen:
+            if p.stem in seen:
                 continue
-            seen.add(slug)
-            im = Image.open(p).convert("RGBA")
-            w, h = im.size
-            scale = DIM_MAX / max(w, h)
-            dims[slug] = [round(w * scale), round(h * scale)]
+            seen.add(p.stem)
+            yield p.stem, p
 
-            ms = MASK_MAX / max(w, h)
-            mw, mh = max(1, round(w * ms)), max(1, round(h * ms))
-            alpha = im.getchannel("A").resize((mw, mh), Image.LANCZOS)
-            px = alpha.load()
-            bits = bytearray((mw * mh + 7) // 8)
-            for y in range(mh):
-                for x in range(mw):
-                    if px[x, y] > ALPHA_ON:
-                        i = y * mw + x
-                        bits[i >> 3] |= 1 << (7 - (i & 7))
-            masks[slug] = {"w": mw, "h": mh, "bits": base64.b64encode(bytes(bits)).decode()}
+
+def build_tables(dirs: list[Path], only=None):
+    """Return (dims, masks) dicts keyed by slug, in sorted order.
+
+    Slug matching and dir priority live in iter_source_pngs above.
+    """
+    from PIL import Image
+    dims, masks = {}, {}
+    for slug, p in iter_source_pngs(dirs, only):
+        im = Image.open(p).convert("RGBA")
+        w, h = im.size
+        scale = DIM_MAX / max(w, h)
+        dims[slug] = [round(w * scale), round(h * scale)]
+
+        ms = MASK_MAX / max(w, h)
+        mw, mh = max(1, round(w * ms)), max(1, round(h * ms))
+        alpha = im.getchannel("A").resize((mw, mh), Image.LANCZOS)
+        px = alpha.load()
+        bits = bytearray((mw * mh + 7) // 8)
+        for y in range(mh):
+            for x in range(mw):
+                if px[x, y] > ALPHA_ON:
+                    i = y * mw + x
+                    bits[i >> 3] |= 1 << (7 - (i & 7))
+        masks[slug] = {"w": mw, "h": mh, "bits": base64.b64encode(bytes(bits)).decode()}
     return dims, masks
 
 

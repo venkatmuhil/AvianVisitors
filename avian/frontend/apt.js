@@ -409,7 +409,11 @@
   // masks.json at load. They live in their own files (one key per line) so a
   // species-add is a clean diff and two contributors' additions don't collide,
   // instead of rewriting one ~800KB line and conflicting on every merge.
-  var DIMS = {}, MASKS = {}, tablesReady = false;
+  // tablesFailed distinguishes "dims.json is still in flight" from "it is
+  // never coming". The Atlas needs that difference: it waits for the real
+  // tables rather than drawing art it would have to re-fetch, but it must
+  // still render if the fetch failed outright.
+  var DIMS = {}, MASKS = {}, tablesReady = false, tablesFailed = false;
   // Species drawn during this session. The atlas re-renders straight after a
   // generate and cutout.php sets a day of cache, so the fresh render needs its
   // own stamp to get past whatever the earlier 404 left behind.
@@ -437,6 +441,11 @@
       // Leave tablesReady false so renderCollage keeps waiting rather than
       // packing with no silhouettes. The empty-nest state still renders.
       if (window.console) console.error('collage: dims/masks failed to load', e);
+      // Release the Atlas's wait. Without the tables every species resolves
+      // through cutout.php, which is exactly the pre-WebP behaviour - degraded,
+      // but a rendered sheet beats a blank one.
+      tablesFailed = true;
+      try { if (DATA.lifelist) renderAtlas(false); } catch (e2) { }
       return false;
     });
   }
@@ -453,8 +462,36 @@
     return base + '&v=' + (version || SKETCH_VERSION);
   }
 
+  // Bundled art is served as a static WebP that Caddy hands over directly:
+  // /avian/assets/webp/<slug>.webp, written by avian/scripts/build_webp.py.
+  // Two reasons that path exists rather than everything going through
+  // cutout.php: a .php URL is never edge-cached by a CDN, so every visitor
+  // re-pulled the whole set off the Pi, and the WebP is ~10x smaller than the
+  // PNG cutout.php streams.
+  //
+  // build_webp.py writes exactly the slugs dims.json carries and asserts it
+  // before exiting, so DIMS *is* the availability test and no probe is needed.
+  // It has to be decided here, up front, because the src reaches four
+  // consumers in stamps.js and only <img> carries an error hook - the
+  // --src:url() CSS masks, the canvas data-src and the SVG <image href> all
+  // fail to blank paper with no console error and no broken-image icon.
+  //
+  // Anything DIMS does not cover has no bundled art at all and still resolves
+  // through cutout.php, which owns the Wikipedia + rembg just-in-time path.
+  function artSrc(sci, pose, commonName) {
+    var n = +pose || 1;
+    var key = slugify(sci) + (n > 1 ? '-' + n : '');
+    if (tablesReady && DIMS[key]) {
+      // No &com= here. It only ever meant something to cutout.php's generate
+      // path, and minting it on some callers but not others gave the same bird
+      // two URLs - which cost a second full download of every shared species.
+      return './avian/assets/webp/' + key + '.webp?v=' + IMG_VERSION;
+    }
+    return defaultCutoutSrc(sci, n, IMG_VERSION, commonName);
+  }
+
   function collageImageSrc(sci, pose, commonName) {
-    return defaultCutoutSrc(sci, pose, IMG_VERSION, commonName);
+    return artSrc(sci, pose, commonName);
   }
 
   // Tunables - Galliformes-poster-inspired. Raster-mask nesting.
@@ -2586,8 +2623,8 @@
   function liRow(yr, label, ct, sci) {
     var attr = sci ? ' data-sci="' + sci.replace(/"/g, '&quot;') + '"' : '';
     var thumb = sci
-      ? '<span class="thumb"><img loading="lazy" decoding="async" src="./avian/api/cutout.php?sci='
-        + encodeURIComponent(sci) + '&v=' + SKETCH_VERSION + '" alt=""></span>'
+      ? '<span class="thumb"><img loading="lazy" decoding="async" src="'
+        + artSrc(sci, 1) + '" alt=""></span>'
       : '<span class="thumb"></span>';
     return '<li' + attr + '>' + thumb + '<span class="yr">' + yr + '</span><span>' + label + '</span><span class="ct">' + (ct == null ? '-' : ct) + '</span></li>';
   }
@@ -2781,7 +2818,7 @@
       var centerPct = (i + 0.5) / C * 100;
       var n = +s.n || 0;
       var bottomPct = (n / maxN) * SPAN * 100;   // square height = quantity
-      var thumbSrc = './avian/api/cutout.php?sci=' + encodeURIComponent(s.sci) + '&v=' + SKETCH_VERSION;
+      var thumbSrc = artSrc(s.sci, 1, s.com);
       cols += ''
         + '<div class="stats-tl-col" data-sci="' + s.sci + '" style="left:' + centerPct.toFixed(3) + '%;width:' + colW.toFixed(2) + 'px">'
         +   '<div class="stats-tl-square" style="bottom:' + bottomPct.toFixed(1) + '%;width:' + sq.toFixed(1) + 'px;height:' + sq.toFixed(1) + 'px">'
@@ -4431,6 +4468,12 @@
   }
 
   function renderAtlas(animate) {
+    // Hold the first sheet until dims.json lands. artSrc can only pick the
+    // static WebP once DIMS exists, and the lifelist API reliably beats
+    // masks.json (1.4MB) to the finish - drawing now would emit a full set of
+    // cutout.php URLs and then re-fetch every one of them as WebP a moment
+    // later. loadTables() re-invokes this on success and on failure alike.
+    if (!tablesReady && !tablesFailed) return;
     var grid = document.getElementById('atlasGrid');
     if (!grid) return;
     var priorRects = atlasRects(grid);
@@ -4518,9 +4561,7 @@
       var win = winBySci[s.sci] || 0;
       var firstMs = Date.parse((s.first_seen || '').replace(' ', 'T'));
       var isLifer = !isAllWindow && !isNaN(firstMs) && firstMs >= windowStartMs;
-      var sketchSrc = './avian/api/cutout.php?sci=' + encodeURIComponent(s.sci) +
-        (s.com ? '&com=' + encodeURIComponent(s.com) : '') +
-        '&v=' + SKETCH_VERSION;
+      var sketchSrc = artSrc(s.sci, 1, s.com);
       var audioSrc = './avian/api/recording.php?sci=' + encodeURIComponent(s.sci);
       // The "all time" window makes the windowed count identical to the
       // all-time count - collapse to a single stat rather than print the
@@ -6039,16 +6080,12 @@
   }
 
   function sketchSrc(sci, pose) {
-    // Look up the common name from the lifelist so the worker's JIT
-    // Gemini prompt is right for a never-pre-rendered species.
+    // The common name only matters on the cutout.php branch, where it feeds
+    // the worker's JIT Gemini prompt for a never-pre-rendered species; artSrc
+    // drops it for bundled art so the URL stays identical across callers.
     var sp = ((DATA.lifelist && DATA.lifelist.species) || [])
       .find(function (s) { return s.sci === sci; });
-    var com = sp ? (sp.com || '') : '';
-    var base = './avian/api/cutout.php?sci=' + encodeURIComponent(sci) +
-      (com ? '&com=' + encodeURIComponent(com) : '') +
-      '&v=' + SKETCH_VERSION;
-    var n = +pose || 1;
-    return n > 1 ? base + '&pose=' + n : base;
+    return artSrc(sci, pose, sp ? (sp.com || '') : '');
   }
   // ---- On-demand generation (atlas modal) ----
   // The generate button appears only for species with no illustration

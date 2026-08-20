@@ -81,7 +81,7 @@
   pointer-events:none;
   background:
     linear-gradient(102deg,transparent 0 36%,rgba(255,255,255,.055) 47%,transparent 57%),
-    url('./assets/stamp/paper-texture-grey.png') center/cover no-repeat;
+    url('./assets/stamp/paper-texture-grey.webp') center/cover no-repeat;
   filter:grayscale(1) contrast(1.2);
   mix-blend-mode:multiply;
   opacity:.17;
@@ -96,7 +96,7 @@
   --ps:11.2px;
   padding:0;
   background:
-    url('./assets/stamp/paper-texture-grey.png') center/cover no-repeat,
+    url('./assets/stamp/paper-texture-grey.webp') center/cover no-repeat,
     #f0e4cb;
   background-blend-mode:soft-light,normal;
 }
@@ -180,7 +180,7 @@
   background:
     radial-gradient(circle at 23% 19%,rgba(255,255,255,.12),transparent 24%),
     radial-gradient(circle at 81% 71%,rgba(135,98,31,.08),transparent 28%),
-    url('./assets/stamp/paper-texture-grey.png') center/cover no-repeat,
+    url('./assets/stamp/paper-texture-grey.webp') center/cover no-repeat,
     url('./grain.png') center/170px repeat;
   filter:grayscale(1) contrast(1.22);
   mix-blend-mode:multiply;

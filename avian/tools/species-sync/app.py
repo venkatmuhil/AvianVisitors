@@ -283,6 +283,17 @@ def api_rebuild():
     if result.returncode != 0:
         raise HTTPException(500, f"build_masks.py failed:\n{result.stderr}")
 
+    # apt.js treats a dims.json entry as proof that a static .webp exists and
+    # links to it without probing, so the WebP set has to be rebuilt in the same
+    # breath as the masks. A slug registered without one draws as blank paper in
+    # the CSS-mask stamp templates, silently.
+    result = subprocess.run(
+        [sys.executable, str(SCRIPTS_DIR / "build_webp.py")],
+        cwd=SCRIPTS_DIR, capture_output=True, text=True,
+    )
+    if result.returncode != 0:
+        raise HTTPException(500, f"build_webp.py failed:\n{result.stderr}")
+
     src = APT_JS.read_text()
 
     def bump(m: re.Match) -> str:

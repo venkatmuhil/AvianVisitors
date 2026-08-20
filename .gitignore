@@ -79,3 +79,8 @@ avian/assets/_legacy/
 # to whatever hardware happened to produce them.
 tflite_runtime-*.whl
 requirements_custom.txt
+
+# WebP twins of the bundled bird art, written by avian/scripts/build_webp.py.
+# Regenerated from the committed PNGs on each Pi, so committing them would add
+# ~110MB of derived bytes and a merge conflict per re-rendered species.
+avian/assets/webp/

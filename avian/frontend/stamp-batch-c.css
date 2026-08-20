@@ -85,7 +85,7 @@
   /* One continuous photographed surface crosses stock, type and plate. Soft
      light uses its luminance as a material mask, gently modulating the inks
      beneath instead of laying a pale photograph over the white stock. */
-  background-image:url('./assets/stamp/rough-concrete-cc0.png');
+  background-image:url('./assets/stamp/rough-concrete-cc0.webp');
   background-size:cover;
   background-position:50% 50%;
   background-repeat:no-repeat;
@@ -101,7 +101,7 @@
 .stamp:has(.tpl-triennale){
   --stamp-paper:#e7e0cf;
   background-color:#e7e0cf;
-  background-image:linear-gradient(rgba(231,224,207,.9),rgba(231,224,207,.9)),url('./assets/stamp/paper-texture-grey.png');
+  background-image:linear-gradient(rgba(231,224,207,.9),rgba(231,224,207,.9)),url('./assets/stamp/paper-texture-grey.webp');
   background-size:auto,430px 560px;
   background-position:center;
   background-blend-mode:normal,multiply;
@@ -202,7 +202,7 @@
 .tpl-triennale .ti-texture{
   background-image:
     repeating-linear-gradient(13deg,rgba(23,26,24,.08) 0,rgba(23,26,24,.08) .42px,transparent .42px,transparent 2.9px),
-    url('./assets/stamp/paper-texture-grey.png');
+    url('./assets/stamp/paper-texture-grey.webp');
   background-size:auto,430px 560px;
   background-position:center;
   background-repeat:no-repeat;
@@ -227,7 +227,7 @@
   z-index:40;
   inset:0;
   pointer-events:none;
-  background-image:repeating-linear-gradient(11.8deg,rgba(51,57,53,.13) 0 .25px,transparent .25px 2.65px),repeating-linear-gradient(13.6deg,rgba(51,57,53,.075) 0 .2px,transparent .2px 3.08px),url('./assets/stamp/paper-texture-grey.png'),url('./grain.png');
+  background-image:repeating-linear-gradient(11.8deg,rgba(51,57,53,.13) 0 .25px,transparent .25px 2.65px),repeating-linear-gradient(13.6deg,rgba(51,57,53,.075) 0 .2px,transparent .2px 3.08px),url('./assets/stamp/paper-texture-grey.webp'),url('./grain.png');
   background-size:auto,auto,430px 560px,116px 116px;
   background-position:.35px -.2px,-.4px .55px,center,13px 7px;
   background-repeat:repeat,repeat,repeat,repeat;

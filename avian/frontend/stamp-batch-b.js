@@ -15,7 +15,7 @@
     html: [
       '<div class="face tpl-thrush-flora" style="--face:#f5f6f3">',
         '<div class="tf-specimen">',
-          '<canvas class="fxc tf-bird-plate" data-fx="inkStamp" data-src="{{SRC}}" data-paper="./assets/stamp/paper-texture-grey.png" data-opt=\'{"fit":"bird","pad":0.008,"scale":0.95,"offsetX":-0.028,"offsetY":0.006,"ink":"#343938","lift":0.038,"contrast":1.28}\' aria-label="{{NAME}}"></canvas>',
+          '<canvas class="fxc tf-bird-plate" data-fx="inkStamp" data-src="{{SRC}}" data-paper="./assets/stamp/paper-texture-grey.webp" data-opt=\'{"fit":"bird","pad":0.008,"scale":0.95,"offsetX":-0.028,"offsetY":0.006,"ink":"#343938","lift":0.038,"contrast":1.28}\' aria-label="{{NAME}}"></canvas>',
         '</div>',
         '<aside class="tf-rail">',
           '<div class="tf-value">',

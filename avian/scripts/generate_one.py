@@ -196,6 +196,15 @@ def main() -> int:
             r = subprocess.run([sys.executable, str(HERE / "build_masks.py"), "--add", *slugs])
             if r.returncode != 0:
                 raise RuntimeError("build_masks --add failed")
+            # The frontend reads a dims.json entry as "a static .webp exists for
+            # this slug" and points <img>/CSS-mask/SVG straight at it without
+            # probing, so the two must be written together. Registering a mask
+            # without its WebP would draw the card as blank paper - no console
+            # error, no broken-image icon.
+            write_state(running=True, sci=sci, com=com, step="webp")
+            r = subprocess.run([sys.executable, str(HERE / "build_webp.py"), "--add", *slugs])
+            if r.returncode != 0:
+                raise RuntimeError("build_webp --add failed")
     except Exception as e:
         write_state(running=False, sci=sci, com=com, ok=False, error=str(e))
         print(f"error: {e}", file=sys.stderr)
