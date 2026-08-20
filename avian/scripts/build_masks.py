@@ -47,12 +47,16 @@ MASK_MAX = 93   # long side of the stored silhouette
 ALPHA_ON = 127  # opaque above this -> silhouette bit set
 
 
-def build_tables(dirs: list[Path]):
+def build_tables(dirs: list[Path], only=None):
     """Return (dims, masks) dicts keyed by slug, in sorted order.
 
     Dirs are processed in priority order: once a slug has been seen,
     later dirs are skipped for that slug (so a bundled illustration
     always wins over a photo cutout of the same species).
+
+    `only` (a set of slugs) restricts the scan for incremental --add runs.
+    The filter is applied per-dir, before the seen-check, so an --add of a
+    slug that exists in both dirs still resolves by the same priority.
     """
     from PIL import Image
     dims, masks = {}, {}
@@ -60,6 +64,8 @@ def build_tables(dirs: list[Path]):
     for illus_dir in dirs:
         pngs = sorted(p for p in illus_dir.glob("*.png")
                       if re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", p.stem))
+        if only is not None:
+            pngs = [p for p in pngs if p.stem in only]
         for p in pngs:
             slug = p.stem
             if slug in seen:
@@ -111,10 +117,14 @@ def main() -> int:
                     help="Dir to write dims.json + masks.json (default: avian/frontend/)")
     ap.add_argument("--check", action="store_true",
                     help="Report counts against the current dims.json, don't write")
+    ap.add_argument("--add", nargs="+", metavar="SLUG",
+                    help="Update only these slugs, merged into the existing "
+                         "dims.json/masks.json (the on-Pi generate path - a "
+                         "full rescan of hundreds of cutouts is slow there)")
     args = ap.parse_args()
 
     dirs = [args.illustrations] if args.no_cutouts else [args.illustrations, args.cutouts]
-    dims, masks = build_tables(dirs)
+    dims, masks = build_tables(dirs, only=set(args.add) if args.add else None)
     illus_slugs = {p.stem for p in args.illustrations.glob("*.png")}
     perched = sum(1 for k in dims if k in illus_slugs and not k.endswith("-2"))
     flight = sum(1 for k in dims if k in illus_slugs and k.endswith("-2"))
@@ -127,6 +137,21 @@ def main() -> int:
 
     dims_path = args.frontend / "dims.json"
     masks_path = args.frontend / "masks.json"
+
+    if args.add:
+        missing = sorted(set(args.add) - set(dims))
+        if missing:
+            print(f"error: no cutout for: {', '.join(missing)}", file=sys.stderr)
+            return 1
+        cur_d = json.loads(dims_path.read_text()) if dims_path.exists() else {}
+        cur_m = json.loads(masks_path.read_text()) if masks_path.exists() else {}
+        cur_d.update(dims)
+        cur_m.update(masks)
+        dims_path.write_text(dump_perkey(cur_d))
+        masks_path.write_text(dump_perkey(cur_m))
+        print(f"merged {len(dims)} slug(s) into {dims_path.name} + {masks_path.name} "
+              f"({len(cur_d)} entries total)")
+        return 0
 
     if args.check:
         cur = json.loads(dims_path.read_text()) if dims_path.exists() else {}
