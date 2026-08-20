@@ -20,6 +20,13 @@
         check is deliberately GENERIC, so it catches the next one too,
         not just 'field'.
 
+     3. FALSE TAXONOMY - a few family issues hardcode their own family
+        name in the artwork ('raptor' prints ACCIPITRIDAE). Those are
+        correct for the family they are assigned to and WRONG for anyone
+        else, so they must never enter the unknown-genus fallback pool.
+        A wrong stamp is worse than a plain one, and nothing about it
+        looks broken.
+
    Usage:  node avian/tools/verify-stamps/verify-stamps.js [--verbose]
    Exit 0 = clean, 1 = regression. Safe to wire into CI or a deploy gate.
    ============================================================ */
@@ -192,14 +199,24 @@ for (const id of ids) {
 /* ---- CHECK 3: is anything styleless actually reachable? ----
    A styleless template that nothing can select is dead weight, not a
    bug. One that styleFor() can return WILL blank a species. */
+/* ORDERED_STYLES is module-private, so pool membership is probed through
+   styleFor(): an unknown genus hashes across exactly that pool. This MUST
+   stay independent of GROUP_STYLE - a design can be both family-assigned
+   and pooled (flock, geo, mono, kieler, linescreen and opart all are), and
+   an earlier version of this script returned 'GROUP_STYLE' first and so
+   never checked those, which is precisely the set CHECK 4 cares about. */
+const POOL = (() => {
+  const seen = new Set();
+  for (let i = 0; i < 6000; i++) seen.add(S.styleFor('Zzgenus zz' + i).id);
+  return seen;
+})();
+const assigned = new Set(Object.values(S.GROUP_STYLE || {}));
+
 function reachable(id) {
-  if (Object.values(S.GROUP_STYLE || {}).includes(id)) return 'GROUP_STYLE';
-  // ORDERED_STYLES is module-private, so probe styleFor() instead: an
-  // unknown genus hashes across exactly that pool.
-  for (let i = 0; i < 4000; i++) {
-    if (S.styleFor('Zzgenus zz' + i).id === id) return 'unknown-genus fallback pool';
-  }
-  return null;
+  const via = [];
+  if (assigned.has(id)) via.push('GROUP_STYLE');
+  if (POOL.has(id)) via.push('unknown-genus fallback pool');
+  return via.length ? via.join(' + ') : null;
 }
 
 for (const { id, classes } of styleless) {
@@ -209,6 +226,22 @@ for (const { id, classes } of styleless) {
   else note(`${detail} - unreachable, so harmless; leave it out of the selection pools.`);
 }
 if (!styleless.length) note(`stylesheets: all ${ids.length} templates have CSS of their own`);
+
+/* ---- CHECK 4: nothing in the generic pool asserts a family ----
+   Family-assigned designs may double as fallbacks - flock, geo, mono,
+   kieler, linescreen and opart all do - but only if their artwork makes
+   no taxonomic claim of its own. */
+const TAXON = /\b[A-Z]{4,}(?:IDAE|INAE|IFORMES)\b/;
+const pooled = ids.filter(id => POOL.has(id));
+let lying = 0;
+for (const id of pooled) {
+  const m = (rendered[id] || '').replace(/<[^>]*>/g, ' ').match(TAXON);
+  if (m) {
+    lying++;
+    fail(`template '${id}' hardcodes the taxon '${m[0]}' but sits in the unknown-genus fallback pool - it will print a false family on unrelated species.`);
+  }
+}
+if (!lying) note(`taxonomy: none of the ${pooled.length} pooled designs hardcode a family name`);
 
 report();
 

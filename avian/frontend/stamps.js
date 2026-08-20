@@ -2372,7 +2372,25 @@ document.documentElement.setAttribute('data-stamps-stage', 'fx-ready');
      face: the cutout laid out at its natural size, overflowed the 188px plate
      and was clipped away, leaving blank paper. Re-add it only with its CSS. */
   var ORDERED_STYLES = ['flock','dither','geo','mono','bundespost','zurichpink',
-    'mexico','kieler','linescreen','terraplana','opart','nzplate','editorial','minimal'];
+    'mexico','kieler','linescreen','terraplana','opart','nzplate','editorial','minimal',
+    /* v1.0.0's batch designs. Upstream added them as family issues but never
+       widened this pool, so on a station whose genera are mostly outside the
+       North-American GENUS_GROUP map - here, 51 of 60 species - they were
+       unreachable and the album drew from the original 14 only. A design being
+       family-assigned is no bar to also serving as a fallback: flock, geo, mono,
+       kieler, linescreen and opart already do both. */
+    'dove-flight','finch-editorial','flyRose','mimicLine','ribbonbird',
+    'sparrowGuide','squaretone','thrushFlora','triennale','waxBotanical'];
+  /* Deliberately NOT in the pool:
+       raptor  - hardcodes <b>ACCIPITRIDAE</b>, so on any non-hawk it prints a
+                 false taxonomic claim. Reachable via GROUP_STYLE.Hawks only.
+       sparrowFine / sparrowRosette / sparrowDirectional
+               - halftone proofs of sparrowGuide, kept from upstream's family
+                 review ("Proofing is complete: the family review returns to one
+                 production stamp"). sparrowRosette is parameter-identical to
+                 sparrowGuide, and none of the three have fringeGeometry entries,
+                 so they would also perforate wrong.
+       field   - styleless; see the note above. */
 
   function groupFor(sci) {
     var genus = String(sci || '').split(' ')[0];
