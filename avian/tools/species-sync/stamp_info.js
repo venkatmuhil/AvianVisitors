@@ -208,9 +208,13 @@ if (sci) {
     // How the default was reached, so the CMS can say "this is its family
     // issue" rather than implying every bird was individually chosen.
     via: groupStyle && S.TPL[groupStyle] ? 'family' : 'hash',
-    // markup() forces the flight plate for Columbidae regardless of which
-    // design is picked, so this is a property of the bird, not the design.
-    family_forces_flight: family === 'Doves & Pigeons'
+    // markup() forces the flight plate for 'Doves & Pigeons' regardless of
+    // which design is picked, and a group whose OWN design uses {{SRC_ALT}}
+    // is equally flight-composed - derive both so the warning survives any
+    // future flight-composed group instead of being pinned to one literal.
+    family_forces_flight: family === 'Doves & Pigeons' ||
+      !!(groupStyle && S.TPL[groupStyle] &&
+         String(S.TPL[groupStyle].html || '').indexOf('{{SRC_ALT}}') >= 0)
   };
 }
 

@@ -1,0 +1,4935 @@
+{
+  "Acanthis": {
+    "familyCom": "",
+    "familySci": "Fringillidae",
+    "flight": [
+      "acanthis-flammea"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "acanthis-flammea"
+    ]
+  },
+  "Accipiter": {
+    "familyCom": "",
+    "familySci": "Accipitridae",
+    "flight": [
+      "accipiter-cooperii",
+      "accipiter-gentilis",
+      "accipiter-striatus"
+    ],
+    "order": "Accipitriformes",
+    "species": [
+      "accipiter-cooperii",
+      "accipiter-gentilis",
+      "accipiter-nisus",
+      "accipiter-striatus"
+    ]
+  },
+  "Acridotheres": {
+    "familyCom": "",
+    "familySci": "Sturnidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "acridotheres-fuscus",
+      "acridotheres-ginginianus",
+      "acridotheres-tristis"
+    ]
+  },
+  "Acritillas": {
+    "familyCom": "",
+    "familySci": "Pycnonotidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "acritillas-indica"
+    ]
+  },
+  "Acrocephalus": {
+    "familyCom": "",
+    "familySci": "Acrocephalidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "acrocephalus-agricola",
+      "acrocephalus-dumetorum",
+      "acrocephalus-stentoreus"
+    ]
+  },
+  "Actitis": {
+    "familyCom": "",
+    "familySci": "Scolopacidae",
+    "flight": [
+      "actitis-macularius"
+    ],
+    "order": "Charadriiformes",
+    "species": [
+      "actitis-hypoleucos",
+      "actitis-macularius"
+    ]
+  },
+  "Aechmophorus": {
+    "familyCom": "",
+    "familySci": "Podicipedidae",
+    "flight": [
+      "aechmophorus-occidentalis"
+    ],
+    "order": "Podicipediformes",
+    "species": [
+      "aechmophorus-occidentalis"
+    ]
+  },
+  "Aegithina": {
+    "familyCom": "",
+    "familySci": "Aegithinidae",
+    "flight": [
+      "aegithina-tiphia"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "aegithina-nigrolutea",
+      "aegithina-tiphia"
+    ]
+  },
+  "Aegolius": {
+    "familyCom": "",
+    "familySci": "Strigidae",
+    "flight": [
+      "aegolius-acadicus"
+    ],
+    "order": "Strigiformes",
+    "species": [
+      "aegolius-acadicus"
+    ]
+  },
+  "Aegypius": {
+    "familyCom": "",
+    "familySci": "Accipitridae",
+    "flight": [],
+    "order": "Accipitriformes",
+    "species": [
+      "aegypius-monachus"
+    ]
+  },
+  "Aerodramus": {
+    "familyCom": "",
+    "familySci": "Apodidae",
+    "flight": [],
+    "order": "Apodiformes",
+    "species": [
+      "aerodramus-unicolor"
+    ]
+  },
+  "Aeronautes": {
+    "familyCom": "",
+    "familySci": "Apodidae",
+    "flight": [
+      "aeronautes-saxatalis"
+    ],
+    "order": "Apodiformes",
+    "species": [
+      "aeronautes-saxatalis"
+    ]
+  },
+  "Aethopyga": {
+    "familyCom": "",
+    "familySci": "Nectariniidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "aethopyga-vigorsii"
+    ]
+  },
+  "Agapornis": {
+    "familyCom": "",
+    "familySci": "Psittacidae",
+    "flight": [],
+    "order": "Psittaciformes",
+    "species": [
+      "agapornis-roseicollis"
+    ]
+  },
+  "Agelaius": {
+    "familyCom": "",
+    "familySci": "Icteridae",
+    "flight": [
+      "agelaius-phoeniceus"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "agelaius-phoeniceus"
+    ]
+  },
+  "Aix": {
+    "familyCom": "",
+    "familySci": "Anatidae",
+    "flight": [
+      "aix-sponsa"
+    ],
+    "order": "Anseriformes",
+    "species": [
+      "aix-sponsa"
+    ]
+  },
+  "Alauda": {
+    "familyCom": "",
+    "familySci": "Alaudidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "alauda-gulgula"
+    ]
+  },
+  "Alcedo": {
+    "familyCom": "",
+    "familySci": "Alcedinidae",
+    "flight": [],
+    "order": "Coraciiformes",
+    "species": [
+      "alcedo-atthis",
+      "alcedo-meninting"
+    ]
+  },
+  "Alcippe": {
+    "familyCom": "",
+    "familySci": "Pellorneidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "alcippe-poioicephala"
+    ]
+  },
+  "Amandava": {
+    "familyCom": "",
+    "familySci": "Estrildidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "amandava-amandava"
+    ]
+  },
+  "Amaurornis": {
+    "familyCom": "",
+    "familySci": "Rallidae",
+    "flight": [],
+    "order": "Gruiformes",
+    "species": [
+      "amaurornis-phoenicurus"
+    ]
+  },
+  "Amazona": {
+    "familyCom": "",
+    "familySci": "Psittacidae",
+    "flight": [],
+    "order": "Psittaciformes",
+    "species": [
+      "amazona-amazonica"
+    ]
+  },
+  "Ammodramus": {
+    "familyCom": "",
+    "familySci": "Passerellidae",
+    "flight": [
+      "ammodramus-savannarum"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "ammodramus-savannarum"
+    ]
+  },
+  "Ammomanes": {
+    "familyCom": "",
+    "familySci": "Alaudidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "ammomanes-phoenicura"
+    ]
+  },
+  "Amphispiza": {
+    "familyCom": "",
+    "familySci": "Passerellidae",
+    "flight": [
+      "amphispiza-bilineata"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "amphispiza-bilineata"
+    ]
+  },
+  "Anarhynchus": {
+    "familyCom": "",
+    "familySci": "Charadriidae",
+    "flight": [],
+    "order": "Charadriiformes",
+    "species": [
+      "anarhynchus-alexandrinus",
+      "anarhynchus-atrifrons",
+      "anarhynchus-leschenaultii"
+    ]
+  },
+  "Anas": {
+    "familyCom": "",
+    "familySci": "Anatidae",
+    "flight": [
+      "anas-acuta",
+      "anas-crecca",
+      "anas-platyrhynchos",
+      "anas-rubripes"
+    ],
+    "order": "Anseriformes",
+    "species": [
+      "anas-acuta",
+      "anas-crecca",
+      "anas-platyrhynchos",
+      "anas-poecilorhyncha",
+      "anas-rubripes"
+    ]
+  },
+  "Anastomus": {
+    "familyCom": "",
+    "familySci": "Ciconiidae",
+    "flight": [],
+    "order": "Ciconiiformes",
+    "species": [
+      "anastomus-oscitans"
+    ]
+  },
+  "Anhinga": {
+    "familyCom": "",
+    "familySci": "Anhingidae",
+    "flight": [],
+    "order": "Suliformes",
+    "species": [
+      "anhinga-melanogaster"
+    ]
+  },
+  "Anous": {
+    "familyCom": "",
+    "familySci": "Laridae",
+    "flight": [],
+    "order": "Charadriiformes",
+    "species": [
+      "anous-stolidus",
+      "anous-tenuirostris"
+    ]
+  },
+  "Anser": {
+    "familyCom": "",
+    "familySci": "Anatidae",
+    "flight": [
+      "anser-albifrons"
+    ],
+    "order": "Anseriformes",
+    "species": [
+      "anser-albifrons",
+      "anser-anser",
+      "anser-erythropus",
+      "anser-indicus"
+    ]
+  },
+  "Anthracoceros": {
+    "familyCom": "",
+    "familySci": "Bucerotidae",
+    "flight": [
+      "anthracoceros-coronatus"
+    ],
+    "order": "Bucerotiformes",
+    "species": [
+      "anthracoceros-coronatus"
+    ]
+  },
+  "Anthus": {
+    "familyCom": "",
+    "familySci": "Motacillidae",
+    "flight": [
+      "anthus-rubescens"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "anthus-campestris",
+      "anthus-cervinus",
+      "anthus-godlewskii",
+      "anthus-hodgsoni",
+      "anthus-richardi",
+      "anthus-rubescens",
+      "anthus-rufulus",
+      "anthus-similis",
+      "anthus-trivialis"
+    ]
+  },
+  "Antigone": {
+    "familyCom": "",
+    "familySci": "Gruidae",
+    "flight": [
+      "antigone-canadensis"
+    ],
+    "order": "Gruiformes",
+    "species": [
+      "antigone-canadensis"
+    ]
+  },
+  "Antrostomus": {
+    "familyCom": "",
+    "familySci": "Caprimulgidae",
+    "flight": [
+      "antrostomus-vociferus"
+    ],
+    "order": "Caprimulgiformes",
+    "species": [
+      "antrostomus-vociferus"
+    ]
+  },
+  "Aphelocoma": {
+    "familyCom": "",
+    "familySci": "Corvidae",
+    "flight": [
+      "aphelocoma-californica",
+      "aphelocoma-woodhouseii"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "aphelocoma-californica",
+      "aphelocoma-woodhouseii"
+    ]
+  },
+  "Apus": {
+    "familyCom": "",
+    "familySci": "Apodidae",
+    "flight": [],
+    "order": "Apodiformes",
+    "species": [
+      "apus-affinis",
+      "apus-apus",
+      "apus-leuconyx"
+    ]
+  },
+  "Aquila": {
+    "familyCom": "",
+    "familySci": "Accipitridae",
+    "flight": [
+      "aquila-chrysaetos"
+    ],
+    "order": "Accipitriformes",
+    "species": [
+      "aquila-chrysaetos",
+      "aquila-fasciata",
+      "aquila-heliaca",
+      "aquila-nipalensis",
+      "aquila-rapax"
+    ]
+  },
+  "Arachnothera": {
+    "familyCom": "",
+    "familySci": "Nectariniidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "arachnothera-longirostra"
+    ]
+  },
+  "Archilochus": {
+    "familyCom": "",
+    "familySci": "Trochilidae",
+    "flight": [
+      "archilochus-alexandri",
+      "archilochus-colubris"
+    ],
+    "order": "Apodiformes",
+    "species": [
+      "archilochus-alexandri",
+      "archilochus-colubris"
+    ]
+  },
+  "Ardea": {
+    "familyCom": "",
+    "familySci": "Ardeidae",
+    "flight": [
+      "ardea-alba",
+      "ardea-herodias"
+    ],
+    "order": "Pelecaniformes",
+    "species": [
+      "ardea-alba",
+      "ardea-cinerea",
+      "ardea-coromanda",
+      "ardea-herodias",
+      "ardea-intermedia",
+      "ardea-purpurea"
+    ]
+  },
+  "Ardenna": {
+    "familyCom": "",
+    "familySci": "Procellariidae",
+    "flight": [],
+    "order": "Procellariiformes",
+    "species": [
+      "ardenna-carneipes",
+      "ardenna-grisea"
+    ]
+  },
+  "Ardeola": {
+    "familyCom": "",
+    "familySci": "Ardeidae",
+    "flight": [],
+    "order": "Pelecaniformes",
+    "species": [
+      "ardeola-grayii"
+    ]
+  },
+  "Ardeotis": {
+    "familyCom": "",
+    "familySci": "Otididae",
+    "flight": [],
+    "order": "Otidiformes",
+    "species": [
+      "ardeotis-nigriceps"
+    ]
+  },
+  "Arenaria": {
+    "familyCom": "",
+    "familySci": "Scolopacidae",
+    "flight": [],
+    "order": "Charadriiformes",
+    "species": [
+      "arenaria-interpres"
+    ]
+  },
+  "Argya": {
+    "familyCom": "",
+    "familySci": "Leiothrichidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "argya-affinis",
+      "argya-caudata",
+      "argya-malcolmi",
+      "argya-striata",
+      "argya-subrufa"
+    ]
+  },
+  "Artamus": {
+    "familyCom": "",
+    "familySci": "Artamidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "artamus-fuscus"
+    ]
+  },
+  "Artemisiospiza": {
+    "familyCom": "",
+    "familySci": "Passerellidae",
+    "flight": [
+      "artemisiospiza-belli"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "artemisiospiza-belli"
+    ]
+  },
+  "Arundinax": {
+    "familyCom": "",
+    "familySci": "Acrocephalidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "arundinax-aedon"
+    ]
+  },
+  "Asio": {
+    "familyCom": "",
+    "familySci": "Strigidae",
+    "flight": [
+      "asio-flammeus",
+      "asio-otus"
+    ],
+    "order": "Strigiformes",
+    "species": [
+      "asio-flammeus",
+      "asio-otus"
+    ]
+  },
+  "Athene": {
+    "familyCom": "",
+    "familySci": "Strigidae",
+    "flight": [
+      "athene-cunicularia"
+    ],
+    "order": "Strigiformes",
+    "species": [
+      "athene-brama",
+      "athene-cunicularia"
+    ]
+  },
+  "Aviceda": {
+    "familyCom": "",
+    "familySci": "Accipitridae",
+    "flight": [],
+    "order": "Accipitriformes",
+    "species": [
+      "aviceda-jerdoni",
+      "aviceda-leuphotes"
+    ]
+  },
+  "Aythya": {
+    "familyCom": "",
+    "familySci": "Anatidae",
+    "flight": [
+      "aythya-affinis",
+      "aythya-americana",
+      "aythya-collaris",
+      "aythya-valisineria"
+    ],
+    "order": "Anseriformes",
+    "species": [
+      "aythya-affinis",
+      "aythya-americana",
+      "aythya-collaris",
+      "aythya-ferina",
+      "aythya-fuligula",
+      "aythya-nyroca",
+      "aythya-valisineria"
+    ]
+  },
+  "Baeolophus": {
+    "familyCom": "",
+    "familySci": "Paridae",
+    "flight": [
+      "baeolophus-bicolor",
+      "baeolophus-inornatus"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "baeolophus-bicolor",
+      "baeolophus-inornatus"
+    ]
+  },
+  "Batrachostomus": {
+    "familyCom": "",
+    "familySci": "Podargidae",
+    "flight": [],
+    "order": "Caprimulgiformes",
+    "species": [
+      "batrachostomus-moniliger"
+    ]
+  },
+  "Bombycilla": {
+    "familyCom": "",
+    "familySci": "Bombycillidae",
+    "flight": [
+      "bombycilla-cedrorum",
+      "bombycilla-garrulus"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "bombycilla-cedrorum",
+      "bombycilla-garrulus"
+    ]
+  },
+  "Bonasa": {
+    "familyCom": "",
+    "familySci": "Phasianidae",
+    "flight": [
+      "bonasa-umbellus"
+    ],
+    "order": "Galliformes",
+    "species": [
+      "bonasa-umbellus"
+    ]
+  },
+  "Botaurus": {
+    "familyCom": "",
+    "familySci": "Ardeidae",
+    "flight": [
+      "botaurus-lentiginosus"
+    ],
+    "order": "Pelecaniformes",
+    "species": [
+      "botaurus-cinnamomeus",
+      "botaurus-flavicollis",
+      "botaurus-lentiginosus",
+      "botaurus-minutus",
+      "botaurus-sinensis",
+      "botaurus-stellaris"
+    ]
+  },
+  "Branta": {
+    "familyCom": "",
+    "familySci": "Anatidae",
+    "flight": [
+      "branta-canadensis"
+    ],
+    "order": "Anseriformes",
+    "species": [
+      "branta-canadensis"
+    ]
+  },
+  "Bubo": {
+    "familyCom": "",
+    "familySci": "Strigidae",
+    "flight": [
+      "bubo-virginianus"
+    ],
+    "order": "Strigiformes",
+    "species": [
+      "bubo-bengalensis",
+      "bubo-virginianus"
+    ]
+  },
+  "Bubulcus": {
+    "familyCom": "",
+    "familySci": "Ardeidae",
+    "flight": [
+      "bubulcus-ibis"
+    ],
+    "order": "Pelecaniformes",
+    "species": [
+      "bubulcus-ibis"
+    ]
+  },
+  "Bucephala": {
+    "familyCom": "",
+    "familySci": "Anatidae",
+    "flight": [
+      "bucephala-albeola",
+      "bucephala-clangula"
+    ],
+    "order": "Anseriformes",
+    "species": [
+      "bucephala-albeola",
+      "bucephala-clangula"
+    ]
+  },
+  "Buceros": {
+    "familyCom": "",
+    "familySci": "Bucerotidae",
+    "flight": [],
+    "order": "Bucerotiformes",
+    "species": [
+      "buceros-bicornis"
+    ]
+  },
+  "Bulweria": {
+    "familyCom": "",
+    "familySci": "Procellariidae",
+    "flight": [],
+    "order": "Procellariiformes",
+    "species": [
+      "bulweria-fallax"
+    ]
+  },
+  "Burhinus": {
+    "familyCom": "",
+    "familySci": "Burhinidae",
+    "flight": [],
+    "order": "Charadriiformes",
+    "species": [
+      "burhinus-indicus"
+    ]
+  },
+  "Butastur": {
+    "familyCom": "",
+    "familySci": "Accipitridae",
+    "flight": [],
+    "order": "Accipitriformes",
+    "species": [
+      "butastur-teesa"
+    ]
+  },
+  "Buteo": {
+    "familyCom": "",
+    "familySci": "Accipitridae",
+    "flight": [
+      "buteo-jamaicensis",
+      "buteo-lagopus",
+      "buteo-lineatus",
+      "buteo-platypterus",
+      "buteo-regalis",
+      "buteo-swainsoni"
+    ],
+    "order": "Accipitriformes",
+    "species": [
+      "buteo-buteo",
+      "buteo-jamaicensis",
+      "buteo-lagopus",
+      "buteo-lineatus",
+      "buteo-platypterus",
+      "buteo-refectus",
+      "buteo-regalis",
+      "buteo-rufinus",
+      "buteo-swainsoni"
+    ]
+  },
+  "Butorides": {
+    "familyCom": "",
+    "familySci": "Ardeidae",
+    "flight": [
+      "butorides-virescens"
+    ],
+    "order": "Pelecaniformes",
+    "species": [
+      "butorides-atricapilla",
+      "butorides-virescens"
+    ]
+  },
+  "Cacomantis": {
+    "familyCom": "",
+    "familySci": "Cuculidae",
+    "flight": [],
+    "order": "Cuculiformes",
+    "species": [
+      "cacomantis-merulinus",
+      "cacomantis-passerinus",
+      "cacomantis-sonneratii"
+    ]
+  },
+  "Cairina": {
+    "familyCom": "",
+    "familySci": "Anatidae",
+    "flight": [],
+    "order": "Anseriformes",
+    "species": [
+      "cairina-moschata"
+    ]
+  },
+  "Calamospiza": {
+    "familyCom": "",
+    "familySci": "Passerellidae",
+    "flight": [
+      "calamospiza-melanocorys"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "calamospiza-melanocorys"
+    ]
+  },
+  "Calandrella": {
+    "familyCom": "",
+    "familySci": "Alaudidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "calandrella-dukhunensis"
+    ]
+  },
+  "Calidris": {
+    "familyCom": "",
+    "familySci": "Scolopacidae",
+    "flight": [
+      "calidris-alba",
+      "calidris-alpina",
+      "calidris-minutilla",
+      "calidris-pusilla"
+    ],
+    "order": "Charadriiformes",
+    "species": [
+      "calidris-alba",
+      "calidris-alpina",
+      "calidris-falcinellus",
+      "calidris-ferruginea",
+      "calidris-minuta",
+      "calidris-minutilla",
+      "calidris-pugnax",
+      "calidris-pusilla",
+      "calidris-subminuta",
+      "calidris-temminckii",
+      "calidris-tenuirostris"
+    ]
+  },
+  "Calliope": {
+    "familyCom": "",
+    "familySci": "Muscicapidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "calliope-calliope",
+      "calliope-pectoralis"
+    ]
+  },
+  "Callipepla": {
+    "familyCom": "",
+    "familySci": "Odontophoridae",
+    "flight": [
+      "callipepla-californica"
+    ],
+    "order": "Galliformes",
+    "species": [
+      "callipepla-californica"
+    ]
+  },
+  "Calonectris": {
+    "familyCom": "",
+    "familySci": "Procellariidae",
+    "flight": [],
+    "order": "Procellariiformes",
+    "species": [
+      "calonectris-leucomelas"
+    ]
+  },
+  "Calothorax": {
+    "familyCom": "",
+    "familySci": "Trochilidae",
+    "flight": [
+      "calothorax-lucifer"
+    ],
+    "order": "Apodiformes",
+    "species": [
+      "calothorax-lucifer"
+    ]
+  },
+  "Calypte": {
+    "familyCom": "",
+    "familySci": "Trochilidae",
+    "flight": [
+      "calypte-anna",
+      "calypte-costae"
+    ],
+    "order": "Apodiformes",
+    "species": [
+      "calypte-anna",
+      "calypte-costae"
+    ]
+  },
+  "Caprimulgus": {
+    "familyCom": "",
+    "familySci": "Caprimulgidae",
+    "flight": [],
+    "order": "Caprimulgiformes",
+    "species": [
+      "caprimulgus-affinis",
+      "caprimulgus-asiaticus",
+      "caprimulgus-atripennis",
+      "caprimulgus-europaeus",
+      "caprimulgus-indicus",
+      "caprimulgus-mahrattensis"
+    ]
+  },
+  "Cardellina": {
+    "familyCom": "",
+    "familySci": "Parulidae",
+    "flight": [
+      "cardellina-canadensis",
+      "cardellina-pusilla",
+      "cardellina-rubrifrons"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "cardellina-canadensis",
+      "cardellina-pusilla",
+      "cardellina-rubrifrons"
+    ]
+  },
+  "Cardinalis": {
+    "familyCom": "",
+    "familySci": "Cardinalidae",
+    "flight": [
+      "cardinalis-cardinalis"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "cardinalis-cardinalis"
+    ]
+  },
+  "Carpodacus": {
+    "familyCom": "",
+    "familySci": "Fringillidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "carpodacus-erythrinus"
+    ]
+  },
+  "Carpospiza": {
+    "familyCom": "",
+    "familySci": "Passeridae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "carpospiza-brachydactyla"
+    ]
+  },
+  "Cathartes": {
+    "familyCom": "",
+    "familySci": "Cathartidae",
+    "flight": [
+      "cathartes-aura"
+    ],
+    "order": "Accipitriformes",
+    "species": [
+      "cathartes-aura"
+    ]
+  },
+  "Catharus": {
+    "familyCom": "",
+    "familySci": "Turdidae",
+    "flight": [
+      "catharus-fuscescens",
+      "catharus-guttatus",
+      "catharus-ustulatus"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "catharus-fuscescens",
+      "catharus-guttatus",
+      "catharus-ustulatus"
+    ]
+  },
+  "Catherpes": {
+    "familyCom": "",
+    "familySci": "Troglodytidae",
+    "flight": [
+      "catherpes-mexicanus"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "catherpes-mexicanus"
+    ]
+  },
+  "Cecropis": {
+    "familyCom": "",
+    "familySci": "Hirundinidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "cecropis-daurica"
+    ]
+  },
+  "Centropus": {
+    "familyCom": "",
+    "familySci": "Cuculidae",
+    "flight": [],
+    "order": "Cuculiformes",
+    "species": [
+      "centropus-bengalensis",
+      "centropus-sinensis"
+    ]
+  },
+  "Certhia": {
+    "familyCom": "",
+    "familySci": "Certhiidae",
+    "flight": [
+      "certhia-americana"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "certhia-americana"
+    ]
+  },
+  "Ceryle": {
+    "familyCom": "",
+    "familySci": "Alcedinidae",
+    "flight": [],
+    "order": "Coraciiformes",
+    "species": [
+      "ceryle-rudis"
+    ]
+  },
+  "Ceyx": {
+    "familyCom": "",
+    "familySci": "Alcedinidae",
+    "flight": [],
+    "order": "Coraciiformes",
+    "species": [
+      "ceyx-erithaca"
+    ]
+  },
+  "Chaetura": {
+    "familyCom": "",
+    "familySci": "Apodidae",
+    "flight": [
+      "chaetura-pelagica",
+      "chaetura-vauxi"
+    ],
+    "order": "Apodiformes",
+    "species": [
+      "chaetura-pelagica",
+      "chaetura-vauxi"
+    ]
+  },
+  "Chalcophaps": {
+    "familyCom": "",
+    "familySci": "Columbidae",
+    "flight": [],
+    "order": "Columbiformes",
+    "species": [
+      "chalcophaps-indica"
+    ]
+  },
+  "Charadrius": {
+    "familyCom": "",
+    "familySci": "Charadriidae",
+    "flight": [
+      "charadrius-melodus",
+      "charadrius-semipalmatus",
+      "charadrius-vociferus"
+    ],
+    "order": "Charadriiformes",
+    "species": [
+      "charadrius-dubius",
+      "charadrius-hiaticula",
+      "charadrius-melodus",
+      "charadrius-semipalmatus",
+      "charadrius-vociferus"
+    ]
+  },
+  "Chlidonias": {
+    "familyCom": "",
+    "familySci": "Laridae",
+    "flight": [
+      "chlidonias-niger"
+    ],
+    "order": "Charadriiformes",
+    "species": [
+      "chlidonias-hybrida",
+      "chlidonias-leucopterus",
+      "chlidonias-niger"
+    ]
+  },
+  "Chloropsis": {
+    "familyCom": "",
+    "familySci": "Chloropseidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "chloropsis-aurifrons",
+      "chloropsis-jerdoni"
+    ]
+  },
+  "Chondestes": {
+    "familyCom": "",
+    "familySci": "Passerellidae",
+    "flight": [
+      "chondestes-grammacus"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "chondestes-grammacus"
+    ]
+  },
+  "Chordeiles": {
+    "familyCom": "",
+    "familySci": "Caprimulgidae",
+    "flight": [
+      "chordeiles-minor"
+    ],
+    "order": "Caprimulgiformes",
+    "species": [
+      "chordeiles-minor"
+    ]
+  },
+  "Chroicocephalus": {
+    "familyCom": "",
+    "familySci": "Laridae",
+    "flight": [
+      "chroicocephalus-philadelphia"
+    ],
+    "order": "Charadriiformes",
+    "species": [
+      "chroicocephalus-brunnicephalus",
+      "chroicocephalus-genei",
+      "chroicocephalus-philadelphia",
+      "chroicocephalus-ridibundus"
+    ]
+  },
+  "Chrysocolaptes": {
+    "familyCom": "",
+    "familySci": "Picidae",
+    "flight": [],
+    "order": "Piciformes",
+    "species": [
+      "chrysocolaptes-festivus",
+      "chrysocolaptes-socialis"
+    ]
+  },
+  "Chrysomma": {
+    "familyCom": "",
+    "familySci": "Sylviidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "chrysomma-sinense"
+    ]
+  },
+  "Ciconia": {
+    "familyCom": "",
+    "familySci": "Ciconiidae",
+    "flight": [],
+    "order": "Ciconiiformes",
+    "species": [
+      "ciconia-ciconia",
+      "ciconia-episcopus",
+      "ciconia-nigra"
+    ]
+  },
+  "Cinclus": {
+    "familyCom": "",
+    "familySci": "Cinclidae",
+    "flight": [
+      "cinclus-mexicanus"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "cinclus-mexicanus"
+    ]
+  },
+  "Cinnyris": {
+    "familyCom": "",
+    "familySci": "Nectariniidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "cinnyris-asiaticus",
+      "cinnyris-lotenius"
+    ]
+  },
+  "Circaetus": {
+    "familyCom": "",
+    "familySci": "Accipitridae",
+    "flight": [],
+    "order": "Accipitriformes",
+    "species": [
+      "circaetus-gallicus"
+    ]
+  },
+  "Circus": {
+    "familyCom": "",
+    "familySci": "Accipitridae",
+    "flight": [
+      "circus-hudsonius"
+    ],
+    "order": "Accipitriformes",
+    "species": [
+      "circus-aeruginosus",
+      "circus-cyaneus",
+      "circus-hudsonius",
+      "circus-macrourus",
+      "circus-melanoleucos",
+      "circus-pygargus",
+      "circus-spilonotus"
+    ]
+  },
+  "Cisticola": {
+    "familyCom": "",
+    "familySci": "Cisticolidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "cisticola-exilis",
+      "cisticola-juncidis"
+    ]
+  },
+  "Cistothorus": {
+    "familyCom": "",
+    "familySci": "Troglodytidae",
+    "flight": [
+      "cistothorus-palustris"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "cistothorus-palustris"
+    ]
+  },
+  "Clamator": {
+    "familyCom": "",
+    "familySci": "Cuculidae",
+    "flight": [],
+    "order": "Cuculiformes",
+    "species": [
+      "clamator-coromandus",
+      "clamator-jacobinus"
+    ]
+  },
+  "Clanga": {
+    "familyCom": "",
+    "familySci": "Accipitridae",
+    "flight": [],
+    "order": "Accipitriformes",
+    "species": [
+      "clanga-clanga",
+      "clanga-hastata"
+    ]
+  },
+  "Coccothraustes": {
+    "familyCom": "",
+    "familySci": "Fringillidae",
+    "flight": [
+      "coccothraustes-vespertinus"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "coccothraustes-vespertinus"
+    ]
+  },
+  "Coccyzus": {
+    "familyCom": "",
+    "familySci": "Cuculidae",
+    "flight": [
+      "coccyzus-americanus",
+      "coccyzus-erythropthalmus"
+    ],
+    "order": "Cuculiformes",
+    "species": [
+      "coccyzus-americanus",
+      "coccyzus-erythropthalmus"
+    ]
+  },
+  "Colaptes": {
+    "familyCom": "",
+    "familySci": "Picidae",
+    "flight": [
+      "colaptes-auratus"
+    ],
+    "order": "Piciformes",
+    "species": [
+      "colaptes-auratus"
+    ]
+  },
+  "Columba": {
+    "familyCom": "",
+    "familySci": "Columbidae",
+    "flight": [
+      "columba-livia"
+    ],
+    "order": "Columbiformes",
+    "species": [
+      "columba-elphinstonii",
+      "columba-livia",
+      "columba-palumbus"
+    ]
+  },
+  "Columbina": {
+    "familyCom": "",
+    "familySci": "Columbidae",
+    "flight": [
+      "columbina-passerina"
+    ],
+    "order": "Columbiformes",
+    "species": [
+      "columbina-passerina"
+    ]
+  },
+  "Contopus": {
+    "familyCom": "",
+    "familySci": "Tyrannidae",
+    "flight": [
+      "contopus-cooperi",
+      "contopus-sordidulus",
+      "contopus-virens"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "contopus-cooperi",
+      "contopus-sordidulus",
+      "contopus-virens"
+    ]
+  },
+  "Copsychus": {
+    "familyCom": "",
+    "familySci": "Muscicapidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "copsychus-fulicatus",
+      "copsychus-malabaricus",
+      "copsychus-saularis"
+    ]
+  },
+  "Coracias": {
+    "familyCom": "",
+    "familySci": "Coraciidae",
+    "flight": [],
+    "order": "Coraciiformes",
+    "species": [
+      "coracias-benghalensis",
+      "coracias-garrulus"
+    ]
+  },
+  "Coracina": {
+    "familyCom": "",
+    "familySci": "Campephagidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "coracina-macei"
+    ]
+  },
+  "Coragyps": {
+    "familyCom": "",
+    "familySci": "Cathartidae",
+    "flight": [
+      "coragyps-atratus"
+    ],
+    "order": "Accipitriformes",
+    "species": [
+      "coragyps-atratus"
+    ]
+  },
+  "Corthylio": {
+    "familyCom": "",
+    "familySci": "Regulidae",
+    "flight": [
+      "corthylio-calendula"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "corthylio-calendula"
+    ]
+  },
+  "Corvus": {
+    "familyCom": "",
+    "familySci": "Corvidae",
+    "flight": [
+      "corvus-brachyrhynchos",
+      "corvus-corax"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "corvus-brachyrhynchos",
+      "corvus-corax",
+      "corvus-macrorhynchos",
+      "corvus-splendens"
+    ]
+  },
+  "Coturnix": {
+    "familyCom": "",
+    "familySci": "Phasianidae",
+    "flight": [],
+    "order": "Galliformes",
+    "species": [
+      "coturnix-coromandelica",
+      "coturnix-coturnix"
+    ]
+  },
+  "Cuculus": {
+    "familyCom": "",
+    "familySci": "Cuculidae",
+    "flight": [],
+    "order": "Cuculiformes",
+    "species": [
+      "cuculus-canorus",
+      "cuculus-micropterus",
+      "cuculus-poliocephalus"
+    ]
+  },
+  "Culicicapa": {
+    "familyCom": "",
+    "familySci": "Stenostiridae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "culicicapa-ceylonensis"
+    ]
+  },
+  "Curruca": {
+    "familyCom": "",
+    "familySci": "Sylviidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "curruca-crassirostris",
+      "curruca-curruca"
+    ]
+  },
+  "Cursorius": {
+    "familyCom": "",
+    "familySci": "Glareolidae",
+    "flight": [],
+    "order": "Charadriiformes",
+    "species": [
+      "cursorius-coromandelicus"
+    ]
+  },
+  "Cyanocitta": {
+    "familyCom": "",
+    "familySci": "Corvidae",
+    "flight": [
+      "cyanocitta-cristata",
+      "cyanocitta-stelleri"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "cyanocitta-cristata",
+      "cyanocitta-stelleri"
+    ]
+  },
+  "Cyanoptila": {
+    "familyCom": "",
+    "familySci": "Muscicapidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "cyanoptila-cyanomelana"
+    ]
+  },
+  "Cygnus": {
+    "familyCom": "",
+    "familySci": "Anatidae",
+    "flight": [
+      "cygnus-buccinator",
+      "cygnus-olor"
+    ],
+    "order": "Anseriformes",
+    "species": [
+      "cygnus-buccinator",
+      "cygnus-olor"
+    ]
+  },
+  "Cyornis": {
+    "familyCom": "",
+    "familySci": "Muscicapidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "cyornis-pallidipes",
+      "cyornis-rubeculoides",
+      "cyornis-tickelliae"
+    ]
+  },
+  "Cypseloides": {
+    "familyCom": "",
+    "familySci": "Apodidae",
+    "flight": [
+      "cypseloides-niger"
+    ],
+    "order": "Apodiformes",
+    "species": [
+      "cypseloides-niger"
+    ]
+  },
+  "Cypsiurus": {
+    "familyCom": "",
+    "familySci": "Apodidae",
+    "flight": [
+      "cypsiurus-balasiensis"
+    ],
+    "order": "Apodiformes",
+    "species": [
+      "cypsiurus-balasiensis"
+    ]
+  },
+  "Delichon": {
+    "familyCom": "",
+    "familySci": "Hirundinidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "delichon-dasypus",
+      "delichon-urbicum"
+    ]
+  },
+  "Dendrocitta": {
+    "familyCom": "",
+    "familySci": "Corvidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "dendrocitta-leucogastra",
+      "dendrocitta-vagabunda"
+    ]
+  },
+  "Dendrocygna": {
+    "familyCom": "",
+    "familySci": "Anatidae",
+    "flight": [],
+    "order": "Anseriformes",
+    "species": [
+      "dendrocygna-bicolor",
+      "dendrocygna-javanica"
+    ]
+  },
+  "Dendronanthus": {
+    "familyCom": "",
+    "familySci": "Motacillidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "dendronanthus-indicus"
+    ]
+  },
+  "Dicaeum": {
+    "familyCom": "",
+    "familySci": "Dicaeidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "dicaeum-concolor",
+      "dicaeum-erythrorhynchos"
+    ]
+  },
+  "Dicrurus": {
+    "familyCom": "",
+    "familySci": "Dicruridae",
+    "flight": [
+      "dicrurus-leucophaeus",
+      "dicrurus-macrocercus"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "dicrurus-aeneus",
+      "dicrurus-caerulescens",
+      "dicrurus-hottentottus",
+      "dicrurus-leucophaeus",
+      "dicrurus-macrocercus",
+      "dicrurus-paradiseus"
+    ]
+  },
+  "Dinopium": {
+    "familyCom": "",
+    "familySci": "Picidae",
+    "flight": [],
+    "order": "Piciformes",
+    "species": [
+      "dinopium-benghalense",
+      "dinopium-javanense"
+    ]
+  },
+  "Dolichonyx": {
+    "familyCom": "",
+    "familySci": "Icteridae",
+    "flight": [
+      "dolichonyx-oryzivorus"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "dolichonyx-oryzivorus"
+    ]
+  },
+  "Dromas": {
+    "familyCom": "",
+    "familySci": "Dromadidae",
+    "flight": [],
+    "order": "Charadriiformes",
+    "species": [
+      "dromas-ardeola"
+    ]
+  },
+  "Dryobates": {
+    "familyCom": "",
+    "familySci": "Picidae",
+    "flight": [
+      "dryobates-nuttallii",
+      "dryobates-pubescens",
+      "dryobates-villosus"
+    ],
+    "order": "Piciformes",
+    "species": [
+      "dryobates-nuttallii",
+      "dryobates-pubescens",
+      "dryobates-villosus"
+    ]
+  },
+  "Dryocopus": {
+    "familyCom": "",
+    "familySci": "Picidae",
+    "flight": [
+      "dryocopus-pileatus"
+    ],
+    "order": "Piciformes",
+    "species": [
+      "dryocopus-javensis",
+      "dryocopus-pileatus"
+    ]
+  },
+  "Ducula": {
+    "familyCom": "",
+    "familySci": "Columbidae",
+    "flight": [],
+    "order": "Columbiformes",
+    "species": [
+      "ducula-aenea",
+      "ducula-badia",
+      "ducula-cuprea"
+    ]
+  },
+  "Dumetella": {
+    "familyCom": "",
+    "familySci": "Mimidae",
+    "flight": [
+      "dumetella-carolinensis"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "dumetella-carolinensis"
+    ]
+  },
+  "Dumetia": {
+    "familyCom": "",
+    "familySci": "Timaliidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "dumetia-atriceps",
+      "dumetia-hyperythra"
+    ]
+  },
+  "Egretta": {
+    "familyCom": "",
+    "familySci": "Ardeidae",
+    "flight": [
+      "egretta-caerulea",
+      "egretta-thula"
+    ],
+    "order": "Pelecaniformes",
+    "species": [
+      "egretta-caerulea",
+      "egretta-garzetta",
+      "egretta-gularis",
+      "egretta-thula"
+    ]
+  },
+  "Elanus": {
+    "familyCom": "",
+    "familySci": "Accipitridae",
+    "flight": [
+      "elanus-leucurus"
+    ],
+    "order": "Accipitriformes",
+    "species": [
+      "elanus-caeruleus",
+      "elanus-leucurus"
+    ]
+  },
+  "Emberiza": {
+    "familyCom": "",
+    "familySci": "Emberizidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "emberiza-aureola",
+      "emberiza-bruniceps",
+      "emberiza-buchanani",
+      "emberiza-fucata",
+      "emberiza-hortulana",
+      "emberiza-lathami",
+      "emberiza-melanocephala",
+      "emberiza-pusilla",
+      "emberiza-stewarti",
+      "emberiza-striolata"
+    ]
+  },
+  "Empidonax": {
+    "familyCom": "",
+    "familySci": "Tyrannidae",
+    "flight": [
+      "empidonax-alnorum",
+      "empidonax-difficilis",
+      "empidonax-flaviventris",
+      "empidonax-hammondii",
+      "empidonax-minimus",
+      "empidonax-oberholseri",
+      "empidonax-traillii",
+      "empidonax-wrightii"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "empidonax-alnorum",
+      "empidonax-difficilis",
+      "empidonax-flaviventris",
+      "empidonax-hammondii",
+      "empidonax-minimus",
+      "empidonax-oberholseri",
+      "empidonax-traillii",
+      "empidonax-wrightii"
+    ]
+  },
+  "Eremophila": {
+    "familyCom": "",
+    "familySci": "Alaudidae",
+    "flight": [
+      "eremophila-alpestris"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "eremophila-alpestris"
+    ]
+  },
+  "Eremopterix": {
+    "familyCom": "",
+    "familySci": "Alaudidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "eremopterix-griseus"
+    ]
+  },
+  "Esacus": {
+    "familyCom": "",
+    "familySci": "Burhinidae",
+    "flight": [],
+    "order": "Charadriiformes",
+    "species": [
+      "esacus-recurvirostris"
+    ]
+  },
+  "Eudynamys": {
+    "familyCom": "",
+    "familySci": "Cuculidae",
+    "flight": [],
+    "order": "Cuculiformes",
+    "species": [
+      "eudynamys-scolopaceus"
+    ]
+  },
+  "Eumyias": {
+    "familyCom": "",
+    "familySci": "Muscicapidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "eumyias-albicaudatus",
+      "eumyias-thalassinus"
+    ]
+  },
+  "Euodice": {
+    "familyCom": "",
+    "familySci": "Estrildidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "euodice-malabarica"
+    ]
+  },
+  "Euphagus": {
+    "familyCom": "",
+    "familySci": "Icteridae",
+    "flight": [
+      "euphagus-cyanocephalus"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "euphagus-cyanocephalus"
+    ]
+  },
+  "Eurystomus": {
+    "familyCom": "",
+    "familySci": "Coraciidae",
+    "flight": [],
+    "order": "Coraciiformes",
+    "species": [
+      "eurystomus-orientalis"
+    ]
+  },
+  "Falco": {
+    "familyCom": "",
+    "familySci": "Falconidae",
+    "flight": [
+      "falco-columbarius",
+      "falco-mexicanus",
+      "falco-peregrinus",
+      "falco-sparverius"
+    ],
+    "order": "Falconiformes",
+    "species": [
+      "falco-amurensis",
+      "falco-chicquera",
+      "falco-columbarius",
+      "falco-jugger",
+      "falco-mexicanus",
+      "falco-naumanni",
+      "falco-peregrinus",
+      "falco-sparverius",
+      "falco-subbuteo",
+      "falco-tinnunculus"
+    ]
+  },
+  "Ficedula": {
+    "familyCom": "",
+    "familySci": "Muscicapidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "ficedula-albicilla",
+      "ficedula-nigrorufa",
+      "ficedula-parva",
+      "ficedula-ruficauda",
+      "ficedula-subrubra",
+      "ficedula-superciliaris",
+      "ficedula-zanthopygia"
+    ]
+  },
+  "Francolinus": {
+    "familyCom": "",
+    "familySci": "Phasianidae",
+    "flight": [],
+    "order": "Galliformes",
+    "species": [
+      "francolinus-pictus"
+    ]
+  },
+  "Fregata": {
+    "familyCom": "",
+    "familySci": "Fregatidae",
+    "flight": [],
+    "order": "Suliformes",
+    "species": [
+      "fregata-andrewsi",
+      "fregata-ariel"
+    ]
+  },
+  "Fulica": {
+    "familyCom": "",
+    "familySci": "Rallidae",
+    "flight": [
+      "fulica-americana"
+    ],
+    "order": "Gruiformes",
+    "species": [
+      "fulica-americana",
+      "fulica-atra"
+    ]
+  },
+  "Galerida": {
+    "familyCom": "",
+    "familySci": "Alaudidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "galerida-deva",
+      "galerida-malabarica"
+    ]
+  },
+  "Gallicrex": {
+    "familyCom": "",
+    "familySci": "Rallidae",
+    "flight": [],
+    "order": "Gruiformes",
+    "species": [
+      "gallicrex-cinerea"
+    ]
+  },
+  "Gallinago": {
+    "familyCom": "",
+    "familySci": "Scolopacidae",
+    "flight": [],
+    "order": "Charadriiformes",
+    "species": [
+      "gallinago-gallinago",
+      "gallinago-media",
+      "gallinago-megala",
+      "gallinago-stenura"
+    ]
+  },
+  "Gallinula": {
+    "familyCom": "",
+    "familySci": "Rallidae",
+    "flight": [],
+    "order": "Gruiformes",
+    "species": [
+      "gallinula-chloropus"
+    ]
+  },
+  "Galloperdix": {
+    "familyCom": "",
+    "familySci": "Phasianidae",
+    "flight": [],
+    "order": "Galliformes",
+    "species": [
+      "galloperdix-lunulata",
+      "galloperdix-spadicea"
+    ]
+  },
+  "Gallus": {
+    "familyCom": "",
+    "familySci": "Phasianidae",
+    "flight": [],
+    "order": "Galliformes",
+    "species": [
+      "gallus-sonneratii"
+    ]
+  },
+  "Gavia": {
+    "familyCom": "",
+    "familySci": "Gaviidae",
+    "flight": [
+      "gavia-immer"
+    ],
+    "order": "Gaviiformes",
+    "species": [
+      "gavia-immer"
+    ]
+  },
+  "Gelochelidon": {
+    "familyCom": "",
+    "familySci": "Laridae",
+    "flight": [],
+    "order": "Charadriiformes",
+    "species": [
+      "gelochelidon-nilotica"
+    ]
+  },
+  "Geokichla": {
+    "familyCom": "",
+    "familySci": "Turdidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "geokichla-citrina",
+      "geokichla-wardii"
+    ]
+  },
+  "Geopelia": {
+    "familyCom": "",
+    "familySci": "Columbidae",
+    "flight": [],
+    "order": "Columbiformes",
+    "species": [
+      "geopelia-cuneata"
+    ]
+  },
+  "Geothlypis": {
+    "familyCom": "",
+    "familySci": "Parulidae",
+    "flight": [
+      "geothlypis-philadelphia",
+      "geothlypis-tolmiei",
+      "geothlypis-trichas"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "geothlypis-philadelphia",
+      "geothlypis-tolmiei",
+      "geothlypis-trichas"
+    ]
+  },
+  "Glareola": {
+    "familyCom": "",
+    "familySci": "Glareolidae",
+    "flight": [],
+    "order": "Charadriiformes",
+    "species": [
+      "glareola-lactea",
+      "glareola-maldivarum",
+      "glareola-pratincola"
+    ]
+  },
+  "Glaucidium": {
+    "familyCom": "",
+    "familySci": "Strigidae",
+    "flight": [
+      "glaucidium-gnoma"
+    ],
+    "order": "Strigiformes",
+    "species": [
+      "glaucidium-gnoma",
+      "glaucidium-radiatum"
+    ]
+  },
+  "Gorsachius": {
+    "familyCom": "",
+    "familySci": "Ardeidae",
+    "flight": [],
+    "order": "Pelecaniformes",
+    "species": [
+      "gorsachius-melanolophus"
+    ]
+  },
+  "Gracula": {
+    "familyCom": "",
+    "familySci": "Sturnidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "gracula-indica"
+    ]
+  },
+  "Gracupica": {
+    "familyCom": "",
+    "familySci": "Sturnidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "gracupica-contra"
+    ]
+  },
+  "Grus": {
+    "familyCom": "",
+    "familySci": "Gruidae",
+    "flight": [],
+    "order": "Gruiformes",
+    "species": [
+      "grus-grus",
+      "grus-virgo"
+    ]
+  },
+  "Gymnogyps": {
+    "familyCom": "",
+    "familySci": "Cathartidae",
+    "flight": [
+      "gymnogyps-californianus"
+    ],
+    "order": "Accipitriformes",
+    "species": [
+      "gymnogyps-californianus"
+    ]
+  },
+  "Gymnoris": {
+    "familyCom": "",
+    "familySci": "Passeridae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "gymnoris-xanthocollis"
+    ]
+  },
+  "Gyps": {
+    "familyCom": "",
+    "familySci": "Accipitridae",
+    "flight": [],
+    "order": "Accipitriformes",
+    "species": [
+      "gyps-bengalensis",
+      "gyps-himalayensis",
+      "gyps-indicus"
+    ]
+  },
+  "Haematopus": {
+    "familyCom": "",
+    "familySci": "Haematopodidae",
+    "flight": [],
+    "order": "Charadriiformes",
+    "species": [
+      "haematopus-ostralegus"
+    ]
+  },
+  "Haemorhous": {
+    "familyCom": "",
+    "familySci": "Fringillidae",
+    "flight": [
+      "haemorhous-mexicanus",
+      "haemorhous-purpureus"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "haemorhous-mexicanus",
+      "haemorhous-purpureus"
+    ]
+  },
+  "Halcyon": {
+    "familyCom": "",
+    "familySci": "Alcedinidae",
+    "flight": [
+      "halcyon-smyrnensis"
+    ],
+    "order": "Coraciiformes",
+    "species": [
+      "halcyon-pileata",
+      "halcyon-smyrnensis"
+    ]
+  },
+  "Haliaeetus": {
+    "familyCom": "",
+    "familySci": "Accipitridae",
+    "flight": [
+      "haliaeetus-leucocephalus"
+    ],
+    "order": "Accipitriformes",
+    "species": [
+      "haliaeetus-leucocephalus"
+    ]
+  },
+  "Haliastur": {
+    "familyCom": "",
+    "familySci": "Accipitridae",
+    "flight": [
+      "haliastur-indus"
+    ],
+    "order": "Accipitriformes",
+    "species": [
+      "haliastur-indus"
+    ]
+  },
+  "Harpactes": {
+    "familyCom": "",
+    "familySci": "Trogonidae",
+    "flight": [],
+    "order": "Trogoniformes",
+    "species": [
+      "harpactes-fasciatus"
+    ]
+  },
+  "Helopsaltes": {
+    "familyCom": "",
+    "familySci": "Locustellidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "helopsaltes-certhiola"
+    ]
+  },
+  "Hemicircus": {
+    "familyCom": "",
+    "familySci": "Picidae",
+    "flight": [],
+    "order": "Piciformes",
+    "species": [
+      "hemicircus-canente"
+    ]
+  },
+  "Hemiprocne": {
+    "familyCom": "",
+    "familySci": "Hemiprocnidae",
+    "flight": [],
+    "order": "Apodiformes",
+    "species": [
+      "hemiprocne-coronata"
+    ]
+  },
+  "Hemipus": {
+    "familyCom": "",
+    "familySci": "Tephrodornithidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "hemipus-picatus"
+    ]
+  },
+  "Hieraaetus": {
+    "familyCom": "",
+    "familySci": "Accipitridae",
+    "flight": [],
+    "order": "Accipitriformes",
+    "species": [
+      "hieraaetus-pennatus"
+    ]
+  },
+  "Hierococcyx": {
+    "familyCom": "",
+    "familySci": "Cuculidae",
+    "flight": [],
+    "order": "Cuculiformes",
+    "species": [
+      "hierococcyx-sparverioides",
+      "hierococcyx-varius"
+    ]
+  },
+  "Himantopus": {
+    "familyCom": "",
+    "familySci": "Recurvirostridae",
+    "flight": [
+      "himantopus-mexicanus"
+    ],
+    "order": "Charadriiformes",
+    "species": [
+      "himantopus-himantopus",
+      "himantopus-mexicanus"
+    ]
+  },
+  "Hirundapus": {
+    "familyCom": "",
+    "familySci": "Apodidae",
+    "flight": [],
+    "order": "Apodiformes",
+    "species": [
+      "hirundapus-giganteus"
+    ]
+  },
+  "Hirundo": {
+    "familyCom": "",
+    "familySci": "Hirundinidae",
+    "flight": [
+      "hirundo-rustica"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "hirundo-domicola",
+      "hirundo-rustica",
+      "hirundo-smithii"
+    ]
+  },
+  "Hydrobates": {
+    "familyCom": "",
+    "familySci": "Hydrobatidae",
+    "flight": [],
+    "order": "Procellariiformes",
+    "species": [
+      "hydrobates-monorhis"
+    ]
+  },
+  "Hydrocoloeus": {
+    "familyCom": "",
+    "familySci": "Laridae",
+    "flight": [],
+    "order": "Charadriiformes",
+    "species": [
+      "hydrocoloeus-minutus"
+    ]
+  },
+  "Hydrophasianus": {
+    "familyCom": "",
+    "familySci": "Jacanidae",
+    "flight": [],
+    "order": "Charadriiformes",
+    "species": [
+      "hydrophasianus-chirurgus"
+    ]
+  },
+  "Hydroprogne": {
+    "familyCom": "",
+    "familySci": "Laridae",
+    "flight": [
+      "hydroprogne-caspia"
+    ],
+    "order": "Charadriiformes",
+    "species": [
+      "hydroprogne-caspia"
+    ]
+  },
+  "Hylocichla": {
+    "familyCom": "",
+    "familySci": "Turdidae",
+    "flight": [
+      "hylocichla-mustelina"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "hylocichla-mustelina"
+    ]
+  },
+  "Hypothymis": {
+    "familyCom": "",
+    "familySci": "Monarchidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "hypothymis-azurea"
+    ]
+  },
+  "Hypsipetes": {
+    "familyCom": "",
+    "familySci": "Pycnonotidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "hypsipetes-ganeesa"
+    ]
+  },
+  "Ichthyaetus": {
+    "familyCom": "",
+    "familySci": "Laridae",
+    "flight": [],
+    "order": "Charadriiformes",
+    "species": [
+      "ichthyaetus-hemprichii",
+      "ichthyaetus-ichthyaetus",
+      "ichthyaetus-leucophthalmus"
+    ]
+  },
+  "Icteria": {
+    "familyCom": "",
+    "familySci": "Parulidae",
+    "flight": [
+      "icteria-virens"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "icteria-virens"
+    ]
+  },
+  "Icterus": {
+    "familyCom": "",
+    "familySci": "Icteridae",
+    "flight": [
+      "icterus-bullockii",
+      "icterus-cucullatus",
+      "icterus-galbula",
+      "icterus-parisorum",
+      "icterus-spurius"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "icterus-bullockii",
+      "icterus-cucullatus",
+      "icterus-galbula",
+      "icterus-parisorum",
+      "icterus-spurius"
+    ]
+  },
+  "Icthyophaga": {
+    "familyCom": "",
+    "familySci": "Accipitridae",
+    "flight": [],
+    "order": "Accipitriformes",
+    "species": [
+      "icthyophaga-humilis",
+      "icthyophaga-ichthyaetus",
+      "icthyophaga-leucogaster"
+    ]
+  },
+  "Ictinaetus": {
+    "familyCom": "",
+    "familySci": "Accipitridae",
+    "flight": [],
+    "order": "Accipitriformes",
+    "species": [
+      "ictinaetus-malaiensis"
+    ]
+  },
+  "Iduna": {
+    "familyCom": "",
+    "familySci": "Acrocephalidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "iduna-caligata",
+      "iduna-rama"
+    ]
+  },
+  "Irena": {
+    "familyCom": "",
+    "familySci": "Irenidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "irena-puella"
+    ]
+  },
+  "Ixobrychus": {
+    "familyCom": "",
+    "familySci": "Ardeidae",
+    "flight": [
+      "ixobrychus-exilis"
+    ],
+    "order": "Pelecaniformes",
+    "species": [
+      "ixobrychus-exilis"
+    ]
+  },
+  "Ixoreus": {
+    "familyCom": "",
+    "familySci": "Turdidae",
+    "flight": [
+      "ixoreus-naevius"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "ixoreus-naevius"
+    ]
+  },
+  "Junco": {
+    "familyCom": "",
+    "familySci": "Passerellidae",
+    "flight": [
+      "junco-hyemalis"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "junco-hyemalis"
+    ]
+  },
+  "Jynx": {
+    "familyCom": "",
+    "familySci": "Picidae",
+    "flight": [],
+    "order": "Piciformes",
+    "species": [
+      "jynx-torquilla"
+    ]
+  },
+  "Ketupa": {
+    "familyCom": "",
+    "familySci": "Strigidae",
+    "flight": [],
+    "order": "Strigiformes",
+    "species": [
+      "ketupa-nipalensis",
+      "ketupa-zeylonensis"
+    ]
+  },
+  "Lalage": {
+    "familyCom": "",
+    "familySci": "Campephagidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "lalage-melanoptera",
+      "lalage-melaschistos"
+    ]
+  },
+  "Lanius": {
+    "familyCom": "",
+    "familySci": "Laniidae",
+    "flight": [
+      "lanius-ludovicianus"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "lanius-cristatus",
+      "lanius-excubitor",
+      "lanius-isabellinus",
+      "lanius-ludovicianus",
+      "lanius-schach",
+      "lanius-vittatus"
+    ]
+  },
+  "Larus": {
+    "familyCom": "",
+    "familySci": "Laridae",
+    "flight": [
+      "larus-argentatus",
+      "larus-californicus",
+      "larus-delawarensis",
+      "larus-glaucescens",
+      "larus-heermanni",
+      "larus-marinus",
+      "larus-occidentalis"
+    ],
+    "order": "Charadriiformes",
+    "species": [
+      "larus-argentatus",
+      "larus-californicus",
+      "larus-delawarensis",
+      "larus-fuscus",
+      "larus-glaucescens",
+      "larus-heermanni",
+      "larus-marinus",
+      "larus-occidentalis"
+    ]
+  },
+  "Larvivora": {
+    "familyCom": "",
+    "familySci": "Muscicapidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "larvivora-brunnea"
+    ]
+  },
+  "Leiopicus": {
+    "familyCom": "",
+    "familySci": "Picidae",
+    "flight": [],
+    "order": "Piciformes",
+    "species": [
+      "leiopicus-mahrattensis"
+    ]
+  },
+  "Leiothlypis": {
+    "familyCom": "",
+    "familySci": "Parulidae",
+    "flight": [
+      "leiothlypis-celata",
+      "leiothlypis-lucidae",
+      "leiothlypis-peregrina",
+      "leiothlypis-ruficapilla"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "leiothlypis-celata",
+      "leiothlypis-lucidae",
+      "leiothlypis-peregrina",
+      "leiothlypis-ruficapilla"
+    ]
+  },
+  "Leptocoma": {
+    "familyCom": "",
+    "familySci": "Nectariniidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "leptocoma-minima",
+      "leptocoma-zeylonica"
+    ]
+  },
+  "Leptoptilos": {
+    "familyCom": "",
+    "familySci": "Ciconiidae",
+    "flight": [],
+    "order": "Ciconiiformes",
+    "species": [
+      "leptoptilos-javanicus"
+    ]
+  },
+  "Leucophaeus": {
+    "familyCom": "",
+    "familySci": "Laridae",
+    "flight": [
+      "leucophaeus-atricilla",
+      "leucophaeus-pipixcan"
+    ],
+    "order": "Charadriiformes",
+    "species": [
+      "leucophaeus-atricilla",
+      "leucophaeus-pipixcan"
+    ]
+  },
+  "Leucosticte": {
+    "familyCom": "",
+    "familySci": "Fringillidae",
+    "flight": [
+      "leucosticte-tephrocotis"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "leucosticte-tephrocotis"
+    ]
+  },
+  "Lewinia": {
+    "familyCom": "",
+    "familySci": "Rallidae",
+    "flight": [],
+    "order": "Gruiformes",
+    "species": [
+      "lewinia-striata"
+    ]
+  },
+  "Limosa": {
+    "familyCom": "",
+    "familySci": "Scolopacidae",
+    "flight": [
+      "limosa-fedoa"
+    ],
+    "order": "Charadriiformes",
+    "species": [
+      "limosa-fedoa",
+      "limosa-lapponica",
+      "limosa-limosa"
+    ]
+  },
+  "Locustella": {
+    "familyCom": "",
+    "familySci": "Locustellidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "locustella-naevia"
+    ]
+  },
+  "Lonchura": {
+    "familyCom": "",
+    "familySci": "Estrildidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "lonchura-kelaarti",
+      "lonchura-malacca",
+      "lonchura-punctulata",
+      "lonchura-striata"
+    ]
+  },
+  "Lophodytes": {
+    "familyCom": "",
+    "familySci": "Anatidae",
+    "flight": [
+      "lophodytes-cucullatus"
+    ],
+    "order": "Anseriformes",
+    "species": [
+      "lophodytes-cucullatus"
+    ]
+  },
+  "Lophospiza": {
+    "familyCom": "Hawks, Eagles, and Kites",
+    "familySci": "Accipitridae",
+    "flight": [],
+    "order": "Accipitriformes",
+    "species": [
+      "lophospiza-trivirgata"
+    ]
+  },
+  "Lophotriorchis": {
+    "familyCom": "",
+    "familySci": "Accipitridae",
+    "flight": [],
+    "order": "Accipitriformes",
+    "species": [
+      "lophotriorchis-kienerii"
+    ]
+  },
+  "Loriculus": {
+    "familyCom": "",
+    "familySci": "Psittacidae",
+    "flight": [],
+    "order": "Psittaciformes",
+    "species": [
+      "loriculus-vernalis"
+    ]
+  },
+  "Loxia": {
+    "familyCom": "",
+    "familySci": "Fringillidae",
+    "flight": [
+      "loxia-curvirostra"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "loxia-curvirostra"
+    ]
+  },
+  "Luscinia": {
+    "familyCom": "",
+    "familySci": "Muscicapidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "luscinia-svecica"
+    ]
+  },
+  "Lymnocryptes": {
+    "familyCom": "",
+    "familySci": "Scolopacidae",
+    "flight": [],
+    "order": "Charadriiformes",
+    "species": [
+      "lymnocryptes-minimus"
+    ]
+  },
+  "Machlolophus": {
+    "familyCom": "",
+    "familySci": "Paridae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "machlolophus-aplonotus",
+      "machlolophus-nuchalis"
+    ]
+  },
+  "Mareca": {
+    "familyCom": "",
+    "familySci": "Anatidae",
+    "flight": [
+      "mareca-americana",
+      "mareca-strepera"
+    ],
+    "order": "Anseriformes",
+    "species": [
+      "mareca-americana",
+      "mareca-penelope",
+      "mareca-strepera"
+    ]
+  },
+  "Megaceryle": {
+    "familyCom": "",
+    "familySci": "Alcedinidae",
+    "flight": [
+      "megaceryle-alcyon"
+    ],
+    "order": "Coraciiformes",
+    "species": [
+      "megaceryle-alcyon"
+    ]
+  },
+  "Megascops": {
+    "familyCom": "",
+    "familySci": "Strigidae",
+    "flight": [
+      "megascops-asio",
+      "megascops-kennicottii"
+    ],
+    "order": "Strigiformes",
+    "species": [
+      "megascops-asio",
+      "megascops-kennicottii"
+    ]
+  },
+  "Melanerpes": {
+    "familyCom": "",
+    "familySci": "Picidae",
+    "flight": [
+      "melanerpes-carolinus",
+      "melanerpes-erythrocephalus",
+      "melanerpes-formicivorus",
+      "melanerpes-lewis"
+    ],
+    "order": "Piciformes",
+    "species": [
+      "melanerpes-carolinus",
+      "melanerpes-erythrocephalus",
+      "melanerpes-formicivorus",
+      "melanerpes-lewis"
+    ]
+  },
+  "Melanocorypha": {
+    "familyCom": "",
+    "familySci": "Alaudidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "melanocorypha-bimaculata"
+    ]
+  },
+  "Meleagris": {
+    "familyCom": "",
+    "familySci": "Phasianidae",
+    "flight": [
+      "meleagris-gallopavo"
+    ],
+    "order": "Galliformes",
+    "species": [
+      "meleagris-gallopavo"
+    ]
+  },
+  "Melopsittacus": {
+    "familyCom": "",
+    "familySci": "Psittacidae",
+    "flight": [],
+    "order": "Psittaciformes",
+    "species": [
+      "melopsittacus-undulatus"
+    ]
+  },
+  "Melospiza": {
+    "familyCom": "",
+    "familySci": "Passerellidae",
+    "flight": [
+      "melospiza-georgiana",
+      "melospiza-lincolnii",
+      "melospiza-melodia"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "melospiza-georgiana",
+      "melospiza-lincolnii",
+      "melospiza-melodia"
+    ]
+  },
+  "Melozone": {
+    "familyCom": "",
+    "familySci": "Passerellidae",
+    "flight": [
+      "melozone-aberti",
+      "melozone-crissalis",
+      "melozone-fusca"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "melozone-aberti",
+      "melozone-crissalis",
+      "melozone-fusca"
+    ]
+  },
+  "Mergus": {
+    "familyCom": "",
+    "familySci": "Anatidae",
+    "flight": [
+      "mergus-merganser"
+    ],
+    "order": "Anseriformes",
+    "species": [
+      "mergus-merganser"
+    ]
+  },
+  "Merops": {
+    "familyCom": "",
+    "familySci": "Meropidae",
+    "flight": [
+      "merops-orientalis"
+    ],
+    "order": "Coraciiformes",
+    "species": [
+      "merops-apiaster",
+      "merops-leschenaulti",
+      "merops-orientalis",
+      "merops-persicus",
+      "merops-philippinus"
+    ]
+  },
+  "Metopidius": {
+    "familyCom": "",
+    "familySci": "Jacanidae",
+    "flight": [],
+    "order": "Charadriiformes",
+    "species": [
+      "metopidius-indicus"
+    ]
+  },
+  "Microcarbo": {
+    "familyCom": "",
+    "familySci": "Phalacrocoracidae",
+    "flight": [],
+    "order": "Suliformes",
+    "species": [
+      "microcarbo-niger"
+    ]
+  },
+  "Micropternus": {
+    "familyCom": "",
+    "familySci": "Picidae",
+    "flight": [],
+    "order": "Piciformes",
+    "species": [
+      "micropternus-brachyurus"
+    ]
+  },
+  "Microtarsus": {
+    "familyCom": "",
+    "familySci": "Pycnonotidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "microtarsus-priocephalus"
+    ]
+  },
+  "Milvus": {
+    "familyCom": "",
+    "familySci": "Accipitridae",
+    "flight": [],
+    "order": "Accipitriformes",
+    "species": [
+      "milvus-migrans"
+    ]
+  },
+  "Mimus": {
+    "familyCom": "",
+    "familySci": "Mimidae",
+    "flight": [
+      "mimus-polyglottos"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "mimus-polyglottos"
+    ]
+  },
+  "Mirafra": {
+    "familyCom": "",
+    "familySci": "Alaudidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "mirafra-javanica"
+    ]
+  },
+  "Mniotilta": {
+    "familyCom": "",
+    "familySci": "Parulidae",
+    "flight": [
+      "mniotilta-varia"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "mniotilta-varia"
+    ]
+  },
+  "Molothrus": {
+    "familyCom": "",
+    "familySci": "Icteridae",
+    "flight": [
+      "molothrus-ater"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "molothrus-ater"
+    ]
+  },
+  "Montecincla": {
+    "familyCom": "",
+    "familySci": "Leiothrichidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "montecincla-jerdoni"
+    ]
+  },
+  "Monticola": {
+    "familyCom": "",
+    "familySci": "Muscicapidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "monticola-cinclorhyncha",
+      "monticola-saxatilis",
+      "monticola-solitarius"
+    ]
+  },
+  "Motacilla": {
+    "familyCom": "",
+    "familySci": "Motacillidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "motacilla-alba",
+      "motacilla-cinerea",
+      "motacilla-citreola",
+      "motacilla-flava",
+      "motacilla-maderaspatensis",
+      "motacilla-tschutschensis"
+    ]
+  },
+  "Muscicapa": {
+    "familyCom": "",
+    "familySci": "Muscicapidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "muscicapa-dauurica",
+      "muscicapa-muttui",
+      "muscicapa-sibirica",
+      "muscicapa-striata"
+    ]
+  },
+  "Myadestes": {
+    "familyCom": "",
+    "familySci": "Turdidae",
+    "flight": [
+      "myadestes-townsendi"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "myadestes-townsendi"
+    ]
+  },
+  "Mycteria": {
+    "familyCom": "",
+    "familySci": "Ciconiidae",
+    "flight": [],
+    "order": "Ciconiiformes",
+    "species": [
+      "mycteria-leucocephala"
+    ]
+  },
+  "Myiarchus": {
+    "familyCom": "",
+    "familySci": "Tyrannidae",
+    "flight": [
+      "myiarchus-cinerascens",
+      "myiarchus-crinitus"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "myiarchus-cinerascens",
+      "myiarchus-crinitus"
+    ]
+  },
+  "Myophonus": {
+    "familyCom": "",
+    "familySci": "Muscicapidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "myophonus-horsfieldii"
+    ]
+  },
+  "Nannopterum": {
+    "familyCom": "",
+    "familySci": "Phalacrocoracidae",
+    "flight": [
+      "nannopterum-auritum"
+    ],
+    "order": "Suliformes",
+    "species": [
+      "nannopterum-auritum"
+    ]
+  },
+  "Neophron": {
+    "familyCom": "",
+    "familySci": "Accipitridae",
+    "flight": [],
+    "order": "Accipitriformes",
+    "species": [
+      "neophron-percnopterus"
+    ]
+  },
+  "Netta": {
+    "familyCom": "",
+    "familySci": "Anatidae",
+    "flight": [],
+    "order": "Anseriformes",
+    "species": [
+      "netta-rufina"
+    ]
+  },
+  "Nettapus": {
+    "familyCom": "",
+    "familySci": "Anatidae",
+    "flight": [],
+    "order": "Anseriformes",
+    "species": [
+      "nettapus-coromandelianus"
+    ]
+  },
+  "Ninox": {
+    "familyCom": "",
+    "familySci": "Strigidae",
+    "flight": [],
+    "order": "Strigiformes",
+    "species": [
+      "ninox-scutulata"
+    ]
+  },
+  "Nisaetus": {
+    "familyCom": "",
+    "familySci": "Accipitridae",
+    "flight": [],
+    "order": "Accipitriformes",
+    "species": [
+      "nisaetus-cirrhatus"
+    ]
+  },
+  "Nucifraga": {
+    "familyCom": "",
+    "familySci": "Corvidae",
+    "flight": [
+      "nucifraga-columbiana"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "nucifraga-columbiana"
+    ]
+  },
+  "Numenius": {
+    "familyCom": "",
+    "familySci": "Scolopacidae",
+    "flight": [
+      "numenius-americanus"
+    ],
+    "order": "Charadriiformes",
+    "species": [
+      "numenius-americanus",
+      "numenius-arquata",
+      "numenius-phaeopus"
+    ]
+  },
+  "Numida": {
+    "familyCom": "",
+    "familySci": "Numididae",
+    "flight": [],
+    "order": "Galliformes",
+    "species": [
+      "numida-meleagris"
+    ]
+  },
+  "Nycticorax": {
+    "familyCom": "",
+    "familySci": "Ardeidae",
+    "flight": [
+      "nycticorax-nycticorax"
+    ],
+    "order": "Pelecaniformes",
+    "species": [
+      "nycticorax-nycticorax"
+    ]
+  },
+  "Nyctyornis": {
+    "familyCom": "",
+    "familySci": "Meropidae",
+    "flight": [],
+    "order": "Coraciiformes",
+    "species": [
+      "nyctyornis-athertoni"
+    ]
+  },
+  "Nymphicus": {
+    "familyCom": "",
+    "familySci": "Psittacidae",
+    "flight": [],
+    "order": "Psittaciformes",
+    "species": [
+      "nymphicus-hollandicus"
+    ]
+  },
+  "Oceanites": {
+    "familyCom": "",
+    "familySci": "Hydrobatidae",
+    "flight": [],
+    "order": "Procellariiformes",
+    "species": [
+      "oceanites-oceanicus"
+    ]
+  },
+  "Ocyceros": {
+    "familyCom": "",
+    "familySci": "Bucerotidae",
+    "flight": [
+      "ocyceros-birostris",
+      "ocyceros-griseus"
+    ],
+    "order": "Bucerotiformes",
+    "species": [
+      "ocyceros-birostris",
+      "ocyceros-griseus"
+    ]
+  },
+  "Oenanthe": {
+    "familyCom": "",
+    "familySci": "Muscicapidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "oenanthe-deserti",
+      "oenanthe-fusca",
+      "oenanthe-isabellina",
+      "oenanthe-oenanthe",
+      "oenanthe-pleschanka"
+    ]
+  },
+  "Onychoprion": {
+    "familyCom": "",
+    "familySci": "Laridae",
+    "flight": [],
+    "order": "Charadriiformes",
+    "species": [
+      "onychoprion-anaethetus",
+      "onychoprion-fuscatus"
+    ]
+  },
+  "Oreothlypis": {
+    "familyCom": "",
+    "familySci": "Parulidae",
+    "flight": [
+      "oreothlypis-ruficapilla"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "oreothlypis-ruficapilla"
+    ]
+  },
+  "Oriolus": {
+    "familyCom": "",
+    "familySci": "Oriolidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "oriolus-chinensis",
+      "oriolus-kundoo",
+      "oriolus-xanthornus"
+    ]
+  },
+  "Orthotomus": {
+    "familyCom": "",
+    "familySci": "Cisticolidae",
+    "flight": [
+      "orthotomus-sutorius"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "orthotomus-sutorius"
+    ]
+  },
+  "Ortygornis": {
+    "familyCom": "",
+    "familySci": "Phasianidae",
+    "flight": [],
+    "order": "Galliformes",
+    "species": [
+      "ortygornis-pondicerianus"
+    ]
+  },
+  "Otus": {
+    "familyCom": "",
+    "familySci": "Strigidae",
+    "flight": [],
+    "order": "Strigiformes",
+    "species": [
+      "otus-bakkamoena",
+      "otus-brucei",
+      "otus-sunia"
+    ]
+  },
+  "Padda": {
+    "familyCom": "",
+    "familySci": "Estrildidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "padda-oryzivora"
+    ]
+  },
+  "Pandion": {
+    "familyCom": "",
+    "familySci": "Pandionidae",
+    "flight": [
+      "pandion-haliaetus"
+    ],
+    "order": "Accipitriformes",
+    "species": [
+      "pandion-haliaetus"
+    ]
+  },
+  "Parkesia": {
+    "familyCom": "",
+    "familySci": "Parulidae",
+    "flight": [
+      "parkesia-noveboracensis"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "parkesia-noveboracensis"
+    ]
+  },
+  "Parus": {
+    "familyCom": "",
+    "familySci": "Paridae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "parus-cinereus"
+    ]
+  },
+  "Passer": {
+    "familyCom": "",
+    "familySci": "Passeridae",
+    "flight": [
+      "passer-domesticus"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "passer-domesticus"
+    ]
+  },
+  "Passerculus": {
+    "familyCom": "",
+    "familySci": "Passerellidae",
+    "flight": [
+      "passerculus-sandwichensis"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "passerculus-sandwichensis"
+    ]
+  },
+  "Passerella": {
+    "familyCom": "",
+    "familySci": "Passerellidae",
+    "flight": [
+      "passerella-iliaca"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "passerella-iliaca"
+    ]
+  },
+  "Passerina": {
+    "familyCom": "",
+    "familySci": "Cardinalidae",
+    "flight": [
+      "passerina-amoena",
+      "passerina-cyanea"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "passerina-amoena",
+      "passerina-cyanea"
+    ]
+  },
+  "Pastor": {
+    "familyCom": "",
+    "familySci": "Sturnidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "pastor-roseus"
+    ]
+  },
+  "Patagioenas": {
+    "familyCom": "",
+    "familySci": "Columbidae",
+    "flight": [
+      "patagioenas-fasciata"
+    ],
+    "order": "Columbiformes",
+    "species": [
+      "patagioenas-fasciata"
+    ]
+  },
+  "Pavo": {
+    "familyCom": "",
+    "familySci": "Phasianidae",
+    "flight": [],
+    "order": "Galliformes",
+    "species": [
+      "pavo-cristatus"
+    ]
+  },
+  "Pelagodroma": {
+    "familyCom": "",
+    "familySci": "Hydrobatidae",
+    "flight": [],
+    "order": "Procellariiformes",
+    "species": [
+      "pelagodroma-marina"
+    ]
+  },
+  "Pelargopsis": {
+    "familyCom": "",
+    "familySci": "Alcedinidae",
+    "flight": [],
+    "order": "Coraciiformes",
+    "species": [
+      "pelargopsis-capensis"
+    ]
+  },
+  "Pelecanus": {
+    "familyCom": "",
+    "familySci": "Pelecanidae",
+    "flight": [
+      "pelecanus-erythrorhynchos",
+      "pelecanus-occidentalis"
+    ],
+    "order": "Pelecaniformes",
+    "species": [
+      "pelecanus-erythrorhynchos",
+      "pelecanus-occidentalis",
+      "pelecanus-onocrotalus",
+      "pelecanus-philippensis"
+    ]
+  },
+  "Pellorneum": {
+    "familyCom": "",
+    "familySci": "Pellorneidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "pellorneum-ruficeps"
+    ]
+  },
+  "Perdicula": {
+    "familyCom": "",
+    "familySci": "Phasianidae",
+    "flight": [],
+    "order": "Galliformes",
+    "species": [
+      "perdicula-argoondah",
+      "perdicula-asiatica",
+      "perdicula-erythrorhyncha"
+    ]
+  },
+  "Pericrocotus": {
+    "familyCom": "",
+    "familySci": "Campephagidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "pericrocotus-cantonensis",
+      "pericrocotus-cinnamomeus",
+      "pericrocotus-divaricatus",
+      "pericrocotus-erythropygius",
+      "pericrocotus-flammeus"
+    ]
+  },
+  "Perisoreus": {
+    "familyCom": "",
+    "familySci": "Corvidae",
+    "flight": [
+      "perisoreus-canadensis"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "perisoreus-canadensis"
+    ]
+  },
+  "Pernis": {
+    "familyCom": "",
+    "familySci": "Accipitridae",
+    "flight": [],
+    "order": "Accipitriformes",
+    "species": [
+      "pernis-apivorus",
+      "pernis-ptilorhynchus"
+    ]
+  },
+  "Petrochelidon": {
+    "familyCom": "",
+    "familySci": "Hirundinidae",
+    "flight": [
+      "petrochelidon-pyrrhonota"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "petrochelidon-fluvicola",
+      "petrochelidon-pyrrhonota"
+    ]
+  },
+  "Phaenicophaeus": {
+    "familyCom": "",
+    "familySci": "Cuculidae",
+    "flight": [],
+    "order": "Cuculiformes",
+    "species": [
+      "phaenicophaeus-viridirostris"
+    ]
+  },
+  "Phaethon": {
+    "familyCom": "",
+    "familySci": "Phaethontidae",
+    "flight": [],
+    "order": "Phaethontiformes",
+    "species": [
+      "phaethon-aethereus"
+    ]
+  },
+  "Phainopepla": {
+    "familyCom": "",
+    "familySci": "Ptilogonatidae",
+    "flight": [
+      "phainopepla-nitens"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "phainopepla-nitens"
+    ]
+  },
+  "Phalacrocorax": {
+    "familyCom": "",
+    "familySci": "Phalacrocoracidae",
+    "flight": [
+      "phalacrocorax-auritus"
+    ],
+    "order": "Suliformes",
+    "species": [
+      "phalacrocorax-auritus",
+      "phalacrocorax-carbo",
+      "phalacrocorax-fuscicollis"
+    ]
+  },
+  "Phalaenoptilus": {
+    "familyCom": "",
+    "familySci": "Caprimulgidae",
+    "flight": [
+      "phalaenoptilus-nuttallii"
+    ],
+    "order": "Caprimulgiformes",
+    "species": [
+      "phalaenoptilus-nuttallii"
+    ]
+  },
+  "Phalaropus": {
+    "familyCom": "",
+    "familySci": "Scolopacidae",
+    "flight": [],
+    "order": "Charadriiformes",
+    "species": [
+      "phalaropus-fulicarius",
+      "phalaropus-lobatus"
+    ]
+  },
+  "Phasianus": {
+    "familyCom": "",
+    "familySci": "Phasianidae",
+    "flight": [
+      "phasianus-colchicus"
+    ],
+    "order": "Galliformes",
+    "species": [
+      "phasianus-colchicus"
+    ]
+  },
+  "Pheucticus": {
+    "familyCom": "",
+    "familySci": "Cardinalidae",
+    "flight": [
+      "pheucticus-ludovicianus",
+      "pheucticus-melanocephalus"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "pheucticus-ludovicianus",
+      "pheucticus-melanocephalus"
+    ]
+  },
+  "Phodilus": {
+    "familyCom": "",
+    "familySci": "Tytonidae",
+    "flight": [],
+    "order": "Strigiformes",
+    "species": [
+      "phodilus-assimilis"
+    ]
+  },
+  "Phoeniconaias": {
+    "familyCom": "",
+    "familySci": "Phoenicopteridae",
+    "flight": [],
+    "order": "Phoenicopteriformes",
+    "species": [
+      "phoeniconaias-minor"
+    ]
+  },
+  "Phoenicopterus": {
+    "familyCom": "",
+    "familySci": "Phoenicopteridae",
+    "flight": [],
+    "order": "Phoenicopteriformes",
+    "species": [
+      "phoenicopterus-roseus"
+    ]
+  },
+  "Phoenicurus": {
+    "familyCom": "",
+    "familySci": "Muscicapidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "phoenicurus-ochruros"
+    ]
+  },
+  "Phylloscopus": {
+    "familyCom": "",
+    "familySci": "Phylloscopidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "phylloscopus-affinis",
+      "phylloscopus-collybita",
+      "phylloscopus-griseolus",
+      "phylloscopus-humei",
+      "phylloscopus-inornatus",
+      "phylloscopus-magnirostris",
+      "phylloscopus-nitidus",
+      "phylloscopus-occipitalis",
+      "phylloscopus-trochiloides",
+      "phylloscopus-tytleri"
+    ]
+  },
+  "Pica": {
+    "familyCom": "",
+    "familySci": "Corvidae",
+    "flight": [
+      "pica-nuttalli"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "pica-nuttalli"
+    ]
+  },
+  "Picoides": {
+    "familyCom": "",
+    "familySci": "Picidae",
+    "flight": [
+      "picoides-arcticus"
+    ],
+    "order": "Piciformes",
+    "species": [
+      "picoides-arcticus"
+    ]
+  },
+  "Picumnus": {
+    "familyCom": "",
+    "familySci": "Picidae",
+    "flight": [],
+    "order": "Piciformes",
+    "species": [
+      "picumnus-innominatus"
+    ]
+  },
+  "Picus": {
+    "familyCom": "",
+    "familySci": "Picidae",
+    "flight": [],
+    "order": "Piciformes",
+    "species": [
+      "picus-chlorolophus",
+      "picus-xanthopygaeus"
+    ]
+  },
+  "Pinicola": {
+    "familyCom": "",
+    "familySci": "Fringillidae",
+    "flight": [
+      "pinicola-enucleator"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "pinicola-enucleator"
+    ]
+  },
+  "Pipilo": {
+    "familyCom": "",
+    "familySci": "Passerellidae",
+    "flight": [
+      "pipilo-chlorurus",
+      "pipilo-erythrophthalmus",
+      "pipilo-maculatus"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "pipilo-chlorurus",
+      "pipilo-erythrophthalmus",
+      "pipilo-maculatus"
+    ]
+  },
+  "Piranga": {
+    "familyCom": "",
+    "familySci": "Cardinalidae",
+    "flight": [
+      "piranga-ludoviciana",
+      "piranga-olivacea",
+      "piranga-rubra"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "piranga-ludoviciana",
+      "piranga-olivacea",
+      "piranga-rubra"
+    ]
+  },
+  "Pitta": {
+    "familyCom": "",
+    "familySci": "Pittidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "pitta-brachyura"
+    ]
+  },
+  "Platalea": {
+    "familyCom": "",
+    "familySci": "Threskiornithidae",
+    "flight": [],
+    "order": "Pelecaniformes",
+    "species": [
+      "platalea-leucorodia"
+    ]
+  },
+  "Plegadis": {
+    "familyCom": "",
+    "familySci": "Threskiornithidae",
+    "flight": [
+      "plegadis-chihi"
+    ],
+    "order": "Pelecaniformes",
+    "species": [
+      "plegadis-chihi",
+      "plegadis-falcinellus"
+    ]
+  },
+  "Plocealauda": {
+    "familyCom": "Larks",
+    "familySci": "Alaudidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "plocealauda-affinis",
+      "plocealauda-erythroptera"
+    ]
+  },
+  "Ploceus": {
+    "familyCom": "",
+    "familySci": "Ploceidae",
+    "flight": [
+      "ploceus-manyar"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "ploceus-benghalensis",
+      "ploceus-manyar",
+      "ploceus-philippinus"
+    ]
+  },
+  "Pluvialis": {
+    "familyCom": "",
+    "familySci": "Charadriidae",
+    "flight": [
+      "pluvialis-squatarola"
+    ],
+    "order": "Charadriiformes",
+    "species": [
+      "pluvialis-fulva",
+      "pluvialis-squatarola"
+    ]
+  },
+  "Podiceps": {
+    "familyCom": "",
+    "familySci": "Podicipedidae",
+    "flight": [
+      "podiceps-nigricollis"
+    ],
+    "order": "Podicipediformes",
+    "species": [
+      "podiceps-nigricollis"
+    ]
+  },
+  "Podilymbus": {
+    "familyCom": "",
+    "familySci": "Podicipedidae",
+    "flight": [
+      "podilymbus-podiceps"
+    ],
+    "order": "Podicipediformes",
+    "species": [
+      "podilymbus-podiceps"
+    ]
+  },
+  "Poecile": {
+    "familyCom": "",
+    "familySci": "Paridae",
+    "flight": [
+      "poecile-atricapillus",
+      "poecile-gambeli",
+      "poecile-rufescens"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "poecile-atricapillus",
+      "poecile-gambeli",
+      "poecile-rufescens"
+    ]
+  },
+  "Polioptila": {
+    "familyCom": "",
+    "familySci": "Polioptilidae",
+    "flight": [
+      "polioptila-caerulea"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "polioptila-caerulea"
+    ]
+  },
+  "Pomatorhinus": {
+    "familyCom": "",
+    "familySci": "Timaliidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "pomatorhinus-horsfieldii"
+    ]
+  },
+  "Pooecetes": {
+    "familyCom": "",
+    "familySci": "Passerellidae",
+    "flight": [
+      "pooecetes-gramineus"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "pooecetes-gramineus"
+    ]
+  },
+  "Porphyrio": {
+    "familyCom": "",
+    "familySci": "Rallidae",
+    "flight": [],
+    "order": "Gruiformes",
+    "species": [
+      "porphyrio-poliocephalus"
+    ]
+  },
+  "Porzana": {
+    "familyCom": "",
+    "familySci": "Rallidae",
+    "flight": [
+      "porzana-carolina"
+    ],
+    "order": "Gruiformes",
+    "species": [
+      "porzana-carolina",
+      "porzana-porzana"
+    ]
+  },
+  "Prinia": {
+    "familyCom": "",
+    "familySci": "Cisticolidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "prinia-buchanani",
+      "prinia-hodgsonii",
+      "prinia-inornata",
+      "prinia-socialis",
+      "prinia-sylvatica"
+    ]
+  },
+  "Progne": {
+    "familyCom": "",
+    "familySci": "Hirundinidae",
+    "flight": [
+      "progne-subis"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "progne-subis"
+    ]
+  },
+  "Psaltriparus": {
+    "familyCom": "",
+    "familySci": "Aegithalidae",
+    "flight": [
+      "psaltriparus-minimus"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "psaltriparus-minimus"
+    ]
+  },
+  "Pseudibis": {
+    "familyCom": "",
+    "familySci": "Threskiornithidae",
+    "flight": [],
+    "order": "Pelecaniformes",
+    "species": [
+      "pseudibis-papillosa"
+    ]
+  },
+  "Psilopogon": {
+    "familyCom": "",
+    "familySci": "Megalaimidae",
+    "flight": [
+      "psilopogon-haemacephalus",
+      "psilopogon-viridis"
+    ],
+    "order": "Piciformes",
+    "species": [
+      "psilopogon-haemacephalus",
+      "psilopogon-malabaricus",
+      "psilopogon-viridis",
+      "psilopogon-zeylanicus"
+    ]
+  },
+  "Psittacula": {
+    "familyCom": "",
+    "familySci": "Psittacidae",
+    "flight": [],
+    "order": "Psittaciformes",
+    "species": [
+      "psittacula-alexandri",
+      "psittacula-columboides",
+      "psittacula-cyanocephala",
+      "psittacula-eupatria",
+      "psittacula-krameri"
+    ]
+  },
+  "Pterocles": {
+    "familyCom": "",
+    "familySci": "Pteroclididae",
+    "flight": [],
+    "order": "Pteroclidiformes",
+    "species": [
+      "pterocles-exustus",
+      "pterocles-indicus"
+    ]
+  },
+  "Pterorhinus": {
+    "familyCom": "",
+    "familySci": "Leiothrichidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "pterorhinus-delesserti"
+    ]
+  },
+  "Ptyonoprogne": {
+    "familyCom": "",
+    "familySci": "Hirundinidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "ptyonoprogne-concolor",
+      "ptyonoprogne-rupestris"
+    ]
+  },
+  "Puffinus": {
+    "familyCom": "",
+    "familySci": "Procellariidae",
+    "flight": [],
+    "order": "Procellariiformes",
+    "species": [
+      "puffinus-persicus"
+    ]
+  },
+  "Pycnonotus": {
+    "familyCom": "",
+    "familySci": "Pycnonotidae",
+    "flight": [
+      "pycnonotus-jocosus"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "pycnonotus-cafer",
+      "pycnonotus-jocosus",
+      "pycnonotus-luteolus",
+      "pycnonotus-xantholaemus"
+    ]
+  },
+  "Pyrrhura": {
+    "familyCom": "",
+    "familySci": "Psittacidae",
+    "flight": [],
+    "order": "Psittaciformes",
+    "species": [
+      "pyrrhura-molinae"
+    ]
+  },
+  "Quiscalus": {
+    "familyCom": "",
+    "familySci": "Icteridae",
+    "flight": [
+      "quiscalus-mexicanus",
+      "quiscalus-quiscula"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "quiscalus-mexicanus",
+      "quiscalus-quiscula"
+    ]
+  },
+  "Rallina": {
+    "familyCom": "",
+    "familySci": "Rallidae",
+    "flight": [],
+    "order": "Gruiformes",
+    "species": [
+      "rallina-eurizonoides"
+    ]
+  },
+  "Rallus": {
+    "familyCom": "",
+    "familySci": "Rallidae",
+    "flight": [
+      "rallus-limicola"
+    ],
+    "order": "Gruiformes",
+    "species": [
+      "rallus-limicola"
+    ]
+  },
+  "Recurvirostra": {
+    "familyCom": "",
+    "familySci": "Recurvirostridae",
+    "flight": [
+      "recurvirostra-americana"
+    ],
+    "order": "Charadriiformes",
+    "species": [
+      "recurvirostra-americana",
+      "recurvirostra-avosetta"
+    ]
+  },
+  "Regulus": {
+    "familyCom": "",
+    "familySci": "Regulidae",
+    "flight": [
+      "regulus-calendula",
+      "regulus-satrapa"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "regulus-calendula",
+      "regulus-satrapa"
+    ]
+  },
+  "Rhinoptilus": {
+    "familyCom": "",
+    "familySci": "Glareolidae",
+    "flight": [],
+    "order": "Charadriiformes",
+    "species": [
+      "rhinoptilus-bitorquatus"
+    ]
+  },
+  "Rhipidura": {
+    "familyCom": "",
+    "familySci": "Rhipiduridae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "rhipidura-albogularis",
+      "rhipidura-aureola"
+    ]
+  },
+  "Riparia": {
+    "familyCom": "",
+    "familySci": "Hirundinidae",
+    "flight": [
+      "riparia-riparia"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "riparia-chinensis",
+      "riparia-riparia"
+    ]
+  },
+  "Rostratula": {
+    "familyCom": "",
+    "familySci": "Rostratulidae",
+    "flight": [],
+    "order": "Charadriiformes",
+    "species": [
+      "rostratula-benghalensis"
+    ]
+  },
+  "Rubigula": {
+    "familyCom": "",
+    "familySci": "Pycnonotidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "rubigula-gularis"
+    ]
+  },
+  "Rynchops": {
+    "familyCom": "",
+    "familySci": "Laridae",
+    "flight": [
+      "rynchops-niger"
+    ],
+    "order": "Charadriiformes",
+    "species": [
+      "rynchops-albicollis",
+      "rynchops-niger"
+    ]
+  },
+  "Salpinctes": {
+    "familyCom": "",
+    "familySci": "Troglodytidae",
+    "flight": [
+      "salpinctes-obsoletus"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "salpinctes-obsoletus"
+    ]
+  },
+  "Sarcogyps": {
+    "familyCom": "",
+    "familySci": "Accipitridae",
+    "flight": [],
+    "order": "Accipitriformes",
+    "species": [
+      "sarcogyps-calvus"
+    ]
+  },
+  "Sarkidiornis": {
+    "familyCom": "",
+    "familySci": "Anatidae",
+    "flight": [],
+    "order": "Anseriformes",
+    "species": [
+      "sarkidiornis-melanotos"
+    ]
+  },
+  "Saxicola": {
+    "familyCom": "",
+    "familySci": "Muscicapidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "saxicola-caprata",
+      "saxicola-ferreus",
+      "saxicola-maurus",
+      "saxicola-rubetra"
+    ]
+  },
+  "Sayornis": {
+    "familyCom": "",
+    "familySci": "Tyrannidae",
+    "flight": [
+      "sayornis-nigricans",
+      "sayornis-phoebe",
+      "sayornis-saya"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "sayornis-nigricans",
+      "sayornis-phoebe",
+      "sayornis-saya"
+    ]
+  },
+  "Schoenicola": {
+    "familyCom": "",
+    "familySci": "Locustellidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "schoenicola-platyurus",
+      "schoenicola-striatus"
+    ]
+  },
+  "Scolopax": {
+    "familyCom": "",
+    "familySci": "Scolopacidae",
+    "flight": [],
+    "order": "Charadriiformes",
+    "species": [
+      "scolopax-rusticola"
+    ]
+  },
+  "Seiurus": {
+    "familyCom": "",
+    "familySci": "Parulidae",
+    "flight": [
+      "seiurus-aurocapilla"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "seiurus-aurocapilla"
+    ]
+  },
+  "Selasphorus": {
+    "familyCom": "",
+    "familySci": "Trochilidae",
+    "flight": [
+      "selasphorus-platycercus",
+      "selasphorus-rufus",
+      "selasphorus-sasin"
+    ],
+    "order": "Apodiformes",
+    "species": [
+      "selasphorus-platycercus",
+      "selasphorus-rufus",
+      "selasphorus-sasin"
+    ]
+  },
+  "Setophaga": {
+    "familyCom": "",
+    "familySci": "Parulidae",
+    "flight": [
+      "setophaga-americana",
+      "setophaga-caerulescens",
+      "setophaga-castanea",
+      "setophaga-cerulea",
+      "setophaga-coronata",
+      "setophaga-fusca",
+      "setophaga-magnolia",
+      "setophaga-nigrescens",
+      "setophaga-occidentalis",
+      "setophaga-palmarum",
+      "setophaga-pensylvanica",
+      "setophaga-petechia",
+      "setophaga-pinus",
+      "setophaga-ruticilla",
+      "setophaga-striata",
+      "setophaga-tigrina",
+      "setophaga-townsendi",
+      "setophaga-virens"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "setophaga-americana",
+      "setophaga-caerulescens",
+      "setophaga-castanea",
+      "setophaga-cerulea",
+      "setophaga-coronata",
+      "setophaga-fusca",
+      "setophaga-magnolia",
+      "setophaga-nigrescens",
+      "setophaga-occidentalis",
+      "setophaga-palmarum",
+      "setophaga-pensylvanica",
+      "setophaga-petechia",
+      "setophaga-pinus",
+      "setophaga-ruticilla",
+      "setophaga-striata",
+      "setophaga-tigrina",
+      "setophaga-townsendi",
+      "setophaga-virens"
+    ]
+  },
+  "Sholicola": {
+    "familyCom": "",
+    "familySci": "Muscicapidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "sholicola-major"
+    ]
+  },
+  "Sialia": {
+    "familyCom": "",
+    "familySci": "Turdidae",
+    "flight": [
+      "sialia-currucoides",
+      "sialia-mexicana",
+      "sialia-sialis"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "sialia-currucoides",
+      "sialia-mexicana",
+      "sialia-sialis"
+    ]
+  },
+  "Sitta": {
+    "familyCom": "",
+    "familySci": "Sittidae",
+    "flight": [
+      "sitta-canadensis",
+      "sitta-carolinensis",
+      "sitta-pygmaea"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "sitta-canadensis",
+      "sitta-carolinensis",
+      "sitta-castanea",
+      "sitta-frontalis",
+      "sitta-pygmaea"
+    ]
+  },
+  "Spatula": {
+    "familyCom": "",
+    "familySci": "Anatidae",
+    "flight": [
+      "spatula-clypeata",
+      "spatula-discors"
+    ],
+    "order": "Anseriformes",
+    "species": [
+      "spatula-clypeata",
+      "spatula-discors",
+      "spatula-querquedula"
+    ]
+  },
+  "Sphyrapicus": {
+    "familyCom": "",
+    "familySci": "Picidae",
+    "flight": [
+      "sphyrapicus-ruber",
+      "sphyrapicus-thyroideus",
+      "sphyrapicus-varius"
+    ],
+    "order": "Piciformes",
+    "species": [
+      "sphyrapicus-ruber",
+      "sphyrapicus-thyroideus",
+      "sphyrapicus-varius"
+    ]
+  },
+  "Spilopelia": {
+    "familyCom": "",
+    "familySci": "Columbidae",
+    "flight": [],
+    "order": "Columbiformes",
+    "species": [
+      "spilopelia-chinensis",
+      "spilopelia-senegalensis"
+    ]
+  },
+  "Spilornis": {
+    "familyCom": "",
+    "familySci": "Accipitridae",
+    "flight": [],
+    "order": "Accipitriformes",
+    "species": [
+      "spilornis-cheela"
+    ]
+  },
+  "Spinus": {
+    "familyCom": "",
+    "familySci": "Fringillidae",
+    "flight": [
+      "spinus-lawrencei",
+      "spinus-pinus",
+      "spinus-psaltria",
+      "spinus-tristis"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "spinus-lawrencei",
+      "spinus-pinus",
+      "spinus-psaltria",
+      "spinus-tristis"
+    ]
+  },
+  "Spiza": {
+    "familyCom": "",
+    "familySci": "Cardinalidae",
+    "flight": [
+      "spiza-americana"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "spiza-americana"
+    ]
+  },
+  "Spizella": {
+    "familyCom": "",
+    "familySci": "Passerellidae",
+    "flight": [
+      "spizella-atrogularis",
+      "spizella-breweri",
+      "spizella-pallida",
+      "spizella-passerina",
+      "spizella-pusilla"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "spizella-atrogularis",
+      "spizella-breweri",
+      "spizella-pallida",
+      "spizella-passerina",
+      "spizella-pusilla"
+    ]
+  },
+  "Spizelloides": {
+    "familyCom": "",
+    "familySci": "Passerellidae",
+    "flight": [
+      "spizelloides-arborea"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "spizelloides-arborea"
+    ]
+  },
+  "Stelgidopteryx": {
+    "familyCom": "",
+    "familySci": "Hirundinidae",
+    "flight": [
+      "stelgidopteryx-serripennis"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "stelgidopteryx-serripennis"
+    ]
+  },
+  "Stercorarius": {
+    "familyCom": "",
+    "familySci": "Stercorariidae",
+    "flight": [],
+    "order": "Charadriiformes",
+    "species": [
+      "stercorarius-antarcticus",
+      "stercorarius-longicaudus",
+      "stercorarius-maccormicki",
+      "stercorarius-parasiticus",
+      "stercorarius-pomarinus"
+    ]
+  },
+  "Sterna": {
+    "familyCom": "",
+    "familySci": "Laridae",
+    "flight": [
+      "sterna-forsteri",
+      "sterna-hirundo"
+    ],
+    "order": "Charadriiformes",
+    "species": [
+      "sterna-acuticauda",
+      "sterna-aurantia",
+      "sterna-forsteri",
+      "sterna-hirundo",
+      "sterna-repressa"
+    ]
+  },
+  "Sternula": {
+    "familyCom": "",
+    "familySci": "Laridae",
+    "flight": [],
+    "order": "Charadriiformes",
+    "species": [
+      "sternula-albifrons",
+      "sternula-saundersi"
+    ]
+  },
+  "Streptopelia": {
+    "familyCom": "",
+    "familySci": "Columbidae",
+    "flight": [
+      "streptopelia-chinensis",
+      "streptopelia-decaocto",
+      "streptopelia-senegalensis"
+    ],
+    "order": "Columbiformes",
+    "species": [
+      "streptopelia-chinensis",
+      "streptopelia-decaocto",
+      "streptopelia-orientalis",
+      "streptopelia-senegalensis",
+      "streptopelia-tranquebarica"
+    ]
+  },
+  "Strix": {
+    "familyCom": "",
+    "familySci": "Strigidae",
+    "flight": [
+      "strix-occidentalis",
+      "strix-varia"
+    ],
+    "order": "Strigiformes",
+    "species": [
+      "strix-leptogrammica",
+      "strix-occidentalis",
+      "strix-ocellata",
+      "strix-varia"
+    ]
+  },
+  "Sturnella": {
+    "familyCom": "",
+    "familySci": "Icteridae",
+    "flight": [
+      "sturnella-magna",
+      "sturnella-neglecta"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "sturnella-magna",
+      "sturnella-neglecta"
+    ]
+  },
+  "Sturnia": {
+    "familyCom": "",
+    "familySci": "Sturnidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "sturnia-blythii",
+      "sturnia-malabarica",
+      "sturnia-pagodarum"
+    ]
+  },
+  "Sturnus": {
+    "familyCom": "",
+    "familySci": "Sturnidae",
+    "flight": [
+      "sturnus-vulgaris"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "sturnus-vulgaris"
+    ]
+  },
+  "Sula": {
+    "familyCom": "",
+    "familySci": "Sulidae",
+    "flight": [],
+    "order": "Suliformes",
+    "species": [
+      "sula-dactylatra",
+      "sula-leucogaster"
+    ]
+  },
+  "Surniculus": {
+    "familyCom": "",
+    "familySci": "Cuculidae",
+    "flight": [],
+    "order": "Cuculiformes",
+    "species": [
+      "surniculus-dicruroides"
+    ]
+  },
+  "Synoicus": {
+    "familyCom": "",
+    "familySci": "Phasianidae",
+    "flight": [],
+    "order": "Galliformes",
+    "species": [
+      "synoicus-chinensis"
+    ]
+  },
+  "Sypheotides": {
+    "familyCom": "",
+    "familySci": "Otididae",
+    "flight": [],
+    "order": "Otidiformes",
+    "species": [
+      "sypheotides-indicus"
+    ]
+  },
+  "Taccocua": {
+    "familyCom": "",
+    "familySci": "Cuculidae",
+    "flight": [],
+    "order": "Cuculiformes",
+    "species": [
+      "taccocua-leschenaultii"
+    ]
+  },
+  "Tachybaptus": {
+    "familyCom": "",
+    "familySci": "Podicipedidae",
+    "flight": [],
+    "order": "Podicipediformes",
+    "species": [
+      "tachybaptus-ruficollis"
+    ]
+  },
+  "Tachycineta": {
+    "familyCom": "",
+    "familySci": "Hirundinidae",
+    "flight": [
+      "tachycineta-bicolor",
+      "tachycineta-thalassina"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "tachycineta-bicolor",
+      "tachycineta-thalassina"
+    ]
+  },
+  "Tachymarptis": {
+    "familyCom": "",
+    "familySci": "Apodidae",
+    "flight": [],
+    "order": "Apodiformes",
+    "species": [
+      "tachymarptis-melba"
+    ]
+  },
+  "Tachyspiza": {
+    "familyCom": "Hawks, Eagles, and Kites",
+    "familySci": "Accipitridae",
+    "flight": [],
+    "order": "Accipitriformes",
+    "species": [
+      "tachyspiza-badia",
+      "tachyspiza-brevipes",
+      "tachyspiza-virgata"
+    ]
+  },
+  "Tadorna": {
+    "familyCom": "",
+    "familySci": "Anatidae",
+    "flight": [],
+    "order": "Anseriformes",
+    "species": [
+      "tadorna-ferruginea"
+    ]
+  },
+  "Taeniopygia": {
+    "familyCom": "",
+    "familySci": "Estrildidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "taeniopygia-guttata"
+    ]
+  },
+  "Tauraco": {
+    "familyCom": "",
+    "familySci": "Musophagidae",
+    "flight": [],
+    "order": "Musophagiformes",
+    "species": [
+      "tauraco-persa"
+    ]
+  },
+  "Tephrodornis": {
+    "familyCom": "",
+    "familySci": "Tephrodornithidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "tephrodornis-pondicerianus",
+      "tephrodornis-sylvicola"
+    ]
+  },
+  "Terpsiphone": {
+    "familyCom": "",
+    "familySci": "Monarchidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "terpsiphone-paradisi"
+    ]
+  },
+  "Thalasseus": {
+    "familyCom": "",
+    "familySci": "Laridae",
+    "flight": [
+      "thalasseus-elegans"
+    ],
+    "order": "Charadriiformes",
+    "species": [
+      "thalasseus-bengalensis",
+      "thalasseus-bergii",
+      "thalasseus-elegans",
+      "thalasseus-sandvicensis"
+    ]
+  },
+  "Thinornis": {
+    "familyCom": "",
+    "familySci": "Charadriidae",
+    "flight": [],
+    "order": "Charadriiformes",
+    "species": [
+      "thinornis-dubius"
+    ]
+  },
+  "Threskiornis": {
+    "familyCom": "",
+    "familySci": "Threskiornithidae",
+    "flight": [],
+    "order": "Pelecaniformes",
+    "species": [
+      "threskiornis-melanocephalus"
+    ]
+  },
+  "Thryomanes": {
+    "familyCom": "",
+    "familySci": "Troglodytidae",
+    "flight": [
+      "thryomanes-bewickii"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "thryomanes-bewickii"
+    ]
+  },
+  "Thryothorus": {
+    "familyCom": "",
+    "familySci": "Troglodytidae",
+    "flight": [
+      "thryothorus-ludovicianus"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "thryothorus-ludovicianus"
+    ]
+  },
+  "Toxostoma": {
+    "familyCom": "",
+    "familySci": "Mimidae",
+    "flight": [
+      "toxostoma-redivivum",
+      "toxostoma-rufum"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "toxostoma-redivivum",
+      "toxostoma-rufum"
+    ]
+  },
+  "Treron": {
+    "familyCom": "",
+    "familySci": "Columbidae",
+    "flight": [],
+    "order": "Columbiformes",
+    "species": [
+      "treron-affinis",
+      "treron-bicinctus",
+      "treron-phoenicopterus"
+    ]
+  },
+  "Trichoglossus": {
+    "familyCom": "",
+    "familySci": "Psittacidae",
+    "flight": [],
+    "order": "Psittaciformes",
+    "species": [
+      "trichoglossus-haematodus"
+    ]
+  },
+  "Tringa": {
+    "familyCom": "",
+    "familySci": "Scolopacidae",
+    "flight": [
+      "tringa-flavipes",
+      "tringa-melanoleuca",
+      "tringa-semipalmata",
+      "tringa-solitaria"
+    ],
+    "order": "Charadriiformes",
+    "species": [
+      "tringa-erythropus",
+      "tringa-flavipes",
+      "tringa-glareola",
+      "tringa-melanoleuca",
+      "tringa-nebularia",
+      "tringa-ochropus",
+      "tringa-semipalmata",
+      "tringa-solitaria",
+      "tringa-stagnatilis",
+      "tringa-totanus"
+    ]
+  },
+  "Troglodytes": {
+    "familyCom": "",
+    "familySci": "Troglodytidae",
+    "flight": [
+      "troglodytes-aedon",
+      "troglodytes-hiemalis",
+      "troglodytes-pacificus"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "troglodytes-aedon",
+      "troglodytes-hiemalis",
+      "troglodytes-pacificus"
+    ]
+  },
+  "Turdus": {
+    "familyCom": "",
+    "familySci": "Turdidae",
+    "flight": [
+      "turdus-migratorius"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "turdus-migratorius",
+      "turdus-obscurus",
+      "turdus-simillimus",
+      "turdus-unicolor"
+    ]
+  },
+  "Turnix": {
+    "familyCom": "",
+    "familySci": "Turnicidae",
+    "flight": [],
+    "order": "Charadriiformes",
+    "species": [
+      "turnix-suscitator",
+      "turnix-tanki"
+    ]
+  },
+  "Tyrannus": {
+    "familyCom": "",
+    "familySci": "Tyrannidae",
+    "flight": [
+      "tyrannus-tyrannus",
+      "tyrannus-verticalis",
+      "tyrannus-vociferans"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "tyrannus-tyrannus",
+      "tyrannus-verticalis",
+      "tyrannus-vociferans"
+    ]
+  },
+  "Tyto": {
+    "familyCom": "",
+    "familySci": "Tytonidae",
+    "flight": [
+      "tyto-alba"
+    ],
+    "order": "Strigiformes",
+    "species": [
+      "tyto-alba",
+      "tyto-javanica"
+    ]
+  },
+  "Upupa": {
+    "familyCom": "",
+    "familySci": "Upupidae",
+    "flight": [],
+    "order": "Bucerotiformes",
+    "species": [
+      "upupa-epops"
+    ]
+  },
+  "Urile": {
+    "familyCom": "",
+    "familySci": "Phalacrocoracidae",
+    "flight": [
+      "urile-penicillatus"
+    ],
+    "order": "Suliformes",
+    "species": [
+      "urile-penicillatus"
+    ]
+  },
+  "Vanellus": {
+    "familyCom": "",
+    "familySci": "Charadriidae",
+    "flight": [],
+    "order": "Charadriiformes",
+    "species": [
+      "vanellus-cinereus",
+      "vanellus-indicus",
+      "vanellus-malabaricus"
+    ]
+  },
+  "Vireo": {
+    "familyCom": "",
+    "familySci": "Vireonidae",
+    "flight": [
+      "vireo-bellii",
+      "vireo-cassinii",
+      "vireo-flavifrons",
+      "vireo-gilvus",
+      "vireo-huttoni",
+      "vireo-olivaceus",
+      "vireo-philadelphicus",
+      "vireo-solitarius"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "vireo-bellii",
+      "vireo-cassinii",
+      "vireo-flavifrons",
+      "vireo-gilvus",
+      "vireo-huttoni",
+      "vireo-olivaceus",
+      "vireo-philadelphicus",
+      "vireo-solitarius"
+    ]
+  },
+  "Xanthocephalus": {
+    "familyCom": "",
+    "familySci": "Icteridae",
+    "flight": [
+      "xanthocephalus-xanthocephalus"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "xanthocephalus-xanthocephalus"
+    ]
+  },
+  "Xenus": {
+    "familyCom": "",
+    "familySci": "Scolopacidae",
+    "flight": [],
+    "order": "Charadriiformes",
+    "species": [
+      "xenus-cinereus"
+    ]
+  },
+  "Yungipicus": {
+    "familyCom": "",
+    "familySci": "Picidae",
+    "flight": [],
+    "order": "Piciformes",
+    "species": [
+      "yungipicus-nanus"
+    ]
+  },
+  "Zapornia": {
+    "familyCom": "",
+    "familySci": "Rallidae",
+    "flight": [],
+    "order": "Gruiformes",
+    "species": [
+      "zapornia-akool",
+      "zapornia-fusca",
+      "zapornia-pusilla"
+    ]
+  },
+  "Zenaida": {
+    "familyCom": "",
+    "familySci": "Columbidae",
+    "flight": [
+      "zenaida-asiatica",
+      "zenaida-macroura"
+    ],
+    "order": "Columbiformes",
+    "species": [
+      "zenaida-asiatica",
+      "zenaida-macroura"
+    ]
+  },
+  "Zonotrichia": {
+    "familyCom": "",
+    "familySci": "Passerellidae",
+    "flight": [
+      "zonotrichia-albicollis",
+      "zonotrichia-atricapilla",
+      "zonotrichia-leucophrys",
+      "zonotrichia-querula"
+    ],
+    "order": "Passeriformes",
+    "species": [
+      "zonotrichia-albicollis",
+      "zonotrichia-atricapilla",
+      "zonotrichia-leucophrys",
+      "zonotrichia-querula"
+    ]
+  },
+  "Zoonavena": {
+    "familyCom": "",
+    "familySci": "Apodidae",
+    "flight": [],
+    "order": "Apodiformes",
+    "species": [
+      "zoonavena-sylvatica"
+    ]
+  },
+  "Zoothera": {
+    "familyCom": "",
+    "familySci": "Turdidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "zoothera-neilgherriensis"
+    ]
+  },
+  "Zosterops": {
+    "familyCom": "",
+    "familySci": "Zosteropidae",
+    "flight": [],
+    "order": "Passeriformes",
+    "species": [
+      "zosterops-palpebrosus"
+    ]
+  }
+}

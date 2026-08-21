@@ -2761,6 +2761,11 @@ document.documentElement.setAttribute('data-stamps-stage', 'fx-ready');
   window.STAMPS = {
     markup: markup, styleFor: styleFor, familyOf: familyOf, latinOf: latinOf,
     boxFor: boxFor, BOX_W: BOX_W, BOX_H: BOX_H, NAT_W: NAT_W, TPL: TPL,
+    // Local carry #5: GENUS_GROUP export. stamp-batch-local.js extends the
+    // genus->group map through this reference (groupFor closes over the same
+    // object, so mutations are live). Without it the local batch is inert and
+    // every non-upstream genus silently falls back to the hash pool.
+    GENUS_GROUP: GENUS_GROUP,
     GROUP_STYLE: GROUP_STYLE, GROUP_LATIN: GROUP_LATIN,
     setOverrides: setOverrides,
     syncFringe: function (root) {

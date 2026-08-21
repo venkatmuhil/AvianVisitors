@@ -1,0 +1,18 @@
+{
+  "_README": "Hand-curated overlay for fetch_families.py. Applied AFTER the API result, so entries here win. Add a genus when the API can't resolve it (recent splits, synonyms) or resolves it wrongly. Schema per genus: familySci, familyCom, order.",
+  "Lophospiza": {
+    "familySci": "Accipitridae",
+    "familyCom": "Hawks, Eagles, and Kites",
+    "order": "Accipitriformes"
+  },
+  "Plocealauda": {
+    "familySci": "Alaudidae",
+    "familyCom": "Larks",
+    "order": "Passeriformes"
+  },
+  "Tachyspiza": {
+    "familySci": "Accipitridae",
+    "familyCom": "Hawks, Eagles, and Kites",
+    "order": "Accipitriformes"
+  }
+}
