@@ -2392,6 +2392,21 @@ document.documentElement.setAttribute('data-stamps-stage', 'fx-ready');
                  so they would also perforate wrong.
        field   - styleless; see the note above. */
 
+  /* ---- Per-species overrides, chosen in the species-sync CMS and shipped as
+     style-overrides.json (apt.js fetches it alongside dims/masks and calls
+     setOverrides before the atlas draws). Keyed by scientific name, because
+     that is the only identifier BirdNET and the CMS share.
+
+     Two things the automatic rules cannot know sit here: which designs look
+     wrong on a bird the North-American GENUS_GROUP map has never heard of,
+     and which ones demand a flight plate this station has no photo for.
+     Neither failure is visible - a design with no art draws blank paper - so
+     the override has to win over both family and hash, not tie-break them. */
+  var STYLE_OVERRIDE = {};
+  function setOverrides(map) {
+    STYLE_OVERRIDE = (map && typeof map === 'object') ? map : {};
+  }
+
   function groupFor(sci) {
     var genus = String(sci || '').split(' ')[0];
     if (GENUS_GROUP[genus]) return GENUS_GROUP[genus];
@@ -2403,6 +2418,10 @@ document.documentElement.setAttribute('data-stamps-stage', 'fx-ready');
     return list[Math.abs(h) % list.length];
   }
   function styleFor(sci) {
+    // An unknown id falls through rather than blanking the bird, so an override
+    // left behind by a design upstream renamed or retired is inert, not fatal.
+    var chosen = STYLE_OVERRIDE[String(sci || '')];
+    if (chosen && TPL[chosen]) return TPL[chosen];
     var g = groupFor(sci);
     if (g && GROUP_STYLE[g] && TPL[GROUP_STYLE[g]]) return TPL[GROUP_STYLE[g]];
     // unknown genus: stable per-species pick so it never flickers between renders
@@ -2743,6 +2762,7 @@ document.documentElement.setAttribute('data-stamps-stage', 'fx-ready');
     markup: markup, styleFor: styleFor, familyOf: familyOf, latinOf: latinOf,
     boxFor: boxFor, BOX_W: BOX_W, BOX_H: BOX_H, NAT_W: NAT_W, TPL: TPL,
     GROUP_STYLE: GROUP_STYLE, GROUP_LATIN: GROUP_LATIN,
+    setOverrides: setOverrides,
     syncFringe: function (root) {
       ensureFringeFilters();
       if (window.FX && typeof window.FX.syncFringe === 'function') {

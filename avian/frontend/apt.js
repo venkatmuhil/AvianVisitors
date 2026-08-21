@@ -1,19 +1,27 @@
 (function () {
   var PLACEHOLDER = [{ "sci": "Calypte anna", "com": "Anna's Hummingbird", "featured": true }, { "sci": "Passer domesticus", "com": "House Sparrow" }, { "sci": "Haemorhous mexicanus", "com": "House Finch" }, { "sci": "Turdus migratorius", "com": "American Robin" }, { "sci": "Zenaida macroura", "com": "Mourning Dove" }, { "sci": "Spinus psaltria", "com": "Lesser Goldfinch" }, { "sci": "Zonotrichia leucophrys", "com": "White-crowned Sparrow" }, { "sci": "Aphelocoma californica", "com": "California Scrub-Jay" }, { "sci": "Mimus polyglottos", "com": "Northern Mockingbird" }, { "sci": "Sayornis nigricans", "com": "Black Phoebe" }, { "sci": "Larus occidentalis", "com": "Western Gull" }, { "sci": "Corvus brachyrhynchos", "com": "American Crow" }];
   // Bumped whenever the offline sketch build changes, so the browser
-  // doesn't keep a stale cache after we regenerate the sketches.
-  var SKETCH_VERSION = 'r35'; // r35: merged upstream v1.0.0's 333-species
-  // illustration set with our 565 photo-cutout-only masks for Karnataka
-  // species that have no bundled illustration. Tables live in dims.json /
-  // masks.json (1231 entries).
+  // doesn't keep a stale cache after we regenerate the sketches. It is the
+  // ?v= on dims.json, masks.json and style-overrides.json - the tables that
+  // hold upstream's 333-species illustration set plus our photo-cutout-only
+  // masks for the Karnataka species that have no bundled illustration
+  // (1231 entries between them).
+  //
+  // Do NOT annotate this line with what changed at which revision. It is
+  // rewritten mechanically by bump_versions() in avian/tools/species-sync,
+  // which moves the number and cannot know what the number now means - so
+  // any such note is stale from the next upload onwards. git log is the
+  // changelog.
+  var SKETCH_VERSION = 'r36';
   // Cache-bust for /api/img - bump whenever a bird gets re-rendered via
   // /api/regen or whenever you need every CF DC to drop its cached copy.
   // Cloudflare keys on the full URL incl. query, so bumping this is
   // equivalent to a global cache purge for /api/img. (caches.default
   // .delete() in the worker only affects ONE colo at a time, so a
   // versioned URL is the only reliable way to invalidate everywhere.)
-  var IMG_VERSION = 'r35'; // r35: merged upstream v1.0.0 with our 565
-  // photo-cutout-only species, so drop every cached copy.
+  // Kept in step with SKETCH_VERSION by the same bump, and carrying the same
+  // rule: no per-revision annotation here, it goes stale mechanically.
+  var IMG_VERSION = 'r36';
 
   // ---- Sliding pill helper ----
   // Each segmented control has a single .seg-pill element that we move via
@@ -424,10 +432,20 @@
     var q = '?v=' + SKETCH_VERSION + (bust ? '&t=' + Date.now() : '');
     return Promise.all([
       fetch('./dims.json' + q).then(function (r) { return r.json(); }),
-      fetch('./masks.json' + q).then(function (r) { return r.json(); })
+      fetch('./masks.json' + q).then(function (r) { return r.json(); }),
+      // Per-species stamp designs picked in the species-sync CMS. Optional by
+      // design: it is its own webroot symlink, so a deploy that has not re-run
+      // link_webroot.sh yet must fall back to the automatic family/hash rules
+      // rather than rejecting the whole table load and blanking the collage.
+      fetch('./style-overrides.json' + q)
+        .then(function (r) { return r.ok ? r.json() : {}; })
+        .catch(function () { return {}; })
     ]).then(function (loaded) {
       DIMS = loaded[0];
       MASKS = loaded[1];
+      if (window.STAMPS && window.STAMPS.setOverrides) {
+        window.STAMPS.setOverrides(loaded[2]);
+      }
       maskCache = {};
       tablesReady = true;
       // renderCollage defers its first pack until the silhouettes exist (see

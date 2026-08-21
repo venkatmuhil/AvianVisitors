@@ -47,7 +47,13 @@
   .seg .seg-btn:last-child { border-radius:0 8px 8px 0; }
   .seg .seg-btn[aria-pressed="true"] { background:var(--accent); color:#fff; }
   pre { background:#f5f2ea; padding:.7rem; border-radius:8px; overflow:auto; font-size:.8rem; }
-  .status { font-size:.85rem; color:#666; }
+  .status { font-size:.85rem; color:#666; white-space:pre-wrap; }
+  .stamp-block { margin-top:1.2rem; padding-top:1rem; border-top:1px solid var(--line); }
+  select { font:inherit; padding:.45rem .5rem; border-radius:8px; border:1px solid var(--line); background:#fff; max-width:340px; }
+  /* A design whose art will not resolve fails as blank paper with a clean
+     console, so the warning has to carry the weight the page cannot. */
+  .warn { margin:.5rem 0 0; padding:.55rem .7rem; border-radius:8px; font-size:.85rem;
+          background:#fdf1d8; color:#7a5312; border:1px solid #e8d4a8; max-width:640px; }
 </style>
 </head>
 <body>
@@ -81,6 +87,18 @@
   <div class="row">
     <button class="secondary" id="fetch-wiki">Fetch from Wikipedia</button>
     <span class="status" id="cutout-status"></span>
+  </div>
+
+  <div class="stamp-block">
+    <h2>Stamp design</h2>
+    <div class="status" id="stamp-current">…</div>
+    <div class="row">
+      <select id="stamp-select"></select>
+      <button class="secondary" id="stamp-save">Pin this design</button>
+      <button class="secondary" id="stamp-reset">Back to automatic</button>
+    </div>
+    <div class="warn" id="stamp-warn" style="display:none"></div>
+    <div class="status" id="stamp-status"></div>
   </div>
 </div>
 
@@ -197,6 +215,7 @@ async function selectSpecies(item) {
   // silently uploading into the flight slot.
   applyPose(1);
   await refreshCurrent();
+  await loadStamp();
   detailEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
@@ -267,7 +286,129 @@ async function showCandidate() {
     candidateFrame.innerHTML = `<img src="${url}">`;
     currentFrame.innerHTML = `<img src="${url}">`;
   }
+  // The search row's coverage flags are what the flight warning reads, and
+  // an upload just changed them - refresh them here so uploading the missing
+  // flight photo visibly clears the warning instead of leaving a stale one.
+  if (current) {
+    if (currentPose === 2) current.has_flight = true; else current.has_perched = true;
+    renderStampWarnings();
+  }
 }
+
+/* ---- Stamp design -------------------------------------------------------
+   Which design a bird gets is normally decided for it: by family if its genus
+   is in the (all-North-American) GENUS_GROUP map, otherwise by a stable hash
+   of its scientific name across a 24-design pool. At this station 52 of 61
+   species land in the hash branch, so this is where a deliberate choice goes.
+   The pin is written to avian/frontend/style-overrides.json and wins over
+   both rules in styleFor(). ------------------------------------------------ */
+const stampSelect = document.getElementById('stamp-select');
+const stampCurrent = document.getElementById('stamp-current');
+const stampWarn = document.getElementById('stamp-warn');
+const stampStatus = document.getElementById('stamp-status');
+let stampInfo = null;
+
+function designById(id) {
+  return (stampInfo && stampInfo.designs || []).find(d => d.id === id) || null;
+}
+
+// The two ways a stamp can end up with no art. Both draw as blank paper with
+// no console error, which is exactly why they are surfaced here at the moment
+// of choosing rather than left to be noticed on the live page.
+function flightWarning(design) {
+  if (!design || !current || current.has_flight) return '';
+  const sp = (stampInfo && stampInfo.species) || {};
+  const blank = 'The stamp will render as blank paper, with no error.';
+  // The two causes need different advice. A design that composes the bird in
+  // flight can simply be swapped out; markup() forcing the flight plate for
+  // Columbidae is keyed on the FAMILY, so no design choice escapes it and the
+  // only fix is the missing photo.
+  if (sp.family_forces_flight) {
+    return `Every ${sp.family} stamp is drawn from the flight plate, whichever `
+         + `design is picked, and this species has no flight image. ${blank} `
+         + `Only uploading a flight photo above fixes this.`;
+  }
+  if (design.needs_flight) {
+    return `“${design.title}” composes the bird in flight, and this species has `
+         + `no flight image. ${blank} Upload a flight photo above, or pick a `
+         + `different design.`;
+  }
+  return '';
+}
+
+function renderStampWarnings() {
+  const d = designById(stampSelect.value);
+  const notes = (d ? d.warnings.slice() : []);
+  const flight = flightWarning(d);
+  if (flight) notes.push(flight);
+  stampWarn.style.display = notes.length ? 'block' : 'none';
+  stampWarn.innerHTML = notes.map(n => `<div>⚠ ${n}</div>`).join('');
+}
+
+stampSelect.onchange = renderStampWarnings;
+
+async function loadStamp() {
+  if (!current || !current.sci) {
+    stampCurrent.textContent = 'No scientific name — stamp designs are keyed by it.';
+    stampSelect.innerHTML = '';
+    return;
+  }
+  stampCurrent.textContent = 'Reading the stamp system…';
+  stampWarn.style.display = 'none';
+  stampStatus.textContent = '';
+  try {
+    const res = await fetch('/api/stamp?sci=' + encodeURIComponent(current.sci));
+    stampInfo = await res.json();
+    if (!res.ok) { stampCurrent.textContent = 'Failed: ' + (stampInfo.detail || res.statusText); return; }
+  } catch (e) {
+    stampCurrent.textContent = 'Could not reach the backend: ' + e.message;
+    return;
+  }
+  const sp = stampInfo.species || {};
+  stampSelect.innerHTML = stampInfo.designs.map(d => {
+    const tags = [];
+    if (d.family_assigned) tags.push('family issue');
+    if (d.warnings.length) tags.push('⚠');
+    return `<option value="${d.id}">${d.title}${tags.length ? ' — ' + tags.join(', ') : ''}</option>`;
+  }).join('');
+  stampSelect.value = sp.effective || sp.current;
+
+  const how = sp.via === 'override'
+    ? `pinned here`
+    : sp.via === 'family'
+      ? `automatic — the family issue for ${sp.family}`
+      : `automatic — hashed from the scientific name (its genus is not in the family map)`;
+  const auto = sp.current ? ` Automatic pick is “${(designById(sp.current) || {}).title || sp.current}”.` : '';
+  stampCurrent.textContent = `Currently “${(designById(sp.effective) || {}).title || sp.effective}” — ${how}.`
+    + (sp.via === 'override' ? auto : '');
+  renderStampWarnings();
+}
+
+async function setStamp(design) {
+  if (!current || !current.sci) return;
+  stampStatus.textContent = design ? 'Pinning…' : 'Clearing…';
+  try {
+    const fd = new FormData();
+    fd.append('sci', current.sci);
+    fd.append('design', design || '');
+    const res = await fetch('/api/stamp', { method: 'POST', body: fd });
+    const data = await res.json();
+    if (!res.ok) { stampStatus.textContent = 'Failed: ' + (data.detail || res.statusText); return; }
+    // loadStamp() clears this line, so re-read first and confirm afterwards -
+    // otherwise the refresh wipes the only acknowledgement the click gets.
+    await loadStamp();
+    // Nothing is live until it is pushed: the pin only edits a file in the
+    // working tree, exactly like an uploaded cutout does.
+    stampStatus.textContent = (design ? 'Pinned. ' : 'Cleared. ')
+      + `${data.count} override(s) on file, cache bumped to ${data.new_version}. `
+      + 'Push + deploy below to publish.';
+  } catch (e) {
+    stampStatus.textContent = 'Could not reach the backend: ' + e.message;
+  }
+}
+
+document.getElementById('stamp-save').onclick = () => setStamp(stampSelect.value);
+document.getElementById('stamp-reset').onclick = () => setStamp('');
 
 document.getElementById('rebuild-btn').onclick = async () => {
   const statusEl = document.getElementById('rebuild-status');

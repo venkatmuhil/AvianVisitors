@@ -32,16 +32,25 @@ from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
+HERE = Path(__file__).resolve().parent
 REPO = Path(__file__).resolve().parents[3]  # .../AvianVisitors
 AVIAN = REPO / "avian"
 ILLUS_DIR = AVIAN / "assets" / "illustrations"
 CUTOUTS_DIR = AVIAN / "assets" / "cutouts"
 APT_JS = AVIAN / "frontend" / "apt.js"        # still holds SKETCH_VERSION/IMG_VERSION
+INDEX_HTML = AVIAN / "frontend" / "index.html"  # carries the ?v= stamp on apt.js
 DIMS_JSON = AVIAN / "frontend" / "dims.json"  # written by build_masks.py
 MASKS_JSON = AVIAN / "frontend" / "masks.json"
-# Everything the mask rebuild can touch, for git add / diff --stat.
+STYLE_OVERRIDES_JSON = AVIAN / "frontend" / "style-overrides.json"
+STAMP_INFO_JS = HERE / "stamp_info.js"
+# Everything a rebuild or a stamp change can touch, for git add / diff --stat.
+# index.html is here for the ?v= bump, not for its content: without that bump
+# the pushed apt.js is never requested at all, because Cloudflare and the
+# browser both hold the old one under `immutable, max-age=31536000`.
 TRACKED_PATHS = ["avian/assets", "avian/frontend/apt.js",
-                 "avian/frontend/dims.json", "avian/frontend/masks.json"]
+                 "avian/frontend/index.html",
+                 "avian/frontend/dims.json", "avian/frontend/masks.json",
+                 "avian/frontend/style-overrides.json"]
 SCRIPTS_DIR = AVIAN / "scripts"
 LABELS_EN = REPO / "model" / "l18n" / "labels_en.json"
 
@@ -274,6 +283,97 @@ async def api_cutout(
             "path": str(out_path.relative_to(REPO)), "bytes": len(out_bytes)}
 
 
+def load_overrides() -> dict:
+    if not STYLE_OVERRIDES_JSON.is_file():
+        return {}
+    try:
+        data = json.loads(STYLE_OVERRIDES_JSON.read_text())
+    except json.JSONDecodeError as e:
+        raise HTTPException(500, f"{STYLE_OVERRIDES_JSON.name} is not valid JSON: {e}")
+    return data if isinstance(data, dict) else {}
+
+
+def save_overrides(data: dict) -> None:
+    """One key per line, sorted - same convention as dims.json/masks.json.
+
+    That layout is the whole reason those two stopped conflicting on every
+    upstream merge: a species-add becomes a one-line diff instead of a
+    rewrite of one enormous line.
+    """
+    lines = [f"  {json.dumps(k)}: {json.dumps(v)}" for k, v in sorted(data.items())]
+    STYLE_OVERRIDES_JSON.write_text("{\n" + ",\n".join(lines) + ("\n" if lines else "") + "}\n")
+
+
+def stamp_info(sci: str = "") -> dict:
+    """Ask the real frontend which designs exist and what this bird gets.
+
+    Shelling out to node rather than parsing stamps.js from here is
+    deliberate: the catalogue is ~29 template objects spread across five
+    scripts, and the family map and fallback pool are module-private. A
+    Python reimplementation of styleFor() would drift, and the way it would
+    drift is by offering a design the page cannot draw - which fails as blank
+    paper with no console error.
+    """
+    try:
+        result = subprocess.run(
+            ["node", str(STAMP_INFO_JS), sci],
+            cwd=str(HERE), capture_output=True, text=True, timeout=60,
+        )
+    except FileNotFoundError:
+        raise HTTPException(503, "node is not installed on this machine; the stamp "
+                                 "designs are read by running the real frontend")
+    except subprocess.TimeoutExpired:
+        raise HTTPException(504, "stamp_info.js timed out")
+    if result.returncode != 0:
+        detail = result.stdout.strip() or result.stderr.strip() or "unknown error"
+        raise HTTPException(500, f"stamp_info.js failed: {detail}")
+    return json.loads(result.stdout)
+
+
+@app.get("/api/stamp")
+def api_stamp_get(sci: str):
+    info = stamp_info(sci)
+    overrides = load_overrides()
+    chosen = overrides.get(sci)
+    species = info.get("species", {})
+    # `current` from stamp_info.js is the automatic pick; the override wins
+    # over it in styleFor(), so report both rather than only the winner.
+    species["override"] = chosen
+    species["effective"] = chosen if chosen else species.get("current")
+    if chosen:
+        species["via"] = "override"
+    info["species"] = species
+    return info
+
+
+@app.post("/api/stamp")
+def api_stamp_set(sci: str = Form(...), design: str = Form("")):
+    """Pin a species to one design, or clear the pin with an empty design."""
+    sci = sci.strip()
+    if not sci:
+        raise HTTPException(422, "sci is required")
+
+    overrides = load_overrides()
+    design = design.strip()
+
+    if design:
+        known = {d["id"] for d in stamp_info().get("designs", [])}
+        # styleFor() ignores an unknown id and falls back, so a typo here would
+        # look like the override silently doing nothing. Reject it instead.
+        if design not in known:
+            raise HTTPException(422, f"unknown design '{design}'")
+        overrides[sci] = design
+    else:
+        overrides.pop(sci, None)
+
+    save_overrides(overrides)
+    # A design change ships no new image, so nothing else would invalidate the
+    # cached apt.js/style-overrides.json pair - bump here or the change never
+    # reaches a browser that has already loaded the page once.
+    return {"sci": sci, "design": design or None,
+            "count": len(overrides), "new_version": bump_versions()}
+
+
 @app.post("/api/rebuild")
 def api_rebuild():
     result = subprocess.run(
@@ -294,19 +394,48 @@ def api_rebuild():
     if result.returncode != 0:
         raise HTTPException(500, f"build_webp.py failed:\n{result.stderr}")
 
-    src = APT_JS.read_text()
+    return {"build_output": result.stdout, "new_version": bump_versions()}
 
+
+def bump_versions() -> str:
+    """Invalidate every cached copy of the frontend's art tables.
+
+    Two stamps have to move together, and missing either one is silent:
+
+      * SKETCH_VERSION / IMG_VERSION inside apt.js - the `?v=` apt.js puts on
+        dims.json, masks.json, style-overrides.json and every WebP.
+      * the `?v=` index.html puts on apt.js itself. index.html is served
+        `no-cache` so it is always re-read, but apt.js is
+        `public, max-age=31536000, immutable` and sits in Cloudflare's edge
+        cache. Leave its URL unchanged and the browser keeps running LAST
+        deploy's apt.js, which asks for last deploy's dims.json - so a newly
+        added species stays invisible on birds.7ml.in for up to a year while
+        looking perfectly fine on the Pi's LAN address.
+
+    Returns the new IMG_VERSION.
+    """
     def bump(m: re.Match) -> str:
         return f"{m.group(1)}{int(m.group(2)) + 1}{m.group(3)}"
 
+    src = APT_JS.read_text()
     new_src, n1 = re.subn(r"(var SKETCH_VERSION = 'r)(\d+)(';)", bump, src)
     new_src, n2 = re.subn(r"(var IMG_VERSION = 'r)(\d+)(';)", bump, new_src)
     if n1 != 1 or n2 != 1:
         raise HTTPException(500, "could not find/bump SKETCH_VERSION or IMG_VERSION in apt.js")
-    APT_JS.write_text(new_src)
 
-    new_version = re.search(r"var IMG_VERSION = '(r\d+)';", new_src).group(1)
-    return {"build_output": result.stdout, "new_version": new_version}
+    html = INDEX_HTML.read_text()
+    new_html, n3 = re.subn(r'(src="\./apt\.js\?v=r)(\d+)(")', bump, html)
+    if n3 != 1:
+        raise HTTPException(
+            500, "could not find the apt.js ?v= stamp in index.html - the cache "
+                 "bust would be incomplete, so nothing was written")
+
+    # Both files or neither: a bumped apt.js whose index.html still points at
+    # the old URL is the exact failure this function exists to prevent.
+    APT_JS.write_text(new_src)
+    INDEX_HTML.write_text(new_html)
+
+    return re.search(r"var IMG_VERSION = '(r\d+)';", new_src).group(1)
 
 
 def _pending_diff() -> str:
@@ -333,14 +462,31 @@ def api_deploy(commit_message: str = Form("Update bird cutouts via species-sync 
     subprocess.run(["git", "commit", "-m", commit_message], cwd=REPO, check=True)
     subprocess.run(["git", "push", "origin", "avian-visitors"], cwd=REPO, check=True)
 
+    # build_webp.py is NOT optional and does NOT come down with the pull.
+    # avian/assets/webp/ is gitignored (the WebPs are derived from the
+    # committed PNGs), so a git-only deploy leaves the Pi with a dims.json
+    # entry for the new species and no art behind it. apt.js treats a dims
+    # entry as proof the .webp exists and links straight to it without
+    # probing, and the src reaches a CSS mask, a canvas and an SVG <image> -
+    # none of which have an error hook. The species draws as blank paper with
+    # a clean console. Running it here is cheap: it skips everything current.
+    remote = (
+        f"cd {PI_REPO}"
+        " && git fetch origin avian-visitors"
+        " && git reset --hard origin/avian-visitors"
+        " && python3 avian/scripts/build_webp.py"
+    )
     ssh_cmd = [
         "ssh", "-i", PI_SSH_KEY, "-o", "ConnectTimeout=10",
-        f"{PI_USER}@{PI_HOST}",
-        f"cd {PI_REPO} && git fetch origin avian-visitors && git reset --hard origin/avian-visitors",
+        f"{PI_USER}@{PI_HOST}", remote,
     ]
-    result = subprocess.run(ssh_cmd, capture_output=True, text=True)
+    # Encoding a first-time species is a few seconds, but a --force or a large
+    # art drop walks all 1231 images across the Pi's four cores.
+    result = subprocess.run(ssh_cmd, capture_output=True, text=True, timeout=1800)
     if result.returncode != 0:
-        raise HTTPException(500, f"pushed to GitHub, but deploy to Pi failed:\n{result.stderr}")
+        raise HTTPException(
+            500, "pushed to GitHub, but deploy to Pi failed:\n"
+                 + (result.stderr.strip() or result.stdout.strip()))
 
     return {"diff": diff, "pi_output": result.stdout}
 
