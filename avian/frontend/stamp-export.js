@@ -482,17 +482,52 @@
      the element means every selector still applies, including any upstream
      adds later. An empty canvas paints transparent, so the background shows
      through exactly where the pixels were. */
+  /* Freeze an element's entire resolved box as an inline style.
+
+     Wholesale rather than a curated list on purpose: the point is that nothing
+     is left depending on a selector, so there is no list to keep in step with
+     upstream's CSS. getComputedStyle enumerates longhands only, so this is
+     re-appliable as-is. */
+  function frozenStyle(el) {
+    var cs = window.getComputedStyle(el);
+    var out = [];
+    for (var i = 0; i < cs.length; i++) {
+      var name = cs[i];
+      if (name === 'background-image') continue;      // the bitmap rides on src
+      var value = cs.getPropertyValue(name);
+      if (value) out.push(name + ':' + value);
+    }
+    return out.join(';');
+  }
+
+  /* Bake each ink plate into an <img>.
+
+     A <canvas> cannot survive here. An SVG loaded into an <img> is a
+     script-free document, and WebKit simply does not render canvas content
+     inside it - on iOS the plate vanishes and the bird disappears, leaving
+     bare paper and type. Chromium does render it, which is why keeping the
+     canvas looked correct for so long. Reported from an iPhone download of
+     the Laughing Dove (zurichpink, a canvas halftone); the Malabar Gray
+     Hornbill on the same device kept its birds because that design draws them
+     with an SVG <pattern> instead.
+
+     Swapping the tag costs the tag-name selectors - `.tpl-dither .dth-panel
+     canvas`, the terraplana equivalent and `canvas.fxc` - which an <img>
+     cannot match, and losing them lays the plate out at its intrinsic size
+     instead of its box. So the resolved box travels with it as inline style,
+     which outranks every selector and needs no knowledge of which rules
+     existed. */
   function bakeCanvases(root) {
-    var plates = root.querySelectorAll('canvas');
+    var plates = [].slice.call(root.querySelectorAll('canvas'));
     for (var i = 0; i < plates.length; i++) {
-      var data;
-      try { data = plates[i].toDataURL('image/png'); }
-      catch (e) { lastFailures.push('canvas ' + (plates[i].dataset.fx || i)); continue; }
-      plates[i].style.backgroundImage = 'url("' + data + '")';
-      plates[i].style.backgroundSize = '100% 100%';
-      plates[i].style.backgroundRepeat = 'no-repeat';
-      plates[i].style.backgroundPosition = 'center';
-      plates[i].style.backgroundOrigin = 'border-box';
+      var plate = plates[i], data;
+      try { data = plate.toDataURL('image/png'); }
+      catch (e) { lastFailures.push('canvas ' + (plate.dataset.fx || i)); continue; }
+      var img = document.createElement('img');
+      img.setAttribute('src', data);
+      img.className = plate.className;
+      img.setAttribute('style', frozenStyle(plate) + ';object-fit:fill;');
+      if (plate.parentNode) plate.parentNode.replaceChild(img, plate);
     }
   }
 
