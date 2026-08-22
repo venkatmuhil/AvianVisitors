@@ -1,0 +1,221 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Stamp export check</title>
+<!-- Local dev harness. NOT deployed to the Pi - it lives under avian/tools/,
+     which link_webroot.sh never links and the Caddy policy never serves.
+
+     Renders every stamp design live, runs the real browser-side exporter over
+     each one, and puts the resulting PNG beside the DOM it came from. The
+     export path relies on the browser's foreignObject rasteriser, whose
+     handling of mix-blend-mode and CSS masks cannot be verified by reading
+     code - only by looking at the two panels side by side.
+
+     Run from the REPOSITORY ROOT so /avian/assets/webp/... resolves:
+       python3 -m http.server 8000
+       open http://localhost:8000/avian/tools/stamp-export-check/ -->
+<link rel="stylesheet" href="/avian/frontend/stamps.css">
+<link rel="stylesheet" href="/avian/frontend/stamp-batch-root.css">
+<link rel="stylesheet" href="/avian/frontend/stamp-batch-a.css">
+<link rel="stylesheet" href="/avian/frontend/stamp-batch-b.css">
+<link rel="stylesheet" href="/avian/frontend/stamp-batch-c.css">
+<style>
+  :root { color-scheme: light; }
+  body { margin: 0; padding: 24px; background: #f4f1ea; color: #211d16;
+         font: 14px/1.45 ui-sans-serif, system-ui, sans-serif; }
+  h1 { font-size: 17px; margin: 0 0 4px; }
+  .lede { margin: 0 0 18px; color: #6f6656; max-width: 62ch; }
+  .bar { display: flex; gap: 10px; align-items: center; margin-bottom: 18px; }
+  button { font: inherit; padding: 6px 12px; border-radius: 6px;
+           border: 1px solid #cfc7b6; background: #fffdf7; cursor: pointer; }
+  #tally { font-variant-numeric: tabular-nums; }
+  .row { display: grid; grid-template-columns: 150px auto auto auto 1fr;
+         gap: 14px; align-items: center; padding: 10px 0;
+         border-top: 1px solid #e2dccd; }
+  /* The live stamp is forced to its natural scale and the exported PNG is
+     shown at its natural CSS size, so the two panes are the same object at
+     the same size and a difference is a real difference, not a resample. */
+  .stack { position: relative; }
+  .stack .under, .stack .over { position: absolute; inset: 0; }
+  .stack .over { mix-blend-mode: difference; }
+  .diff { background: #000; }
+  .diff .pane { background: #000; background-image: none; }
+  .id { font: 600 13px/1.3 ui-monospace, monospace; }
+  .id small { display: block; font-weight: 400; color: #6f6656; }
+  .pane { display: grid; place-items: center; min-height: 250px;
+          /* A checker ground: a transparent export must read as transparent,
+             not as whatever the page happens to be painted. */
+          background-image:
+            linear-gradient(45deg, #e6e0d0 25%, transparent 25%, transparent 75%, #e6e0d0 75%),
+            linear-gradient(45deg, #e6e0d0 25%, transparent 25%, transparent 75%, #e6e0d0 75%);
+          background-size: 16px 16px; background-position: 0 0, 8px 8px;
+          background-color: #f7f4ec; border-radius: 6px; }
+  .pane img { display: block; }
+  .pane.fixed { padding: 0; border-radius: 0; }
+  .caption { grid-column: 2 / 5; font-size: 11px; color: #6f6656; }
+  .note { font-size: 12px; color: #6f6656; }
+  .note b { color: #8a3a1e; }
+  .ok { color: #2f6b48; }
+  .atlas-grid { display: block; }
+</style>
+
+<h1>Stamp export check</h1>
+<p class="lede">Left is the live DOM stamp, middle is the PNG the in-browser
+exporter produced from it, right is the two differenced against each other
+(black = identical). They should be indistinguishable apart from the
+export's transparent surround. Look hardest at designs that lean on
+<code>mix-blend-mode</code> — that is the one property the foreignObject
+rasteriser handles inconsistently.</p>
+
+<div class="bar">
+  <button id="run" type="button">Export all</button>
+  <button id="save" type="button">Download all PNGs</button>
+  <span id="tally">idle</span>
+</div>
+
+<div id="rows"></div>
+
+<!-- The real frontend, unmodified. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" id="stampFilters"><defs>
+  <filter id="duo-ink"><feColorMatrix type="matrix" values="0.33 0.33 0.33 0 0 0.33 0.33 0.33 0 0 0.33 0.33 0.33 0 0 0 0 0 1 0"/></filter>
+  <filter id="poster"><feComponentTransfer><feFuncR type="discrete" tableValues="0 0.4 0.75 1"/><feFuncG type="discrete" tableValues="0 0.4 0.75 1"/><feFuncB type="discrete" tableValues="0 0.4 0.75 1"/></feComponentTransfer></filter>
+</defs></svg>
+
+<script src="/avian/frontend/stamps.js"></script>
+<script src="/avian/frontend/stamp-batch-root.js"></script>
+<script src="/avian/frontend/stamp-batch-a.js"></script>
+<script src="/avian/frontend/stamp-batch-b.js"></script>
+<script src="/avian/frontend/stamp-batch-c.js"></script>
+<script src="/avian/frontend/stamp-batch-local.js"></script>
+<script src="/avian/frontend/stamp-export.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  // A species carrying BOTH plates, so the flight-composed designs
+  // (kieler's {{SRC_ALT}}, the Doves & Pigeons family force) resolve.
+  var BIRD = {
+    sci: 'Streptopelia chinensis',
+    com: 'Spotted Dove',
+    index: '07',
+    count: 42
+  };
+  var SRC = '/avian/assets/webp/streptopelia-chinensis.webp';
+
+  var TPL = window.STAMPS.TPL;
+  var ids = Object.keys(TPL);
+  var rows = document.getElementById('rows');
+  var tally = document.getElementById('tally');
+  var made = [];
+
+  ids.forEach(function (id) {
+    var row = document.createElement('div');
+    row.className = 'row';
+    row.innerHTML =
+      '<div class="id">' + id + '<small>' + (TPL[id].title || '') + '</small></div>' +
+      '<div class="pane live atlas-grid fixed"></div>' +
+      '<div class="pane out fixed"><span class="note">not run</span></div>' +
+      '<div class="pane diff fixed"><span class="note">not run</span></div>' +
+      '<div class="note status"></div>';
+    rows.appendChild(row);
+    var live = row.querySelector('.live');
+    live.innerHTML = window.STAMPS.markup(BIRD, SRC, TPL[id]);
+    // Natural scale, so the pane holds the same geometry the exporter uses.
+    var fit = live.querySelector('.stamp-fit');
+    [].slice.call(fit.querySelectorAll('.stamp, .stamp-fringe-outline')).forEach(function (el) {
+      el.style.setProperty('--scale', '1');
+      el.style.setProperty('--tilt', '0deg');
+    });
+  });
+
+  // Paint the ink plates and sync the perforation contours exactly as the
+  // atlas does, then give the images and fonts a moment to land.
+  function ready() {
+    window.FX.run(document);
+    window.STAMPS.syncFringe(document);
+    return document.fonts.ready.then(function () {
+      return new Promise(function (r) { setTimeout(r, 1800); });
+    }).then(function () {
+      window.FX.run(document);
+      window.STAMPS.syncFringe(document);
+      return new Promise(function (r) { setTimeout(r, 600); });
+    });
+  }
+
+  function runAll() {
+    tally.textContent = 'warming up…';
+    made = [];
+    return ready().then(function () {
+      var list = [].slice.call(rows.querySelectorAll('.row'));
+      var clean = 0, dirty = 0;
+      return list.reduce(function (chain, row, i) {
+        return chain.then(function () {
+          var id = ids[i];
+          var fit = row.querySelector('.live .stamp-fit');
+          var out = row.querySelector('.out');
+          var status = row.querySelector('.status');
+          tally.textContent = 'exporting ' + (i + 1) + '/' + list.length + ' — ' + id;
+          var diff = row.querySelector('.diff');
+          return window.STAMP_EXPORT.toPngBlob(fit).then(function (res) {
+            var scale = window.STAMP_EXPORT.scale;
+            var cssW = res.width / scale, cssH = res.height / scale;
+            var url = URL.createObjectURL(res.blob);
+
+            // Both panes get the export's exact CSS box. The live stamp is
+            // centred in it the same way the exporter centres it, so the two
+            // are registered and can be differenced.
+            [row.querySelector('.live'), out, diff].forEach(function (pane) {
+              pane.style.width = cssW + 'px';
+              pane.style.height = cssH + 'px';
+              pane.style.position = 'relative';
+            });
+
+            var img = new Image();
+            img.src = url; img.width = cssW; img.height = cssH;
+            out.innerHTML = ''; out.appendChild(img);
+
+            // difference: the export laid over an identical live render.
+            var under = document.createElement('div');
+            under.className = 'under atlas-grid';
+            under.style.cssText = 'position:absolute;inset:0;';
+            under.appendChild(fit.cloneNode(true));
+            var over = new Image();
+            over.className = 'over'; over.src = url;
+            over.width = cssW; over.height = cssH;
+            diff.innerHTML = '';
+            diff.className = 'pane diff fixed stack';
+            diff.appendChild(under); diff.appendChild(over);
+            window.FX.run(diff); window.STAMPS.syncFringe(diff);
+
+            made.push({ id: id, blob: res.blob });
+            if (res.failures.length) {
+              dirty++;
+              status.innerHTML = '<b>' + res.failures.length + ' asset(s) missing</b><br>' +
+                res.failures.map(function (f) { return f.split('/').pop(); }).join('<br>');
+            } else {
+              clean++;
+              status.innerHTML = '<span class="ok">clean</span> · ' +
+                res.width + '×' + res.height + ' · ' +
+                Math.round(res.blob.size / 1024) + ' KB';
+            }
+          }).catch(function (err) {
+            dirty++;
+            out.innerHTML = '<span class="note"><b>failed</b></span>';
+            status.innerHTML = '<b>' + (err && err.message || err) + '</b>';
+          });
+        });
+      }, Promise.resolve()).then(function () {
+        tally.textContent = clean + ' clean, ' + dirty + ' with problems, of ' + list.length;
+      });
+    });
+  }
+
+  document.getElementById('run').addEventListener('click', runAll);
+  document.getElementById('save').addEventListener('click', function () {
+    made.forEach(function (m, i) {
+      setTimeout(function () {
+        window.STAMP_EXPORT.save(m.blob, 'check-' + m.id + '.png');
+      }, i * 300);
+    });
+  });
+})();
+</script>
