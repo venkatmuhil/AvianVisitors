@@ -112,11 +112,37 @@
            /\/stamp-batch-[a-z]+\.css(\?|$)/.test(href);
   }
 
-  function stampSheetHrefs() {
+  /* styles.css is the page's own stylesheet and must NOT be embedded wholesale
+     - it carries `.postcard-stamp-slot .stamp-fit{...!important}` and other
+       component rules that would fight the export's geometry.
+     But the stamp designs do depend on one thing in it: the universal
+     `* { box-sizing: border-box }` reset. Without it `.stamp{padding:6px}`
+     adds to the 188px width instead of insetting, `.face` comes out 188 wide
+     instead of 176, and since every dither/flock/geo coordinate is expressed
+     in `cqw`, the entire interior renders ~7% oversized and the top line is
+     clipped away. That is small enough to look fine in a thumbnail, which is
+     exactly why it has to be taken from the page rather than assumed.
+     Universal rules only: a selector made of nothing but `*` can never carry
+     component styling in. */
+  function isPageSheet(href) {
+    return /\/styles\.css(\?|$)/.test(href);
+  }
+
+  function isUniversalSelector(selector) {
+    var parts = String(selector).split(',');
+    for (var i = 0; i < parts.length; i++) {
+      if (!/^\s*\*(::?[a-z-]+)?\s*$/i.test(parts[i])) return false;
+    }
+    return parts.length > 0;
+  }
+
+  function sheetHrefs(match) {
     return [].slice.call(document.styleSheets)
       .map(function (sheet) { return sheet.href || ''; })
-      .filter(isStampSheet);
+      .filter(match);
   }
+
+  function stampSheetHrefs() { return sheetHrefs(isStampSheet); }
 
   /* The stylesheets are fetched as TEXT, deliberately - NOT read out of the
      CSSOM as rule.cssText.
@@ -216,7 +242,7 @@
      is unchanged. This has to happen here rather than being left to the SVG:
      the SVG's own viewport is one stamp wide, so `@media (max-width:700px)`
      would fire on a desktop export and hand back the phone layout. */
-  function processCss(css, keepFace) {
+  function processCss(css, keepFace, keepSelector) {
     var out = '', i = 0, n = css.length;
     while (i < n) {
       var ch = css.charAt(i);
@@ -244,12 +270,12 @@
             var cond = prelude.replace(/^@media\s*/i, '');
             var ok = true;
             try { ok = window.matchMedia(cond).matches; } catch (e) { }
-            if (ok) out += processCss(inner, keepFace);
+            if (ok) out += processCss(inner, keepFace, keepSelector);
           } else if (kw === 'font-face') {
             if (keepFace(inner)) out += prelude + '{' + inner + '}';
           } else if (kw === 'supports' || kw === 'container' ||
                      kw === 'layer' || kw === 'scope') {
-            var body = processCss(inner, keepFace);
+            var body = processCss(inner, keepFace, keepSelector);
             if (body.trim()) out += prelude + '{' + body + '}';
           } else {
             out += prelude + '{' + inner + '}';        // @keyframes and friends
@@ -271,7 +297,9 @@
       }
       if (brace < 0) { out += css.slice(i); break; }
       var ruleEnd = matchBrace(css, brace);
-      out += css.slice(i, ruleEnd + 1);
+      if (!keepSelector || keepSelector(css.slice(i, brace))) {
+        out += css.slice(i, ruleEnd + 1);
+      }
       i = ruleEnd + 1;
     }
     return out;
@@ -315,9 +343,16 @@
       var declared = /font-family\s*:\s*([^;}]+)/i.exec(block);
       return !!(declared && used[familyKey(declared[1])]);
     }
-    var built = Promise.all(stampSheetHrefs().map(sheetText)).then(function (texts) {
+    var built = Promise.all([
+      Promise.all(sheetHrefs(isPageSheet).map(sheetText)),
+      Promise.all(stampSheetHrefs().map(sheetText))
+    ]).then(function (groups) {
+      // The reset goes first so the stamp sheets still override it.
+      var reset = processCss(groups[0].join('\n'), function () { return false; },
+                             isUniversalSelector);
+      var body = processCss(groups[1].join('\n'), keepFace);
       // `:root` cannot match inside a foreignObject; the export root stands in.
-      var css = processCss(texts.join('\n'), keepFace).replace(/:root\b/g, '.sx-root');
+      var css = (reset + '\n' + body).replace(/:root\b/g, '.sx-root');
       return inlineCssUrls(css);
     });
     cssMemo[key] = built;
@@ -753,5 +788,38 @@
     install();
   }
 
-  window.STAMP_EXPORT = { toPngBlob: toPngBlob, fileNameFor: fileNameFor, save: save, scale: SCALE };
+  /* toSvgText is the debugging affordance for this module: it returns the exact
+     document handed to the rasteriser, so it can be loaded into an iframe and
+     measured against the live node. Geometry faults - a container-query unit
+     resolving against the wrong box, say - are a few percent and invisible in a
+     thumbnail; they are obvious the moment you can measure the real DOM. */
+  function toSvgText(sourceFit) {
+    lastFailures = [];
+    var staged, theme, defs, size, props = '';
+    try {
+      staged = stageForExport(sourceFit);
+      theme = effectiveTheme();
+      defs = filterDefs();
+      size = measure(staged.fit);
+    } catch (err) {
+      if (staged && staged.host) staged.host.remove();
+      return Promise.reject(err);
+    }
+    return Promise.resolve()
+      .then(function () { return document.fonts && document.fonts.ready; })
+      .then(primeCustomPropNames)
+      .then(function () {
+        props = inheritedProps(sourceFit);
+        return Promise.all([stampCss(staged.fit), inlineNodeAssets(staged.fit)]);
+      })
+      .then(function (parts) {
+        return { svg: buildSvg(staged.fit, size, parts[0], defs, props, theme), size: size };
+      })
+      .finally(function () { staged.host.remove(); });
+  }
+
+  window.STAMP_EXPORT = {
+    toPngBlob: toPngBlob, toSvgText: toSvgText,
+    fileNameFor: fileNameFor, save: save, scale: SCALE
+  };
 })();

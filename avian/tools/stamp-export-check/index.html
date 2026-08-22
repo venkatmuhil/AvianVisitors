@@ -13,6 +13,12 @@
      Run from the REPOSITORY ROOT so /avian/assets/webp/... resolves:
        python3 -m http.server 8000
        open http://localhost:8000/avian/tools/stamp-export-check/ -->
+<!-- styles.css FIRST and NOT optional: it carries the page's
+     `* { box-sizing: border-box }` reset, which every stamp design's
+     geometry depends on. A harness without it renders the live stamp
+     wrong in exactly the same way as a broken export, so the two agree
+     and the check passes while the real site is broken. That happened. -->
+<link rel="stylesheet" href="/avian/frontend/styles.css">
 <link rel="stylesheet" href="/avian/frontend/stamps.css">
 <link rel="stylesheet" href="/avian/frontend/stamp-batch-root.css">
 <link rel="stylesheet" href="/avian/frontend/stamp-batch-a.css">
@@ -141,12 +147,117 @@ rasteriser handles inconsistently.</p>
     });
   }
 
+  /* A uniform scale error is the failure mode an eyeball misses: 7% is
+     invisible in a thumbnail and ruins the artwork. So measure it instead.
+     STAMP_EXPORT.toSvgText hands back the exact document the rasteriser is
+     given; load it in an iframe and compare real boxes against the live node.
+     This is what caught the missing `* { box-sizing: border-box }` reset -
+     the stamp came out 200x273 instead of 188x256, every cqw 6.8% too large,
+     and the top line clipped off the design. */
+  function boxesOf(root, doc) {
+    var face = root.querySelector('.face');
+    var stamp = root.querySelector('.stamp');
+    if (!face || !stamp) return null;
+    var fb = face.getBoundingClientRect(), sb = stamp.getBoundingClientRect();
+    var kids = [].slice.call(face.children).filter(function (el) {
+      return el.getBoundingClientRect().width > 0;
+    }).slice(0, 6);
+    var view = (doc.defaultView || window);
+    // Every production design lays its parts out absolutely. A face whose
+    // children are all statically positioned has no design CSS at all - it is
+    // a styleless template, and its layout is undefined rather than wrong.
+    // `field` is upstream's known dead design (its .fld-* CSS stopped
+    // shipping); it is held out of ORDERED_STYLES so nothing with art can
+    // reach it. Detecting the property rather than the name catches the next
+    // one too.
+    var styleless = kids.length > 0 && kids.every(function (el) {
+      return view.getComputedStyle(el).position === 'static';
+    });
+    return {
+      styleless: styleless,
+      face: [fb.width, fb.height],
+      stamp: [sb.width, sb.height],
+      kids: kids.map(function (el) {
+        var b = el.getBoundingClientRect();
+        return [b.left - fb.left, b.top - fb.top, b.width, b.height];
+      })
+    };
+  }
+
+  function geometryCheck(fit) {
+    return window.STAMP_EXPORT.toSvgText(fit).then(function (out) {
+      return new Promise(function (resolve) {
+        var frame = document.createElement('iframe');
+        frame.style.cssText = 'position:fixed;left:-9999px;top:0;width:1200px;height:1600px;border:0';
+        frame.onload = function () {
+          var doc = frame.contentDocument;
+          // Appending an iframe fires a load for about:blank BEFORE srcdoc is
+          // applied. Measuring that empty document yields "nothing to compare",
+          // which used to be reported as a pass - a false green on every row.
+          if (!doc || !doc.querySelector('svg')) return;
+          // the iframe renders the SVG at its width/height attrs, i.e. SCALE x
+          var S = window.STAMP_EXPORT.scale;
+          var exp = boxesOf(doc, doc);
+          // the live node measured the way the exporter stages it
+          var host = document.createElement('div');
+          host.className = 'atlas-grid';
+          host.style.cssText = 'position:fixed;left:-9999px;top:0;width:' +
+            (parseFloat(fit.style.width) || 188) + 'px;height:' +
+            (parseFloat(fit.style.height) || 236) + 'px';
+          var clone = fit.cloneNode(true);
+          // Mirror stageForExport exactly, or this compares a transformed box
+          // against an untransformed one and reports drift that is not real.
+          ['--postcard-turn', '--postcard-scale', '--fit-scale'].forEach(function (n) {
+            clone.style.removeProperty(n);
+          });
+          clone.style.setProperty('--fit-scale', '1');
+          [].slice.call(clone.querySelectorAll('.stamp,.stamp-fringe-outline')).forEach(function (el) {
+            el.style.setProperty('--scale', '1'); el.style.setProperty('--tilt', '0deg');
+          });
+          host.appendChild(clone);
+          document.body.appendChild(host);
+          var live = boxesOf(host, document);
+          host.remove(); frame.remove();
+          if (!exp || !live) {
+            return resolve({ drift: true,
+              detail: 'geometry NOT VERIFIED (' + (exp ? 'live' : 'export') + ' side unmeasurable)' });
+          }
+          if (live.styleless) {
+            return resolve({ drift: false, styleless: true,
+              detail: 'styleless template - layout undefined, must be unreachable in production' });
+          }
+          var bad = [];
+          function cmp(label, a, b) {              // a = live css px, b = export px at S x
+            if (Math.abs(a - b / S) > 1.0) {
+              bad.push(label + ' live ' + a.toFixed(1) + ' vs export ' + (b / S).toFixed(1));
+            }
+          }
+          cmp('face w', live.face[0], exp.face[0]);
+          cmp('face h', live.face[1], exp.face[1]);
+          cmp('stamp w', live.stamp[0], exp.stamp[0]);
+          cmp('stamp h', live.stamp[1], exp.stamp[1]);
+          var n = Math.min(live.kids.length, exp.kids.length);
+          for (var i = 0; i < n; i++) {
+            cmp('child' + i + ' x', live.kids[i][0], exp.kids[i][0]);
+            cmp('child' + i + ' y', live.kids[i][1], exp.kids[i][1]);
+          }
+          resolve({ drift: bad.length > 0, detail: bad.slice(0, 4).join('<br>') });
+        };
+        document.body.appendChild(frame);
+        frame.srcdoc = '<!doctype html><body style="margin:0">' + out.svg + '</body>';
+      });
+    }).catch(function (err) {
+      // A check that did not run is not a check that passed.
+      return { drift: true, detail: 'geometry check failed: ' + (err && err.message || err) };
+    });
+  }
+
   function runAll() {
     tally.textContent = 'warming up…';
     made = [];
     return ready().then(function () {
       var list = [].slice.call(rows.querySelectorAll('.row'));
-      var clean = 0, dirty = 0;
+      var clean = 0, dirty = 0, styleless = 0;
       return list.reduce(function (chain, row, i) {
         return chain.then(function () {
           var id = ids[i];
@@ -155,7 +266,10 @@ rasteriser handles inconsistently.</p>
           var status = row.querySelector('.status');
           tally.textContent = 'exporting ' + (i + 1) + '/' + list.length + ' — ' + id;
           var diff = row.querySelector('.diff');
-          return window.STAMP_EXPORT.toPngBlob(fit).then(function (res) {
+          return geometryCheck(fit).then(function (geo) {
+            row.__geo = geo;
+            return window.STAMP_EXPORT.toPngBlob(fit);
+          }).then(function (res) {
             var scale = window.STAMP_EXPORT.scale;
             var cssW = res.width / scale, cssH = res.height / scale;
             var url = URL.createObjectURL(res.blob);
@@ -191,11 +305,20 @@ rasteriser handles inconsistently.</p>
               dirty++;
               status.innerHTML = '<b>' + res.failures.length + ' asset(s) missing</b><br>' +
                 res.failures.map(function (f) { return f.split('/').pop(); }).join('<br>');
+            } else if (row.__geo && row.__geo.drift) {
+              dirty++;
+              status.innerHTML = '<b>geometry drift</b><br>' + row.__geo.detail;
+            } else if (row.__geo && row.__geo.styleless) {
+              styleless++;
+              status.innerHTML = '<span class="ok">clean</span> · ' +
+                Math.round(res.blob.size / 1024) + ' KB<br><b>styleless</b> - ' +
+                'no design CSS, geometry not comparable';
             } else {
               clean++;
               status.innerHTML = '<span class="ok">clean</span> · ' +
                 res.width + '×' + res.height + ' · ' +
-                Math.round(res.blob.size / 1024) + ' KB';
+                Math.round(res.blob.size / 1024) + ' KB' +
+                (row.__geo ? '<br><span class="ok">geometry exact</span>' : '');
             }
           }).catch(function (err) {
             dirty++;
@@ -204,7 +327,8 @@ rasteriser handles inconsistently.</p>
           });
         });
       }, Promise.resolve()).then(function () {
-        tally.textContent = clean + ' clean, ' + dirty + ' with problems, of ' + list.length;
+        tally.textContent = clean + ' clean, ' + dirty + ' with problems, ' +
+          styleless + ' styleless, of ' + list.length;
       });
     });
   }

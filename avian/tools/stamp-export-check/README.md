@@ -13,7 +13,7 @@ the rasteriser treats `mix-blend-mode`, CSS masks, container queries and SVG
 patterns. So the harness renders all 29 designs live, exports each one, and puts
 the PNG next to the DOM it came from, plus a difference blend of the two.
 
-Both real defects found so far were invisible to a GET-only smoke test and to
+Every real defect so far was invisible to a GET-only smoke test and to
 `node --check`:
 
 1. **`rule.cssText` destroys any shorthand containing `var()`.** Chromium
@@ -29,6 +29,20 @@ Both real defects found so far were invisible to a GET-only smoke test and to
    halftone plates lost `position:absolute;inset:0;width:100%;height:100%` and
    laid out at their intrinsic 825x900. The exporter now keeps the `<canvas>`
    and bakes the pixels on as its background.
+
+3. **The designs depend on `styles.css`'s `* { box-sizing: border-box }`.**
+   Without it `.stamp{padding:6px}` adds to the 188px width instead of
+   insetting, `.face` is 188 wide instead of 176, and since every coordinate in
+   these designs is a `cqw`, the whole interior renders ~7% oversized with the
+   top line clipped. The exporter now pulls universal (`*`) rules from
+   `styles.css` — never the whole file, which carries component rules that
+   would fight the export.
+
+   **This one is why the harness loads `styles.css` and asserts geometry.**
+   The first version of this page did neither: it rendered the live stamp
+   wrong in exactly the same way as the broken export, the two agreed, and it
+   reported 29 clean while the live site was visibly wrong. A comparison
+   harness that omits part of the real environment does not compare anything.
 
 ## Running it
 
@@ -52,8 +66,18 @@ Then open <http://localhost:8732/export-check.html> and press **Export all**.
 
 ## Reading the result
 
-- The tally must say **29 clean, 0 with problems**. A "problem" means an asset
-  could not be embedded; the failing URLs are listed in the row and logged.
+- The tally must say **28 clean, 0 with problems, 1 styleless**. A "problem"
+  means an asset could not be embedded, or the export's geometry drifted from
+  the live node. The styleless one is `field`, upstream's dead design — it is
+  detected by the property (every face child `position:static`) rather than by
+  name, so the next dead design is caught too.
+- Each clean row also reports **geometry exact**: the real boxes inside the
+  export document, measured in an iframe via `STAMP_EXPORT.toSvgText`, match
+  the live node's to within 1px. A uniform scale error is invisible by eye —
+  it has to be measured. Two traps live here: a check that *could not run* is
+  reported as a failure, never a pass; and appending an iframe fires a `load`
+  for `about:blank` before `srcdoc` applies, so the handler ignores any
+  document that has no `<svg>` in it yet.
 - Live and export panes are the same object at the same size, so they can be
   compared directly. The export carries a 2px transparent bleed for the
   dilated cut edge — that surround is expected.
