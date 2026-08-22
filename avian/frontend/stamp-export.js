@@ -59,27 +59,62 @@
   var assetMemo = Object.create(null);
   var lastFailures = [];
 
-  function asDataUri(url) {
-    if (assetMemo[url]) return assetMemo[url];
-    var p = fetch(url, { credentials: 'same-origin' })
+  /* Does this data: URI actually decode as a picture? A response can satisfy
+     `r.ok` and still be empty or truncated - readAsDataURL then yields a
+     perfectly well-formed `data:image/webp;base64,` with nothing behind it,
+     which renders as no bird at all and reports no error. Fonts and SVG are
+     exempt: neither decodes through an Image. */
+  function decodesAsImage(dataUri) {
+    if (!/^data:image\//i.test(dataUri)) return Promise.resolve(true);
+    if (/^data:image\/svg\+xml/i.test(dataUri)) return Promise.resolve(true);
+    return new Promise(function (resolve) {
+      var probe = new Image();
+      probe.onload = function () {
+        resolve(probe.naturalWidth > 0 && probe.naturalHeight > 0);
+      };
+      probe.onerror = function () { resolve(false); };
+      probe.src = dataUri;
+    });
+  }
+
+  function fetchAsset(url, bypassCache) {
+    var opts = { credentials: 'same-origin' };
+    if (bypassCache) opts.cache = 'reload';
+    return fetch(url, opts)
       .then(function (r) {
         if (!r.ok) throw new Error('HTTP ' + r.status);
         return r.blob();
       })
       .then(function (blob) {
+        if (!blob.size) throw new Error('empty response');
         return new Promise(function (resolve, reject) {
           var reader = new FileReader();
           reader.onload = function () { resolve(String(reader.result)); };
-          reader.onerror = function () { reject(new Error('read')); };
+          reader.onerror = function () { reject(new Error('unreadable')); };
           reader.readAsDataURL(blob);
         });
       })
+      .then(function (uri) {
+        return decodesAsImage(uri).then(function (ok) {
+          if (!ok) throw new Error('did not decode');
+          return uri;
+        });
+      });
+  }
+
+  function asDataUri(url) {
+    if (assetMemo[url]) return assetMemo[url];
+    /* One retry with the HTTP cache bypassed. The reported symptom was that
+       the first download of a bird came out without it and the second was
+       correct - the signature of an asset that was not really there the first
+       time round. Verified-only results are memoised; a failure is never
+       cached, so the next export genuinely tries again instead of serving the
+       same broken artwork for the life of the page. */
+    var p = fetchAsset(url, false)
+      .catch(function () { return fetchAsset(url, true); })
       .catch(function (err) {
-        /* A missing asset must not abort the whole export - the rest of the
-           issue is still worth having. But it must not vanish either: a
-           silently-dropped texture is exactly the failure mode this repo
-           keeps getting bitten by, so record it and report at the end. */
         lastFailures.push(url + ' (' + (err && err.message || err) + ')');
+        delete assetMemo[url];
         return '';
       });
     assetMemo[url] = p;
@@ -846,6 +881,16 @@
         return Promise.all([stampCss(staged.fit), inlineNodeAssets(staged.fit)]);
       })
       .then(function (parts) {
+        /* A texture that failed to embed is a blemish; the bird failing to
+           embed is a different thing entirely, and must never be handed over
+           as a finished download. Refuse instead, so the control shows the
+           fault rather than saving a stamp with nothing on it. */
+        var artwork = lastFailures.filter(function (f) {
+          return /\/assets\/(webp|illustrations|cutouts)\/|cutout\.php/.test(f);
+        });
+        if (artwork.length) {
+          throw new Error('the bird artwork could not be embedded: ' + artwork[0]);
+        }
         return rasterise(buildSvg(staged.fit, size, parts[0], defs, props, theme), size);
       })
       .then(function (blob) {
