@@ -47,7 +47,10 @@
 (function () {
   'use strict';
 
-  var SCALE = 3;                     // 188px issue -> ~564px PNG
+  /* 4x: a 188px issue exports at ~768px. The ink plates are already painted
+     at 4-5x by stamps.js, and the type and gradients are vector, so this is
+     real detail rather than an upscale. */
+  var SCALE = 4;
   var BLEED = 2;                     // px of transparent margin for the dilated cut edge
   var XHTML = 'http://www.w3.org/1999/xhtml';
 
@@ -479,19 +482,73 @@
      the element means every selector still applies, including any upstream
      adds later. An empty canvas paints transparent, so the background shows
      through exactly where the pixels were. */
-  function bakeCanvases(source, clone) {
-    var from = source.querySelectorAll('canvas');
-    var to = clone.querySelectorAll('canvas');
-    for (var i = 0; i < to.length && i < from.length; i++) {
+  function bakeCanvases(root) {
+    var plates = root.querySelectorAll('canvas');
+    for (var i = 0; i < plates.length; i++) {
       var data;
-      try { data = from[i].toDataURL('image/png'); }
-      catch (e) { lastFailures.push('canvas ' + (from[i].dataset.fx || i)); continue; }
-      to[i].style.backgroundImage = 'url("' + data + '")';
-      to[i].style.backgroundSize = '100% 100%';
-      to[i].style.backgroundRepeat = 'no-repeat';
-      to[i].style.backgroundPosition = 'center';
-      to[i].style.backgroundOrigin = 'border-box';
+      try { data = plates[i].toDataURL('image/png'); }
+      catch (e) { lastFailures.push('canvas ' + (plates[i].dataset.fx || i)); continue; }
+      plates[i].style.backgroundImage = 'url("' + data + '")';
+      plates[i].style.backgroundSize = '100% 100%';
+      plates[i].style.backgroundRepeat = 'no-repeat';
+      plates[i].style.backgroundPosition = 'center';
+      plates[i].style.backgroundOrigin = 'border-box';
     }
+  }
+
+  /* Has this plate actually been drawn on? FX marks a canvas _done the moment
+     it starts painting, not when it finishes, so that flag cannot be trusted
+     here. Scaling the plate into a thumbnail and looking for any opacity is
+     cheap and tells the truth. */
+  function plateHasInk(plate) {
+    if (!plate.width || !plate.height) return false;
+    try {
+      var probe = document.createElement('canvas');
+      probe.width = 24; probe.height = 24;
+      var pcx = probe.getContext('2d', { willReadFrequently: true });
+      pcx.drawImage(plate, 0, 0, 24, 24);
+      var data = pcx.getImageData(0, 0, 24, 24).data;
+      for (var i = 3; i < data.length; i += 4) {
+        if (data[i] > 8) return true;
+      }
+    } catch (e) {
+      return true;                       // cannot tell; never block the export
+    }
+    return false;
+  }
+
+  /* Paint the staged copy's ink plates and wait for them.
+
+     The plates cannot simply be copied from the live issue: FX paints them
+     lazily, through an IntersectionObserver, so a bird whose card has not been
+     scrolled into view has an empty plate. Copying that produced the reported
+     "first click gives the stamp with no bird, second click is fine" - the
+     first export raced the paint, and by the second the plate existed.
+
+     Painting the staged copy also gets a better plate than the live one: the
+     staging host lays the issue out at its natural size rather than the
+     postcard's shrunken one, so FX sizes the backing store for that. */
+  function platesReady(host) {
+    var plates = host.querySelectorAll('canvas.fxc[data-fx]');
+    if (!plates.length) return Promise.resolve();
+    if (window.FX && typeof window.FX.run === 'function') {
+      try { window.FX.run(host); } catch (e) { }
+    }
+    var deadline = Date.now() + 4000;
+    return new Promise(function (resolve) {
+      (function poll() {
+        var waiting = 0;
+        for (var i = 0; i < plates.length; i++) {
+          if (!plateHasInk(plates[i])) waiting++;
+        }
+        if (!waiting) return resolve();
+        if (Date.now() > deadline) {
+          lastFailures.push(waiting + ' ink plate(s) never painted');
+          return resolve();
+        }
+        setTimeout(poll, 60);
+      })();
+    });
   }
 
   /* Turn <img src> and SVG <image href> into data: URIs. */
@@ -599,7 +656,6 @@
     host.appendChild(fit);
     document.body.appendChild(host);
 
-    bakeCanvases(sourceFit, fit);
     // The cut edge is copied from the live issue's computed geometry, so it
     // has to be recomputed now that scale is 1 and the box has changed.
     if (window.STAMPS && typeof window.STAMPS.syncFringe === 'function') {
@@ -621,14 +677,29 @@
     var body = new XMLSerializer().serializeToString(fit);
     // Definitions first, so every var() below resolves.
     css = assetPrelude(css + body + props) + '\n' + css;
+    var outW = Math.round(size.w * SCALE), outH = Math.round(size.h * SCALE);
+    /* The magnification is a CSS transform on the root, and the viewBox is
+       deliberately 1:1 with the output size.
+
+       Driving it from the viewBox instead - width="576" viewBox="0 0 192 261" -
+       works in Chromium and fails in WebKit, which rasterises the image at the
+       full 576x783 but does NOT apply the viewBox transform to foreignObject
+       content. The stamp then paints at its CSS size in the top-left corner of
+       a canvas three times too big: a small, soft issue swimming in
+       transparent space. Reported from a real download, invisible here.
+
+       A transform is honoured by every engine, and because it is applied
+       before rasterisation the type and gradients are drawn at the final
+       scale rather than being sampled up from a 1x bitmap. */
     return '<svg xmlns="http://www.w3.org/2000/svg" ' +
-             'width="' + (size.w * SCALE) + '" height="' + (size.h * SCALE) + '" ' +
-             'viewBox="0 0 ' + size.w + ' ' + size.h + '">' +
+             'width="' + outW + '" height="' + outH + '" ' +
+             'viewBox="0 0 ' + outW + ' ' + outH + '">' +
              '<defs><style type="text/css"><![CDATA[\n' + css + '\n' + NORMALIZE_CSS + '\n]]></style></defs>' +
              defs +
-             '<foreignObject x="0" y="0" width="' + size.w + '" height="' + size.h + '">' +
+             '<foreignObject x="0" y="0" width="' + outW + '" height="' + outH + '">' +
                '<div xmlns="' + XHTML + '" class="sx-root atlas-grid" data-theme="' + theme + '" ' +
-                 'style="' + props + ';position:relative;width:' + size.w + 'px;height:' + size.h + 'px;">' +
+                 'style="' + props + ';position:relative;width:' + size.w + 'px;height:' + size.h + 'px;' +
+                 'transform:scale(' + SCALE + ');transform-origin:0 0;">' +
                  body +
                '</div>' +
              '</foreignObject>' +
@@ -732,7 +803,10 @@
       // The names have to be known before the live node is read, and they come
       // from the same stylesheet text the export embeds.
       .then(primeCustomPropNames)
+      // Plates first: they must hold pixels before they can be baked in.
+      .then(function () { return platesReady(staged.host); })
       .then(function () {
+        bakeCanvases(staged.fit);
         props = inheritedProps(sourceFit);
         return Promise.all([stampCss(staged.fit), inlineNodeAssets(staged.fit)]);
       })
@@ -904,7 +978,10 @@
     return Promise.resolve()
       .then(function () { return document.fonts && document.fonts.ready; })
       .then(primeCustomPropNames)
+      // Plates first: they must hold pixels before they can be baked in.
+      .then(function () { return platesReady(staged.host); })
       .then(function () {
+        bakeCanvases(staged.fit);
         props = inheritedProps(sourceFit);
         return Promise.all([stampCss(staged.fit), inlineNodeAssets(staged.fit)]);
       })
