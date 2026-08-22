@@ -535,9 +535,17 @@
     '.sx-host{position:fixed!important;left:-99999px!important;top:0!important;' +
       'width:auto!important;height:auto!important;display:block!important;' +
       'contain:none!important;pointer-events:none!important;opacity:1!important;}' +
+    /* opacity/visibility are forced because apt.js drives the postcard's
+       flight animation through inline style on this very node: the issue is
+       appended at `opacity:0` and only restored when the flight settles.
+       Exporting mid-flight - or after any path that leaves it at 0 - produced
+       a perfectly rendered, perfectly invisible stamp: a fully transparent PNG
+       with every other signal reporting success. The export is of the issue,
+       never of whatever animation state the UI happens to be in. */
     '.sx-host>.stamp-fit,.sx-root>.stamp-fit{position:absolute!important;' +
       'left:0!important;top:0!important;right:auto!important;bottom:auto!important;' +
       'width:100%!important;height:100%!important;' +
+      'opacity:1!important;visibility:visible!important;' +
       'transform:none!important;transition:none!important;filter:none!important;}' +
     '.sx-host .stamp,.sx-root .stamp,' +
     '.sx-host .stamp-fringe-outline,.sx-root .stamp-fringe-outline{' +
@@ -574,7 +582,8 @@
 
     var fit = sourceFit.cloneNode(true);
     fit.querySelectorAll('.stamp-peel-layer').forEach(function (el) { el.remove(); });
-    ['--postcard-turn', '--postcard-scale', '--fit-scale'].forEach(function (name) {
+    ['--postcard-turn', '--postcard-scale', '--fit-scale',
+     'opacity', 'visibility'].forEach(function (name) {
       fit.style.removeProperty(name);
     });
     fit.style.setProperty('--fit-scale', '1');
@@ -676,9 +685,10 @@
              handed a blank PNG and told it worked. Sample the result and fail
              loudly instead. A stride keeps it to a few milliseconds. */
           if (isBlank(cx, canvas.width, canvas.height)) {
-            reject(new Error('the browser rasterised the issue as blank - the ' +
-              'export document is likely too large at ' +
-              Math.round(svgText.length / 1048576) + 'MB'));
+            reject(new Error('the browser rasterised the issue as blank ' +
+              '(export document ' + Math.round(svgText.length / 1048576) + 'MB). ' +
+              'Usual causes: the issue carried opacity/visibility state from the ' +
+              'UI, or the document grew too large for the rasteriser.'));
             return;
           }
           // toBlob throws synchronously on a tainted canvas. Inside onload
