@@ -85,7 +85,43 @@
 
   var URL_RE = /url\((['"]?)([^'")]+)\1\)/g;
 
-  /* Rewrite every fetchable url() in a block of CSS to a data: URI.
+  /* Each distinct asset is embedded ONCE, as a custom property on the export
+     root, and every reference becomes var(--sx-aN).
+
+     The stylesheet describes all 29 designs, so a texture like grain.png is
+     named by many rules - most belonging to designs this stamp is not. Pasting
+     the data URI at each site produced 65 embeds totalling 7.1MB for a single
+     stamp, and Chromium silently refuses to rasterise an SVG image that large:
+     the <img> fires onload, reports the right intrinsic size, and paints
+     nothing, so the export comes back fully transparent with no error anywhere.
+
+     Fonts are the exception and stay literal - custom properties do not resolve
+     inside @font-face, which has no element to inherit from. Each face appears
+     once regardless. */
+  var assetVars = Object.create(null);
+  var assetVarSeq = 0;
+
+  function registerAsset(raw, dataUri) {
+    if (/^data:font\//i.test(dataUri)) return null;      // @font-face: literal only
+    if (!assetVars[raw]) {
+      assetVars[raw] = { name: '--sx-a' + (assetVarSeq++), uri: dataUri };
+    }
+    return assetVars[raw].name;
+  }
+
+  /* Emit definitions for exactly the vars the finished document references. */
+  function assetPrelude(documentText) {
+    var out = [];
+    Object.keys(assetVars).forEach(function (raw) {
+      var entry = assetVars[raw];
+      if (documentText.indexOf('var(' + entry.name + ')') >= 0) {
+        out.push(entry.name + ':url("' + entry.uri + '")');
+      }
+    });
+    return out.length ? '.sx-root{' + out.join(';') + '}' : '';
+  }
+
+  /* Rewrite every fetchable url() to a data: URI, or to the var that holds it.
      Fragment references (url(#stampFringeLight)) are left alone - those
      resolve against the defs we copy into the export SVG. */
   function inlineCssUrls(css) {
@@ -100,7 +136,10 @@
       var map = Object.create(null);
       wanted.forEach(function (raw, i) { if (results[i]) map[raw] = results[i]; });
       return css.replace(URL_RE, function (match, quote, raw) {
-        return map[raw] ? 'url("' + map[raw] + '")' : match;
+        var uri = map[raw];
+        if (!uri) return match;
+        var name = registerAsset(raw, uri);
+        return name ? 'var(' + name + ')' : 'url("' + uri + '")';
       });
     });
   }
@@ -246,6 +285,18 @@
     var out = '', i = 0, n = css.length;
     while (i < n) {
       var ch = css.charAt(i);
+      /* Whitespace has to be consumed here, before the dispatch below.
+         Without this, a newline ahead of `@font-face` or `@media` fell through
+         to the ordinary-rule branch, which scans forward to the next `{` and
+         emits everything up to its matching `}` verbatim - swallowing the
+         at-rule whole. The effect was silent and doubled: no @font-face was
+         ever filtered (all 17 faces shipped, ~1MB per export instead of ~200KB)
+         and no @media was ever resolved, so mobile blocks were left for the SVG
+         to evaluate against its own one-stamp-wide viewport. */
+      if (ch === ' ' || ch === '\n' || ch === '\t' || ch === '\r' || ch === '\f') {
+        i++;
+        continue;
+      }
       if (ch === '/' && css.charAt(i + 1) === '*') {
         var ce = css.indexOf('*/', i + 2);
         i = ce < 0 ? n : ce + 2;
@@ -559,6 +610,8 @@
 
   function buildSvg(fit, size, css, defs, props, theme) {
     var body = new XMLSerializer().serializeToString(fit);
+    // Definitions first, so every var() below resolves.
+    css = assetPrelude(css + body + props) + '\n' + css;
     return '<svg xmlns="http://www.w3.org/2000/svg" ' +
              'width="' + (size.w * SCALE) + '" height="' + (size.h * SCALE) + '" ' +
              'viewBox="0 0 ' + size.w + ' ' + size.h + '">' +
@@ -584,6 +637,19 @@
     return btoa(out);
   }
 
+  function isBlank(cx, w, h) {
+    var step = 4;
+    try {
+      var data = cx.getImageData(0, 0, w, h).data;
+      for (var i = 3; i < data.length; i += 4 * step) {
+        if (data[i] > 16) return false;
+      }
+    } catch (e) {
+      return false;                       // cannot tell; do not block the export
+    }
+    return true;
+  }
+
   function rasterise(svgText, size) {
     return new Promise(function (resolve, reject) {
       /* A data: URL, deliberately - NOT URL.createObjectURL.
@@ -604,6 +670,17 @@
           cx.imageSmoothingEnabled = true;
           if ('imageSmoothingQuality' in cx) cx.imageSmoothingQuality = 'high';
           cx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          /* An oversized SVG is rasterised as nothing at all: the <img> fires
+             onload, reports the correct intrinsic size, and paints a fully
+             transparent frame. Nothing throws, so without this the user is
+             handed a blank PNG and told it worked. Sample the result and fail
+             loudly instead. A stride keeps it to a few milliseconds. */
+          if (isBlank(cx, canvas.width, canvas.height)) {
+            reject(new Error('the browser rasterised the issue as blank - the ' +
+              'export document is likely too large at ' +
+              Math.round(svgText.length / 1048576) + 'MB'));
+            return;
+          }
           // toBlob throws synchronously on a tainted canvas. Inside onload
           // that escapes the executor, so without this try the promise would
           // never settle and the button would spin for ever.

@@ -50,6 +50,17 @@ Every real defect so far was invisible to a GET-only smoke test and to
    size still measured correct. One `NORMALIZE_CSS` constant now feeds both,
    and the gate asserts placement as well as size.
 
+5. **An oversized export document rasterises to nothing, silently.** Pasting a
+   data URI at every `url()` embedded the shared textures ~19 times each — 7.1MB
+   for one stamp — and Chromium then paints a fully transparent frame while
+   `onload` still fires with the right intrinsic size. Assets are now registered
+   once as `--sx-aN` custom properties. The gate measures **ink coverage** for
+   exactly this reason, and the module itself now fails loudly on a blank raster.
+6. **Leading whitespace made the CSS scanner swallow every at-rule.** A newline
+   before `@font-face` or `@media` fell into the ordinary-rule branch. No font
+   was ever subset (17 faces, ~1MB per export) and no media query was ever
+   resolved. Fixed by consuming whitespace before dispatch.
+
 ## Running it
 
 Serve a webroot that mirrors what `scripts/link_webroot.sh` installs — the
@@ -77,7 +88,8 @@ Then open <http://localhost:8732/export-check.html> and press **Export all**.
   the live node. The styleless one is `field`, upstream's dead design — it is
   detected by the property (every face child `position:static`) rather than by
   name, so the next dead design is caught too.
-- Each clean row also reports **geometry exact**: the real boxes inside the
+- Each clean row reports its **ink coverage** (expect 91–97%) and
+  **geometry exact**: the real boxes inside the
   export document, measured in an iframe via `STAMP_EXPORT.toSvgText`, match
   the live node's to within 1px. A uniform scale error is invisible by eye —
   it has to be measured. Two traps live here: a check that *could not run* is

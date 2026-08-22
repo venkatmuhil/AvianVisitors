@@ -191,6 +191,38 @@ rasteriser handles inconsistently.</p>
     };
   }
 
+  /* Ink coverage. A blank PNG is the failure this feature keeps producing:
+     an oversized export document rasterises to nothing while every other
+     signal still reports success. The image has to finish decoding first -
+     drawing it straight after setting .src measures an empty frame and calls
+     every design blank. */
+  function inkOf(url, w, h) {
+    return new Promise(function (resolve) {
+      var probe = new Image();
+      probe.onload = function () {
+        try {
+          var c = document.createElement('canvas');
+          c.width = w; c.height = h;
+          var cx = c.getContext('2d', { willReadFrequently: true });
+          cx.drawImage(probe, 0, 0);
+          var px = cx.getImageData(0, 0, w, h).data;
+          var opaque = 0, seen = {}, sampled = 0;
+          for (var q = 0; q < px.length; q += 16) {
+            sampled++;
+            if (px[q + 3] > 16) {
+              opaque++;
+              seen[((px[q] >> 4) << 8) | ((px[q + 1] >> 4) << 4) | (px[q + 2] >> 4)] = 1;
+            }
+          }
+          resolve({ pct: +(100 * opaque / Math.max(1, sampled)).toFixed(1),
+                    colours: Object.keys(seen).length });
+        } catch (e) { resolve({ pct: -1, colours: -1 }); }
+      };
+      probe.onerror = function () { resolve({ pct: 0, colours: 0 }); };
+      probe.src = url;
+    });
+  }
+
   function geometryCheck(fit) {
     return window.STAMP_EXPORT.toSvgText(fit).then(function (out) {
       return new Promise(function (resolve) {
@@ -310,20 +342,9 @@ rasteriser handles inconsistently.</p>
             img.src = url; img.width = cssW; img.height = cssH;
             out.innerHTML = ''; out.appendChild(img);
 
-            // difference: the export laid over an identical live render.
-            var under = document.createElement('div');
-            under.className = 'under atlas-grid';
-            under.style.cssText = 'position:absolute;inset:0;';
-            under.appendChild(fit.cloneNode(true));
-            var over = new Image();
-            over.className = 'over'; over.src = url;
-            over.width = cssW; over.height = cssH;
-            diff.innerHTML = '';
-            diff.className = 'pane diff fixed stack';
-            diff.appendChild(under); diff.appendChild(over);
-            window.FX.run(diff); window.STAMPS.syncFringe(diff);
-
             made.push({ id: id, blob: res.blob });
+            return inkOf(url, res.width, res.height).then(function (ink) {
+            res.inkPct = ink.pct; res.colours = ink.colours;
             if (res.failures.length) {
               dirty++;
               status.innerHTML = '<b>' + res.failures.length + ' asset(s) missing</b><br>' +
@@ -331,6 +352,10 @@ rasteriser handles inconsistently.</p>
             } else if (row.__geo && row.__geo.drift) {
               dirty++;
               status.innerHTML = '<b>geometry drift</b><br>' + row.__geo.detail;
+            } else if (res.inkPct < 5 || res.colours < 8) {
+              dirty++;
+              status.innerHTML = '<b>near-blank export</b><br>ink ' +
+                res.inkPct + '% · ' + res.colours + ' colours';
             } else if (row.__geo && row.__geo.styleless) {
               styleless++;
               status.innerHTML = '<span class="ok">clean</span> · ' +
@@ -340,9 +365,10 @@ rasteriser handles inconsistently.</p>
               clean++;
               status.innerHTML = '<span class="ok">clean</span> · ' +
                 res.width + '×' + res.height + ' · ' +
-                Math.round(res.blob.size / 1024) + ' KB' +
+                Math.round(res.blob.size / 1024) + ' KB · ink ' + res.inkPct + '%' +
                 (row.__geo ? '<br><span class="ok">geometry exact</span>' : '');
             }
+            });
           }).catch(function (err) {
             dirty++;
             out.innerHTML = '<span class="note"><b>failed</b></span>';
