@@ -12,7 +12,7 @@
   // which moves the number and cannot know what the number now means - so
   // any such note is stale from the next upload onwards. git log is the
   // changelog.
-  var SKETCH_VERSION = 'r42';
+  var SKETCH_VERSION = 'r43';
   // Cache-bust for /api/img - bump whenever a bird gets re-rendered via
   // /api/regen or whenever you need every CF DC to drop its cached copy.
   // Cloudflare keys on the full URL incl. query, so bumping this is
@@ -21,7 +21,7 @@
   // versioned URL is the only reliable way to invalidate everywhere.)
   // Kept in step with SKETCH_VERSION by the same bump, and carrying the same
   // rule: no per-revision annotation here, it goes stale mechanically.
-  var IMG_VERSION = 'r42';
+  var IMG_VERSION = 'r43';
 
   // ---- Sliding pill helper ----
   // Each segmented control has a single .seg-pill element that we move via
