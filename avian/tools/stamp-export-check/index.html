@@ -154,10 +154,16 @@ rasteriser handles inconsistently.</p>
      This is what caught the missing `* { box-sizing: border-box }` reset -
      the stamp came out 200x273 instead of 188x256, every cqw 6.8% too large,
      and the top line clipped off the design. */
-  function boxesOf(root, doc) {
+  function boxesOf(root, doc, frameEl) {
     var face = root.querySelector('.face');
     var stamp = root.querySelector('.stamp');
     if (!face || !stamp) return null;
+    // The stamp's PLACEMENT inside its frame matters as much as its size.
+    // A version of this check compared only sizes and offsets-within-face, and
+    // passed while the exported issue sat at (-13.5,-16.2) with its top-left
+    // corner clipped off the PNG.
+    var frame = frameEl || root;
+    var frb = frame.getBoundingClientRect();
     var fb = face.getBoundingClientRect(), sb = stamp.getBoundingClientRect();
     var kids = [].slice.call(face.children).filter(function (el) {
       return el.getBoundingClientRect().width > 0;
@@ -175,6 +181,7 @@ rasteriser handles inconsistently.</p>
     });
     return {
       styleless: styleless,
+      placement: [sb.left - frb.left, sb.top - frb.top],
       face: [fb.width, fb.height],
       stamp: [sb.width, sb.height],
       kids: kids.map(function (el) {
@@ -197,7 +204,7 @@ rasteriser handles inconsistently.</p>
           if (!doc || !doc.querySelector('svg')) return;
           // the iframe renders the SVG at its width/height attrs, i.e. SCALE x
           var S = window.STAMP_EXPORT.scale;
-          var exp = boxesOf(doc, doc);
+          var exp = boxesOf(doc, doc, doc.querySelector('.sx-root'));
           // the live node measured the way the exporter stages it
           var host = document.createElement('div');
           host.className = 'atlas-grid';
@@ -216,7 +223,7 @@ rasteriser handles inconsistently.</p>
           });
           host.appendChild(clone);
           document.body.appendChild(host);
-          var live = boxesOf(host, document);
+          var live = boxesOf(host, document, host);
           host.remove(); frame.remove();
           if (!exp || !live) {
             return resolve({ drift: true,
@@ -231,6 +238,22 @@ rasteriser handles inconsistently.</p>
             if (Math.abs(a - b / S) > 1.0) {
               bad.push(label + ' live ' + a.toFixed(1) + ' vs export ' + (b / S).toFixed(1));
             }
+          }
+          // Placement is asserted against the export's own contract, not against
+          // the live node: the staging host is the design's fit box, which is
+          // often smaller than the issue, so the live offsets are negative and
+          // not comparable. The invariant that matters is absolute - the issue
+          // must sit inset from the export root by exactly the bleed on all
+          // sides. It was landing at (-13.5,-16.2), clipped, while every size
+          // still measured correct.
+          var BLEED = 2;
+          if (Math.abs(exp.placement[0] / S - BLEED) > 1) {
+            bad.push('placement x: issue inset ' + (exp.placement[0] / S).toFixed(1) +
+                     ' from the export edge, expected ' + BLEED);
+          }
+          if (Math.abs(exp.placement[1] / S - BLEED) > 1) {
+            bad.push('placement y: issue inset ' + (exp.placement[1] / S).toFixed(1) +
+                     ' from the export edge, expected ' + BLEED);
           }
           cmp('face w', live.face[0], exp.face[0]);
           cmp('face h', live.face[1], exp.face[1]);

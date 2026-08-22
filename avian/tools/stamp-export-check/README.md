@@ -44,6 +44,12 @@ Every real defect so far was invisible to a GET-only smoke test and to
    reported 29 clean while the live site was visibly wrong. A comparison
    harness that omits part of the real environment does not compare anything.
 
+4. **The staging normalization CSS was not reaching the export.** It was
+   injected into the page only, so the offscreen host laid out correctly and
+   the SVG did not — the issue landed at (-13.5, -16.2), clipped, while every
+   size still measured correct. One `NORMALIZE_CSS` constant now feeds both,
+   and the gate asserts placement as well as size.
+
 ## Running it
 
 Serve a webroot that mirrors what `scripts/link_webroot.sh` installs — the

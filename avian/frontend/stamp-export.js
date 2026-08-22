@@ -473,23 +473,32 @@
 
   /* ---------- the export --------------------------------------------- */
 
+  /* One source of truth for the staging geometry. These rules must reach BOTH
+     the offscreen host (so measure() sees the real box) and the export SVG (so
+     the rasteriser lays it out the same way). Injecting them only into the page
+     - which is what this used to do - left the export without them: inside the
+     SVG `.stamp-fit` kept its inline box, `.stamp` centred against that instead
+     of the export root, and the issue landed at (-13.5,-16.2) with its top-left
+     clipped away, while every size still measured correct. */
+  var NORMALIZE_CSS =
+    '.sx-host{position:fixed!important;left:-99999px!important;top:0!important;' +
+      'width:auto!important;height:auto!important;display:block!important;' +
+      'contain:none!important;pointer-events:none!important;opacity:1!important;}' +
+    '.sx-host>.stamp-fit,.sx-root>.stamp-fit{position:absolute!important;' +
+      'left:0!important;top:0!important;right:auto!important;bottom:auto!important;' +
+      'width:100%!important;height:100%!important;' +
+      'transform:none!important;transition:none!important;filter:none!important;}' +
+    '.sx-host .stamp,.sx-root .stamp,' +
+    '.sx-host .stamp-fringe-outline,.sx-root .stamp-fringe-outline{' +
+      'transition:none!important;animation:none!important;}';
+
   var hostStyle = null;
 
   function ensureHostStyle() {
     if (hostStyle) return;
     hostStyle = document.createElement('style');
     hostStyle.id = 'sx-host-style';
-    hostStyle.textContent =
-      '.sx-host{position:fixed!important;left:-99999px!important;top:0!important;' +
-        'width:auto!important;height:auto!important;display:block!important;' +
-        'contain:none!important;pointer-events:none!important;opacity:1!important;}' +
-      '.sx-host>.stamp-fit,.sx-root>.stamp-fit{position:absolute!important;' +
-        'left:0!important;top:0!important;right:auto!important;bottom:auto!important;' +
-        'width:100%!important;height:100%!important;' +
-        'transform:none!important;transition:none!important;filter:none!important;}' +
-      '.sx-host .stamp,.sx-root .stamp,' +
-      '.sx-host .stamp-fringe-outline,.sx-root .stamp-fringe-outline{' +
-        'transition:none!important;animation:none!important;}';
+    hostStyle.textContent = NORMALIZE_CSS;
     document.head.appendChild(hostStyle);
   }
 
@@ -553,7 +562,7 @@
     return '<svg xmlns="http://www.w3.org/2000/svg" ' +
              'width="' + (size.w * SCALE) + '" height="' + (size.h * SCALE) + '" ' +
              'viewBox="0 0 ' + size.w + ' ' + size.h + '">' +
-             '<defs><style type="text/css"><![CDATA[\n' + css + '\n]]></style></defs>' +
+             '<defs><style type="text/css"><![CDATA[\n' + css + '\n' + NORMALIZE_CSS + '\n]]></style></defs>' +
              defs +
              '<foreignObject x="0" y="0" width="' + size.w + '" height="' + size.h + '">' +
                '<div xmlns="' + XHTML + '" class="sx-root atlas-grid" data-theme="' + theme + '" ' +
