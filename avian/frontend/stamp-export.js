@@ -787,6 +787,52 @@
     return btoa(out);
   }
 
+  var WATERMARK = '7ml.in';
+
+  /* The imprint line, painted onto the finished canvas rather than added to
+     the document.
+
+     Deliberately not part of the exported DOM: drawing it here keeps it out of
+     the foreignObject entirely, so it cannot disturb any design's layout, it
+     needs no font embedding, and it renders identically on every engine -
+     which matters, since foreignObject is exactly where this module keeps
+     finding WebKit differences.
+
+     The ink colour is chosen from the pixels actually underneath it, because
+     the stock runs from near-black (mono, opart) to cream, and a fixed colour
+     would vanish on half the catalogue. */
+  function drawWatermark(cx, W, H) {
+    if (!WATERMARK) return;
+    var pad = Math.round(W * 0.035);
+    var size = Math.max(10, Math.round(W * 0.021));
+    cx.save();
+    cx.font = '600 ' + size + 'px ui-sans-serif, -apple-system, "Helvetica Neue", Arial, sans-serif';
+    if ('letterSpacing' in cx) cx.letterSpacing = Math.max(1, Math.round(size * 0.08)) + 'px';
+    cx.textAlign = 'right';
+    cx.textBaseline = 'alphabetic';
+
+    var x = W - pad, y = H - pad;
+    var boxW = Math.ceil(cx.measureText(WATERMARK).width) + size;
+    var boxH = size + 4;
+    var bx = Math.max(0, Math.round(x - boxW)), by = Math.max(0, Math.round(y - boxH));
+    var onDarkGround = false;
+    try {
+      var px = cx.getImageData(bx, by, Math.max(1, Math.min(boxW, W - bx)),
+                                       Math.max(1, Math.min(boxH, H - by))).data;
+      var sum = 0, n = 0;
+      for (var i = 0; i < px.length; i += 4) {
+        if (px[i + 3] < 16) continue;                 // ignore the perforations
+        sum += 0.299 * px[i] + 0.587 * px[i + 1] + 0.114 * px[i + 2];
+        n++;
+      }
+      onDarkGround = n ? (sum / n) < 128 : false;
+    } catch (e) { }
+
+    cx.fillStyle = onDarkGround ? 'rgba(255,253,247,0.60)' : 'rgba(24,20,15,0.46)';
+    cx.fillText(WATERMARK, x, y);
+    cx.restore();
+  }
+
   function isBlank(cx, w, h) {
     var step = 4;
     try {
@@ -832,6 +878,9 @@
               'UI, or the document grew too large for the rasteriser.'));
             return;
           }
+          // After the blank check, never before it - otherwise the imprint's
+          // own pixels would satisfy the guard and a blank export would pass.
+          drawWatermark(cx, canvas.width, canvas.height);
           // toBlob throws synchronously on a tainted canvas. Inside onload
           // that escapes the executor, so without this try the promise would
           // never settle and the button would spin for ever.
