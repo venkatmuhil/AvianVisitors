@@ -75,8 +75,17 @@ function assetsFromIndex() {
 /* ---- Minimal DOM shim. The stamp modules touch document at load time
    (stage attributes, filter injection, IntersectionObserver) but never
    need a real layout to BUILD markup - only to paint canvases, which we
-   are not asserting on. Proxies absorb whatever they reach for. ---- */
-function buildContext() {
+   are not asserting on. Proxies absorb whatever they reach for.
+
+   getComputedStyle is the one exception: stamp-batch-c.js gates its own
+   registration on a `--avian-stamp-batch-c-ready` custom property so a
+   missing/stale stylesheet can't register markup the CSS can't style
+   (see its own comment). This harness's job is to verify what happens on
+   a normal successful load, not to exercise that failure path, so the
+   shim answers a getPropertyValue() query by scanning the real,
+   already-loaded CSS text for `--name: value` - generically, not just
+   for this one property, so the next such gate is covered too. ---- */
+function buildContext(cssText) {
   const el = () => new Proxy(function () {}, {
     get: (t, k) => {
       if (k === 'style') return el();
@@ -102,7 +111,12 @@ function buildContext() {
     requestAnimationFrame: () => 0,
     cancelAnimationFrame: () => {},
     matchMedia: () => ({ matches: false, addEventListener() {}, addListener() {} }),
-    getComputedStyle: () => ({ getPropertyValue: () => '' }),
+    getComputedStyle: () => ({
+      getPropertyValue: (name) => {
+        const m = new RegExp(name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\s*:\\s*([^;}]+)').exec(cssText || '');
+        return m ? m[1].trim() : '';
+      }
+    }),
     devicePixelRatio: 1,
     addEventListener() {},
     removeEventListener() {},
@@ -128,7 +142,13 @@ function buildContext() {
 const assets = assetsFromIndex();
 if (!assets.js.length) fail('index.html declares no stamp scripts - the discovery regex has drifted.');
 
-const ctx = buildContext();
+const cssText = assets.css
+  .map(f => path.join(FRONTEND, f))
+  .filter(fs.existsSync)
+  .map(p => fs.readFileSync(p, 'utf8'))
+  .join('\n');
+
+const ctx = buildContext(cssText);
 for (const f of assets.js) {
   const p = path.join(FRONTEND, f);
   if (!fs.existsSync(p)) { fail(`${f} is referenced by index.html but missing from frontend/.`); continue; }
@@ -172,11 +192,7 @@ if (stale.length) {
    A template is "styleless" when NONE of its own class names appear in
    any stylesheet. Generic classes are excluded, since they are defined
    once for all designs and would mask a missing per-design sheet. */
-const css = assets.css
-  .map(f => path.join(FRONTEND, f))
-  .filter(fs.existsSync)
-  .map(p => fs.readFileSync(p, 'utf8'))
-  .join('\n');
+const css = cssText;
 
 function ownClasses(html) {
   const out = new Set();
@@ -262,28 +278,50 @@ if (!GG) {
 
 const stylelessIds = new Set(styleless.map(s => s.id));
 
+/* ---- Load dims.json once for CHECKs 6, 7 and 9 ---- */
+const DIMS = JSON.parse(fs.readFileSync(path.join(FRONTEND, 'dims.json'), 'utf8'));
+const baseSlugs = Object.keys(DIMS).filter(k => !k.endsWith('-2'));
+
 /* ---- CHECK 6: mapping closure ----
    styleFor() guards with TPL[GROUP_STYLE[g]] and silently falls through to
    the hash on a typo'd design id, and latinOf() returns '' for a group
    missing from GROUP_LATIN (blank Latin line + display name leaking into
-   the species modal). Neither failure has any runtime signal. */
+   the species modal). Neither failure has any runtime signal.
+
+   A group with no styled template is only a LIVE problem if some genus
+   with actual bundled art can reach it - same tolerance CHECK 3 already
+   gives a styleless template that nothing selects. Upstream can (and has)
+   ship a genus->group mapping for a genus this station has no art for at
+   all; that is inert today, and flagged here as a note so the next art
+   drop for that genus doesn't silently render blank paper. */
 if (GG) {
+  const reachableGenera = new Set(baseSlugs.map(s => {
+    const g = s.split('-')[0];
+    return g.charAt(0).toUpperCase() + g.slice(1);
+  }));
+  const genusesByGroup = {};
+  for (const [genus, group] of Object.entries(GG)) {
+    (genusesByGroup[group] = genusesByGroup[group] || []).push(genus);
+  }
+  const groupIsReachable = group => (genusesByGroup[group] || []).some(g => reachableGenera.has(g));
+
   const badStyle = [], badLatin = [], blankStyle = [];
+  const badStyleInert = [], blankStyleInert = [], badLatinInert = [];
   for (const group of new Set(Object.values(GG))) {
+    const live = groupIsReachable(group);
     const styleId = (S.GROUP_STYLE || {})[group];
-    if (!styleId || !S.TPL[styleId]) badStyle.push(`${group} -> ${styleId || '(none)'}`);
-    else if (stylelessIds.has(styleId)) blankStyle.push(`${group} -> ${styleId}`);
-    if (!(S.GROUP_LATIN || {})[group]) badLatin.push(group);
+    if (!styleId || !S.TPL[styleId]) (live ? badStyle : badStyleInert).push(`${group} -> ${styleId || '(none)'}`);
+    else if (stylelessIds.has(styleId)) (live ? blankStyle : blankStyleInert).push(`${group} -> ${styleId}`);
+    if (!(S.GROUP_LATIN || {})[group]) (live ? badLatin : badLatinInert).push(group);
   }
   if (badStyle.length) fail(`group(s) whose GROUP_STYLE names no existing template (silent hash fallthrough): ${badStyle.join('; ')}`);
   if (blankStyle.length) fail(`group(s) assigned a STYLELESS template (members render blank paper): ${blankStyle.join('; ')}`);
   if (badLatin.length) fail(`group(s) missing from GROUP_LATIN (empty Latin line, display name leaks into the modal): ${badLatin.join(', ')}`);
   if (!badStyle.length && !blankStyle.length && !badLatin.length) note('mapping closure: every group has a styled template and a Latin name');
+  if (badStyleInert.length) note(`group(s) with no styled template but no genus here has art yet, so harmless for now: ${badStyleInert.join('; ')}`);
+  if (blankStyleInert.length) note(`group(s) on a STYLELESS template but no genus here has art yet, so harmless for now: ${blankStyleInert.join('; ')}`);
+  if (badLatinInert.length) note(`group(s) missing from GROUP_LATIN but no genus here has art yet, so harmless for now: ${badLatinInert.join(', ')}`);
 }
-
-/* ---- Load dims.json once for CHECKs 7 and 9 ---- */
-const DIMS = JSON.parse(fs.readFileSync(path.join(FRONTEND, 'dims.json'), 'utf8'));
-const baseSlugs = Object.keys(DIMS).filter(k => !k.endsWith('-2'));
 
 /* ---- CHECK 7: the flight-plate rule ----
    Two things force the pose-2 plate: a template whose html carries

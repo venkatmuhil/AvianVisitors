@@ -9,6 +9,18 @@ fail() {
   exit 1
 }
 
+[ "${EUID:-$(id -u)}" -eq 0 ] || fail "run this smoke in a disposable container as root"
+command -v flock >/dev/null 2>&1 || fail "flock is required for this smoke test"
+
+id caddy >/dev/null 2>&1 \
+  || useradd --system --no-create-home --shell /usr/sbin/nologin caddy
+mkdir -p /var/lib/avian-visitors
+chown root:root /var/lib/avian-visitors
+chmod 0755 /var/lib/avian-visitors
+printf 'v1\t0\t0\t-\n' >/var/lib/avian-visitors/admin-auth.state
+chown root:caddy /var/lib/avian-visitors/admin-auth.state
+chmod 0640 /var/lib/avian-visitors/admin-auth.state
+
 work=$(mktemp -d "${TMPDIR:-/tmp}/avian-generate-test.XXXXXX")
 fixture="$work/station"
 worker_log="$work/workers.log"
@@ -40,6 +52,7 @@ mkdir -p \
   "$fixture/scripts" \
   "$fixture/birdnet/bin"
 cp avian/api/admin-auth.php "$fixture/avian/api/admin-auth.php"
+cp avian/api/admin-state.php "$fixture/avian/api/admin-state.php"
 cp avian/api/generate.php "$fixture/avian/api/generate.php"
 
 printf 'GEMINI_API_KEY="%s"\n' "$test_key" >"$fixture/birdnet.conf"
@@ -51,6 +64,8 @@ SQL
 
 cat >"$fixture/birdnet/bin/python3" <<'SH'
 #!/bin/sh
+exec 7<>"$AVIAN_GENERATION_LOCK"
+flock 7
 printf '%s\n' "$*" >>"$FAKE_WORKER_LOG"
 sleep 2
 SH
@@ -107,6 +122,7 @@ FAKE_WORKER_LOG="$worker_log" \
 FAKE_NOHUP_ARGV="$nohup_argv" \
 FAKE_NOHUP_ENV="$nohup_env" \
 FAKE_PS_SNAPSHOT="$ps_snapshot" \
+AVIAN_GENERATION_LOCK="$fixture/avian/assets/illustrations/.generate.lock" \
 PHP_CLI_SERVER_WORKERS=8 \
   php -d "auto_prepend_file=$work/sqlite-prepend.php" \
   -S "127.0.0.1:$port" -t "$fixture" >"$server_log" 2>&1 &
@@ -242,6 +258,9 @@ done
 [ -s "$worker_log" ] || fail "accepted request did not start a worker"
 [ "$(wc -l <"$worker_log" | tr -d ' ')" -eq 1 ] \
   || fail "parallel requests started more than one worker"
+if flock -n "$lock" true; then
+  fail "spawned worker did not retain the generation lock"
+fi
 [ "$(wc -l <"$fixture/avian/assets/illustrations/.generate.starts" | tr -d ' ')" -eq 1 ] \
   || fail "parallel requests recorded more than one start"
 php -r '

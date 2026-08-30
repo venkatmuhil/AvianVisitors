@@ -15,8 +15,9 @@
 // The frontend's <img src> points here for every species - bundled
 // hits return instantly; cold misses fall through to the dynamic path.
 //
-// Default LAN deploy ships without auth. To expose publicly, gate
-// /avian/api/* with basic_auth in your Caddyfile - see avian/forwarding/.
+// Bundled and cached images are public. A cold Wikipedia/rembg job is allowed
+// only from the station's direct LAN address, while the LAN admin gate is off,
+// and only for a detected species.
 
 declare(strict_types=1);
 
@@ -90,10 +91,42 @@ if ($pose !== 1) {
 // 4. Fresh Wikipedia fetch + rembg. Skipped if rembg-cli isn't on
 //    PATH - the resolver returns a 404 in that case rather than
 //    burning a Wikipedia request we can't use.
+require_once __DIR__ . '/admin-auth.php';
+if (avian_lan_admin_auth_required()) {
+    http_response_code(404);
+    echo 'no cached illustration for ' . htmlspecialchars($sci);
+    exit;
+}
+
 $rembg = '/usr/local/bin/rembg-cli';
 if (!is_executable($rembg)) {
     http_response_code(404);
     echo 'no illustration bundled for ' . htmlspecialchars($sci) . ' (install rembg-cli to enable Wikipedia fallback)';
+    exit;
+}
+
+if (!avian_is_direct_local_request($_SERVER)) {
+    http_response_code(404);
+    echo 'no cached illustration for ' . htmlspecialchars($sci);
+    exit;
+}
+
+$dbPath = dirname(__DIR__, 2) . '/scripts/birds.db';
+if (!is_file($dbPath)) {
+    http_response_code(404);
+    echo 'species is not in this station';
+    exit;
+}
+$db = new SQLite3($dbPath, SQLITE3_OPEN_READONLY);
+$db->busyTimeout(1000);
+$statement = $db->prepare('SELECT 1 FROM detections WHERE Sci_Name = :s LIMIT 1');
+$statement->bindValue(':s', $sci, SQLITE3_TEXT);
+$result = $statement->execute();
+$detected = $result instanceof SQLite3Result && $result->fetchArray(SQLITE3_NUM) !== false;
+$db->close();
+if (!$detected) {
+    http_response_code(404);
+    echo 'species is not in this station';
     exit;
 }
 
