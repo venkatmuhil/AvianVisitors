@@ -6680,7 +6680,11 @@
       ? atlasGridEl.querySelector('.bird-card[data-sci="' + sci.replace(/"/g, '\"') + '"]')
       : null;
     if (card && card.classList.contains('stamp-card')) {
-      highlightAtlas(sci);
+      // Not highlightAtlas(sci) here - its scrollIntoView() would scroll the
+      // Atlas card into view on whatever ancestor is scrollable, which drags
+      // the whole page over to the Atlas panel exactly like the bug this
+      // function exists to avoid. Atlas-driven opens still call it (their
+      // own scroll there is correct, since Atlas is already the open view).
       return openPostcard(card, { preserveHash: true, noFlight: true });
     }
     // Same race openDetailModal guards against: a fresh page load can reach
