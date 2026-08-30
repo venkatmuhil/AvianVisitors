@@ -2589,8 +2589,7 @@
   collage.addEventListener('click', function (ev) {
     var hit = maskHitTest(ev.clientX, ev.clientY);
     if (!hit) return;
-    location.hash = '#sci=' + encodeURIComponent(hit.data.sci);
-    go(2);
+    openPostcardFromCollage(hit.data.sci);
   });
 
   // Debug hook - call __layout({ slugs, weights, n }) from devtools to
@@ -6664,6 +6663,44 @@
     preparePostcardShell();
     revealPostcardShell();
   }
+
+  // Tapping a bird straight from the Collage opens its postcard in place
+  // instead of hopping the whole app to the Atlas tab first - that jump used
+  // to be the only way in, since the click set #sci= and syncRouter's go(2)
+  // is what actually switched tabs. The Atlas grid's stamp card still
+  // supplies the postcard content (it's the only place the resolved stamp
+  // design lives), but openPostcard's "flying stamp" animation is skipped -
+  // there's no on-screen stamp in the Collage to fly from, only a plain
+  // cutout.
+  var collagePostcardRequest = '';
+  function openPostcardFromCollage(sci, waitCount) {
+    if (!sci) return;
+    collagePostcardRequest = sci;
+    var card = atlasGridEl
+      ? atlasGridEl.querySelector('.bird-card[data-sci="' + sci.replace(/"/g, '\"') + '"]')
+      : null;
+    if (card && card.classList.contains('stamp-card')) {
+      highlightAtlas(sci);
+      return openPostcard(card, { preserveHash: true, noFlight: true });
+    }
+    // Same race openDetailModal guards against: a fresh page load can reach
+    // here before the async Atlas grid has committed its stamp cards.
+    waitCount = +waitCount || 0;
+    if (atlasGridEl && !atlasGridEl.querySelector('.bird-card') && waitCount < 15) {
+      setTimeout(function () {
+        if (collagePostcardRequest === sci) openPostcardFromCollage(sci, waitCount + 1);
+      }, 80);
+      return;
+    }
+    // The Atlas grid never produced a matching stamp card (normally
+    // unreachable - the same data load renders the Atlas grid). Show the
+    // information-only card in place rather than reach for the old
+    // Atlas-jump behavior.
+    populatePostcard(sci);
+    if (!postcardModal) return;
+    preparePostcardShell();
+    revealPostcardShell();
+  }
   function cleanAboutLead(text) {
     return String(text || '')
       .replace(/\(\s*\)/g, '')
@@ -9148,6 +9185,21 @@
     landed.dataset.postcardTurn = String(turn);
     landed.style.opacity = '0';
     postcardSlot.appendChild(landed);
+
+    // A no-flight open (tapping a bird straight from the Collage) skips the
+    // travelling-clone animation entirely - there is no on-screen stamp to
+    // fly from there, since the Collage shows plain cutouts, not the Atlas's
+    // little stamp cards. The issue is placed directly in the slot and the
+    // sheet reveals normally, mirroring openDetailModal's own no-card
+    // fallback.
+    if (options.noFlight) {
+      landed.style.opacity = '1';
+      activePostcardLanded = landed;
+      preparePostcardShell();
+      fitPostcardStamp(landed);
+      revealPostcardShell();
+      return;
+    }
 
     var sourceScale = Math.min(source.width / naturalW, source.height / naturalH);
     var flight = document.createElement('div');
