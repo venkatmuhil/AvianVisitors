@@ -31,6 +31,10 @@ __pycache__/
 model/labels.txt
 datasets/
 birdnet.conf
+# Hand-made backups of the above. The source is ignored because it holds
+# CADDY_PWD / ICE_PWD / BirdWeather credentials, so its copies must be too -
+# otherwise one stray `git add -A` publishes the admin password.
+birdnet.conf*.bak
 IdentifiedSoFar.txt
 IdentifiedSoFar.txt.bak
 Birders_Guide_Installer_Configuration.txt
