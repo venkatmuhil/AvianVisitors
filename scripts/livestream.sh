@@ -2,8 +2,17 @@
 # Live Audio Stream Service Script
 source /etc/birdnet/birdnet.conf
 
+# Fork-local (see CLAUDE.md): the livestream follows LIVESTREAM_SOURCE, defaulting to the
+# LOCAL MIC even when RTSP_STREAM is set. Upstream unconditionally prefers RTSP, which meant
+# that configuring the Xiaomi camera for detection silently began broadcasting the camera's
+# microphone with no separate opt-in. Set LIVESTREAM_SOURCE=rtsp in birdnet.conf to stream
+# the camera instead.
+livestream_uses_rtsp() {
+  [ "${LIVESTREAM_SOURCE:-mic}" = 'rtsp' ] && [ -n "${RTSP_STREAM:-}" ]
+}
+
 if [ "${1:-}" = '--check' ] && [ "$#" -eq 1 ]; then
-  if [ -z "${RTSP_STREAM:-}" ]; then
+  if ! livestream_uses_rtsp; then
     case "${REC_CARD:-}" in
       hw:*|plughw:*) exit 1 ;;
     esac
@@ -35,7 +44,7 @@ if [ "$ACTIVATE_FREQSHIFT_IN_LIVESTREAM" == "true" ]; then
   FREQSHIFT_OPT='-af rubberband=pitch='${FREQSHIFT_LO}'/'${FREQSHIFT_HI}
 fi
 
-if [[ -n "${RTSP_STREAM:-}" ]];then
+if livestream_uses_rtsp;then
   # Explode the RSPT steam setting into an array so we can count the number we have
   RSTP_STREAMS_EXPLODED_ARRAY=(${RTSP_STREAM//,/ })
 
