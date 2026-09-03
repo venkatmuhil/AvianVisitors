@@ -1,0 +1,2 @@
+# wrangler's local state/cache (deploy metadata, dev server files).
+.wrangler/

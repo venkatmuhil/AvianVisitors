@@ -90,11 +90,21 @@ h1 {
   font-style: normal;
 }
 
-/* Matches .empty-nest — the collage's own "nothing here" figure. */
-.nest {
-  margin: clamp(26px, 5vh, 52px) 0 clamp(22px, 4vh, 34px);
-  width: 78%; max-width: 470px; height: auto;
+/* Sized like .empty-nest's figure, a touch wider because this is a
+   landscape composition rather than a single object. Deliberately NOT the
+   collage's empty nest: the nest means "no detections heard", which is a
+   different fact and would be a lie here - the station may well be hearing
+   birds, we just cannot reach it. An empty bench says unreachable. */
+.scene {
+  margin: clamp(22px, 4.5vh, 46px) 0 clamp(22px, 4vh, 34px);
+  width: 84%; max-width: 540px; height: auto;
   display: block;
+  /* Above the press screen (z-index 5), not under it. On the real site
+     that screen is on #v1, the stats view - it goes over type and charts,
+     and the collage's own cutouts get no screen at all. Under it the
+     watercolour washes out in light and speckles badly in dark, because
+     the darken blend turns every dot near-black over a light plate. */
+  position: relative; z-index: 6;
 }
 
 /* Matches .window-empty. */
@@ -157,11 +167,11 @@ h1 {
   from { opacity: 0; transform: translateY(6px) scale(.985); }
   to   { opacity: 1; transform: none; }
 }
-.nest   { animation: tile-in 420ms cubic-bezier(.2,.7,.3,1) backwards; }
+.scene  { animation: tile-in 420ms cubic-bezier(.2,.7,.3,1) backwards; }
 .status { animation: tile-in 420ms cubic-bezier(.2,.7,.3,1) 130ms backwards; }
 .retry  { animation: tile-in 420ms cubic-bezier(.2,.7,.3,1) 220ms backwards; }
 @media (prefers-reduced-motion: reduce) {
-  .nest, .status, .retry { animation: none; }
+  .scene, .status, .retry { animation: none; }
 }
 </style>
 </head>
@@ -172,7 +182,9 @@ h1 {
     <h1>Off the air</h1>
   </header>
 
-  <img class="nest" src="{{NEST_WEBP}}" alt="an empty nest" decoding="async">
+  <img class="scene" src="{{BENCH_WEBP}}"
+       alt="an empty bench beside a windswept tree, on the edge of a cliff"
+       decoding="async">
 
   <p class="status" role="status">the listening station can&rsquo;t be reached</p>
 

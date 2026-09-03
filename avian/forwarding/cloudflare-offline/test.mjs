@@ -85,7 +85,7 @@ console.log('\nthe offline response itself');
   check('x-robots-tag: noindex', /noindex/.test(res.headers.get('x-robots-tag') || ''));
   check('content-type is html', /text\/html/.test(res.headers.get('content-type') || ''));
   check('carries the recovery marker the page polls for', res.headers.get('x-avian-offline') === '1');
-  check('body is the offline page', /Off the air/.test(body) && /empty nest/.test(body));
+  check('body is the offline page', /Off the air/.test(body) && /an empty bench/.test(body));
   check('body needs nothing from the station', !/(src|href)="(?!data:)[^"]/.test(body),
     'a non-data: src/href would 404 during the outage');
 }

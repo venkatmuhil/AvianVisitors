@@ -24,7 +24,7 @@ const FRONTEND = path.resolve(HERE, '../../frontend');
 const ASSETS   = path.resolve(HERE, '../../assets');
 
 const ASSET_MAP = {
-  '{{NEST_WEBP}}':   { file: path.join(FRONTEND, 'nest.webp'),       mime: 'image/webp' },
+  '{{BENCH_WEBP}}':  { file: path.join(HERE,     'bench-cliff.webp'), mime: 'image/webp' },
   '{{PRESS_PNG}}':   { file: path.join(FRONTEND, 'stats-press.png'), mime: 'image/png'  },
   '{{FAVICON_PNG}}': { file: path.join(ASSETS,   'favicon.png'),     mime: 'image/png'  },
 };

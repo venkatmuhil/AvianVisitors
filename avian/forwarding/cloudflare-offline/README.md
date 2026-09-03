@@ -19,6 +19,7 @@ and substitutes its own response when the origin does not answer.
 | file | |
 |---|---|
 | `offline.html` | **the source.** Edit this. |
+| `bench-cliff.webp` | the illustration — offline-only art, lives here not in `frontend/` |
 | `build.js` | inlines the assets, emits the two files below |
 | `worker.js` | *generated* — the deployable worker |
 | `preview.html` | *generated* — the same page, openable from disk |
@@ -33,9 +34,17 @@ node build.js && node test.mjs
 
 **1. The page cannot fetch anything from the Pi.** That is the failure case. No
 `styles.css`, no `Caveat.woff2`, no `nest.webp` over the wire. `build.js` inlines
-`nest.webp`, `stats-press.png` and `favicon.png` as `data:` URIs, reading them
-from the live frontend so a re-baked press tile or a new nest illustration is
-picked up on the next build. `test.mjs` asserts no non-`data:` `src`/`href`
+`bench-cliff.webp`, `stats-press.png` and `favicon.png` as `data:` URIs. The
+press tile and favicon are read from the live frontend so a re-bake is picked
+up on the next build; the illustration is offline-only art and sits here.
+
+The illustration is deliberately **not** the collage's empty nest. The nest
+means *no detections heard in this window* — a different fact, and a lie
+during an outage, since the station may well be hearing birds. An empty bench
+says unreachable. It also sits **above** the press screen (`z-index: 6`): on
+the real site that screen is on `#v1`, the stats view, over type and charts,
+and the collage's own cutouts get no screen at all. Under it the watercolour
+washes out in light and speckles badly in dark. `test.mjs` asserts no non-`data:` `src`/`href`
 survives into the response. The design tokens and type scale are copied out of
 `styles.css` into the page's own `<style>`; they are a **carry**, and if the
 site's palette changes they must be updated here by hand.
