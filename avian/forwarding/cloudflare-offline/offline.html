@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>The birds of Karwar &mdash; off the air</title>
+<meta name="description" content="The Karwar listening station is temporarily unreachable.">
+<!-- An outage snapshot must never stand in for the real site in an index. -->
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" href="{{FAVICON_PNG}}">
+<link rel="apple-touch-icon" href="{{FAVICON_PNG}}">
+
+<!-- Same resolver as avian/frontend/index.html. This page is served from the
+     same origin as the collage, so the visitor's saved preference is readable
+     here and their chosen theme carries across the outage. -->
+<script>(function(){var d=document.documentElement,q='(prefers-color-scheme: dark)';
+function systemTheme(){try{return window.matchMedia&&window.matchMedia(q).matches?'dark':'light';}catch(e){return'light';}}
+function preference(){try{var v=localStorage.getItem('bird:theme:v2');if(v==='auto'||v==='light'||v==='dark')return v;var old=localStorage.getItem('bird:theme');return old==='light'||old==='dark'?old:'auto';}catch(e){return'auto';}}
+var p=preference();d.setAttribute('data-theme',p==='light'||p==='dark'?p:systemTheme());})();</script>
+
+<style>
+/* ------------------------------------------------------------------
+   Tokens lifted verbatim from avian/frontend/styles.css so this page
+   is the same publication, not a lookalike. Only the subset this page
+   actually paints with is carried; the rest would be dead weight in a
+   response that has to travel without the station behind it.
+   ------------------------------------------------------------------ */
+:root {
+  color-scheme: light;
+  --paper:    #fcfcfb;
+  --ink:      #1a1612;
+  --ink-2:    #4a3f31;
+  --ink-soft: #908576;
+  --hairline: rgba(26,22,18,0.14);
+  --press-blend: lighten;
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --paper:    #17181c;
+  --ink:      #ece8e1;
+  --ink-2:    #b7afa2;
+  --ink-soft: #837c70;
+  --hairline: rgba(236,232,225,0.20);
+  --press-blend: darken;
+}
+/* The saved preference wins in both directions; "auto" leaves data-theme
+   resolved by the head script, so this only has to cover a first paint
+   that somehow beat it (scripting off). */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --paper:    #17181c;
+    --ink:      #ece8e1;
+    --ink-2:    #b7afa2;
+    --ink-soft: #837c70;
+    --hairline: rgba(236,232,225,0.20);
+    --press-blend: darken;
+  }
+}
+
+* { box-sizing: border-box; }
+html, body {
+  margin: 0; padding: 0; min-height: 100%;
+  background: var(--paper); color: var(--ink);
+}
+body {
+  font-family: ui-serif, "Iowan Old Style", "Apple Garamond", Georgia, serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.stage {
+  position: relative;
+  min-height: 100vh; min-height: 100svh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 48px 24px 40px;
+  text-align: center;
+}
+
+/* Matches .static-head in styles.css. */
+.pre {
+  display: block;
+  font: italic 400 clamp(13px, 1.4vw, 18px)/1.22 ui-serif, "Iowan Old Style", Georgia, serif;
+  color: var(--ink-2); letter-spacing: 0.06em; margin: 0 0 6px;
+}
+h1 {
+  margin: 0; padding: 0;
+  font: 700 clamp(24px, 3.2vw, 40px)/1 ui-serif, "Iowan Old Style", "Bookman Old Style", Georgia, serif;
+  letter-spacing: 0.06em; color: var(--ink); text-transform: uppercase;
+  font-style: normal;
+}
+
+/* Matches .empty-nest — the collage's own "nothing here" figure. */
+.nest {
+  margin: clamp(26px, 5vh, 52px) 0 clamp(22px, 4vh, 34px);
+  width: 78%; max-width: 470px; height: auto;
+  display: block;
+}
+
+/* Matches .window-empty. */
+.status {
+  margin: 0;
+  font: 11px/1.5 "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  color: var(--ink-soft);
+  text-transform: lowercase; letter-spacing: 0.18em;
+}
+.retry {
+  margin: 22px 0 0;
+  font: 10px/1.5 "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  color: var(--ink-soft);
+  text-transform: lowercase; letter-spacing: 0.16em;
+  opacity: 0.75;
+}
+.retry button {
+  -webkit-appearance: none; appearance: none;
+  background: none; border: 0; padding: 0 0 1px;
+  margin-left: 2px;
+  font: inherit; color: var(--ink-2);
+  letter-spacing: inherit; text-transform: inherit;
+  border-bottom: 1px solid var(--hairline);
+  cursor: pointer;
+}
+.retry button:hover { color: var(--ink); border-bottom-color: currentColor; }
+.retry button:focus-visible { outline: 2px solid var(--ink-2); outline-offset: 3px; }
+
+/* styles.css tightens .window-empty at 350px, but it also pins that line
+   with white-space:nowrap. This page lets the line wrap instead, so the
+   tighter setting is pulled forward to 420px - enough that a 360px phone
+   still holds the status on one line. */
+@media (max-width: 420px) {
+  .status, .retry { letter-spacing: 0.14em; }
+  .status { font-size: 10px; }
+}
+
+/* ------------------------------------------------------------------
+   The blue-noise press screen from styles.css (#v1::after), same tile,
+   same technique: a layer painted in var(--paper) and blended lighten,
+   so paper-on-paper is bit-identical paper and only ink is bitten into.
+   Dark theme flips the blend, because there paper is the dark end.
+   ------------------------------------------------------------------ */
+.stage::after {
+  content: ''; position: absolute; inset: 0;
+  pointer-events: none; z-index: 5;
+  background-color: var(--paper);
+  --press: url("{{PRESS_PNG}}");
+  -webkit-mask-image: var(--press);  mask-image: var(--press);
+  -webkit-mask-size: 96px 96px;      mask-size: 96px 96px;
+  -webkit-mask-repeat: repeat;       mask-repeat: repeat;
+  mix-blend-mode: var(--press-blend);
+}
+@media (prefers-contrast: more), (forced-colors: active) {
+  .stage::after { display: none; }
+}
+
+/* Bloom in on the same cue as the collage's empty-nest state. */
+@keyframes tile-in {
+  from { opacity: 0; transform: translateY(6px) scale(.985); }
+  to   { opacity: 1; transform: none; }
+}
+.nest   { animation: tile-in 420ms cubic-bezier(.2,.7,.3,1) backwards; }
+.status { animation: tile-in 420ms cubic-bezier(.2,.7,.3,1) 130ms backwards; }
+.retry  { animation: tile-in 420ms cubic-bezier(.2,.7,.3,1) 220ms backwards; }
+@media (prefers-reduced-motion: reduce) {
+  .nest, .status, .retry { animation: none; }
+}
+</style>
+</head>
+<body>
+<main class="stage">
+  <header>
+    <span class="pre">birds in karwar</span>
+    <h1>Off the air</h1>
+  </header>
+
+  <img class="nest" src="{{NEST_WEBP}}" alt="an empty nest" decoding="async">
+
+  <p class="status" role="status">the listening station can&rsquo;t be reached</p>
+
+  <p class="retry">
+    <span id="countdown">checking again shortly</span>
+    <button type="button" id="checkNow">check now</button>
+  </p>
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  // The worker stamps this header on its own responses. Its ABSENCE on a
+  // 200 is the only proof the station is answering again - a body check
+  // would be fooled by any edge-cached copy of this same page.
+  var MARK = 'x-avian-offline';
+
+  // Backoff so a tab left open through a long outage stops costing a
+  // worker invocation every 30s. Reset by hand ("check now") or by the
+  // tab becoming visible again.
+  var STEPS  = [30, 30, 60, 120, 300];
+  var step   = 0;
+  var left   = STEPS[0];
+  var timer  = null;
+  var probing = false;
+
+  var cdEl = document.getElementById('countdown');
+  var btn  = document.getElementById('checkNow');
+
+  function render() {
+    if (probing) { cdEl.textContent = 'checking…'; return; }
+    cdEl.textContent = 'checking again in ' + left + 's';
+  }
+
+  function schedule() {
+    clearInterval(timer);
+    render();
+    timer = setInterval(function () {
+      if (document.hidden) return;      // don't burn the clock unseen
+      left -= 1;
+      if (left <= 0) { probe(); return; }
+      render();
+    }, 1000);
+  }
+
+  function backoff() {
+    if (step < STEPS.length - 1) step += 1;
+    left = STEPS[step];
+    schedule();
+  }
+
+  function probe() {
+    if (probing) return;
+    probing = true;
+    clearInterval(timer);
+    render();
+
+    var done = function (back) {
+      probing = false;
+      if (back) { location.reload(); return; }
+      backoff();
+    };
+
+    // No-store so no layer between here and the edge can answer this.
+    // redirect:'follow' keeps a station that boots into a redirect honest.
+    fetch('/', { cache: 'no-store', redirect: 'follow' })
+      .then(function (r) {
+        done(r.ok && !r.headers.get(MARK));
+      })
+      .catch(function () { done(false); });
+  }
+
+  btn.addEventListener('click', function () {
+    step = 0;
+    probe();
+  });
+
+  document.addEventListener('visibilitychange', function () {
+    // Coming back to the tab is a fresh intent to see the collage.
+    if (!document.hidden && !probing) { step = 0; left = STEPS[0]; probe(); }
+  });
+
+  schedule();
+})();
+</script>
+</body>
+</html>

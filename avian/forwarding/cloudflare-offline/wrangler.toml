@@ -1,0 +1,19 @@
+name = "birds-offline"
+main = "worker.js"
+compatibility_date = "2026-09-01"
+
+# Deliberately root-only, not "birds.7ml.in/*".
+#
+# Worker routes run BEFORE the Cloudflare cache, so a wildcard route would
+# put this script in front of masks.json, dims.json and all eight
+# birdnet-api.php calls on every request - roughly 15x the invocations per
+# page view against the free plan's 100k/day, and a new moving part sitting
+# in the path of the "Cache collage JSON tables" rule. The root document is
+# the only thing a visitor ever sees the 1033 page instead of, so that is
+# the only thing worth intercepting.
+routes = [
+  { pattern = "birds.7ml.in/", zone_name = "7ml.in" }
+]
+
+# No birds-offline.workers.dev subdomain; this only ever serves the route.
+workers_dev = false
