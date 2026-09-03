@@ -84,7 +84,7 @@ body {
   min-height: 100vh; min-height: 100svh;
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
-  padding: 48px 24px 40px;
+  padding: 48px 24px 96px;
   text-align: center;
 }
 
@@ -108,7 +108,15 @@ h1 {
    birds, we just cannot reach it. An empty bench says unreachable. */
 .scene {
   margin: clamp(22px, 4.5vh, 46px) 0 clamp(22px, 4vh, 34px);
-  width: 84%; max-width: 540px; height: auto;
+  /* Bounded by HEIGHT as well as width. Constraining width alone let the
+     illustration eat a short viewport whole - at 740x400 the page scrolled
+     and the fixed mark landed on the cliff. Driving the width from the
+     height budget (x the 1100/759 aspect) shrinks it proportionally with
+     no letterboxing, which max-height + object-fit would have introduced.
+     vh first, svh second, so browsers without svh still get a bound. */
+  width: min(84%, 540px, calc(42vh * 1.449));
+  width: min(84%, 540px, calc(42svh * 1.449));
+  height: auto;
   display: block;
   /* Above the press screen (z-index 5), not under it. On the real site
      that screen is on #v1, the stats view - it goes over type and charts,
@@ -151,6 +159,40 @@ h1 {
 @media (max-width: 420px) {
   .status, .retry { letter-spacing: 0.14em; }
   .status { font-size: 10px; }
+}
+
+/* The 7ML mark, as on the collage - same size, same 0.8 opacity, same
+   lift on hover - but centred rather than bottom-left, because this page
+   is a single centred column and a corner mark would read as stray.
+   Fixed and outside .stage, so it sits above the press screen (z-index 5)
+   the way the site's own mark does at z-index 30. .stage reserves room
+   for it in its bottom padding, so the two can never collide on a short
+   viewport. */
+.brand-link {
+  position: fixed; left: 50%; bottom: 28px; z-index: 30;
+  height: 40px; display: inline-flex; align-items: center;
+  transform: translateX(-50%); opacity: 0.8;
+  transition: opacity 160ms ease, transform 160ms ease;
+}
+.brand-link:hover { opacity: 1; transform: translateX(-50%) translateY(-1px); }
+.brand-link:focus-visible { outline: 2px solid var(--ink-2); outline-offset: 4px; border-radius: 4px; }
+.brand-mark { display: block; height: 28px; width: auto; }
+@media (max-width: 700px) {
+  .stage { padding-bottom: 76px; }
+  .brand-link { bottom: 14px; height: 34px; }
+  .brand-mark { height: 22px; }
+}
+.brand-link { animation: tile-in 420ms cubic-bezier(.2,.7,.3,1) 300ms backwards; }
+@media (prefers-reduced-motion: reduce) { .brand-link { animation: none; } }
+
+/* Landscape phones and short windows: the page must still fit without a
+   scrollbar, and the fixed mark must stay clear of the retry line. */
+@media (max-height: 560px) {
+  .stage { padding-top: 24px; padding-bottom: 62px; }
+  .scene { margin: 14px 0 16px; }
+  .retry { margin-top: 16px; }
+  .brand-link { bottom: 14px; height: 30px; }
+  .brand-mark { height: 20px; }
 }
 
 /* ------------------------------------------------------------------
@@ -204,6 +246,10 @@ h1 {
     <button type="button" id="checkNow">check now</button>
   </p>
 </main>
+
+<a class="brand-link" href="https://7ml.in" target="_blank" rel="noopener" aria-label="7ML">
+  <img class="brand-mark" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSIxMDAwIiBoZWlnaHQ9IjEwMDAiPjxtZXRhZGF0YT48cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiIHhtbG5zOmRjPSJodHRwOi8vcHVybC5vcmcvZGMvZWxlbWVudHMvMS4xLyI+PHJkZjpEZXNjcmlwdGlvbj48ZGM6Y3JlYXRvcj5SZWFsRmF2aWNvbkdlbmVyYXRvcjwvZGM6Y3JlYXRvcj48ZGM6c291cmNlPmh0dHBzOi8vcmVhbGZhdmljb25nZW5lcmF0b3IubmV0PC9kYzpzb3VyY2U+PC9yZGY6RGVzY3JpcHRpb24+PC9yZGY6UkRGPjwvbWV0YWRhdGE+PGcgY2xpcC1wYXRoPSJ1cmwoI1N2Z2pzQ2xpcFBhdGgxMTgxKSI+PGcgdHJhbnNmb3JtPSJtYXRyaXgoMS43OTY0MDcxODU2Mjg3NDI1LDAsMCwxLjc5NjQwNzE4NTYyODc0MjUsNTEuNzk2NDA3MTg1NjI4NzY2LDUwKSI+PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIGlkPSJMYXllcl8xIiB4PSIwcHgiIHk9IjBweCIgdmlld0JveD0iMCAwIDQ5OSA1MDEiIHN0eWxlPSJlbmFibGUtYmFja2dyb3VuZDpuZXcgMCAwIDQ5OSA1MDE7IiB4bWw6c3BhY2U9InByZXNlcnZlIiB3aWR0aD0iNDk5IiBoZWlnaHQ9IjUwMSI+PHN0eWxlIHR5cGU9InRleHQvY3NzIj4KCS5zdDB7ZmlsbDojRkZGRkZGO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDo5O3N0cm9rZS1saW5lY2FwOnJvdW5kO3N0cm9rZS1taXRlcmxpbWl0OjEwO30KCS5zdDF7ZmlsbDojQzEyNzJEO3N0cm9rZTojQzEyNzJEO3N0cm9rZS13aWR0aDo5O3N0cm9rZS1saW5lY2FwOnJvdW5kO3N0cm9rZS1taXRlcmxpbWl0OjEwO30KCS5zdDJ7ZmlsbDpub25lO3N0cm9rZTojRkZGRkZGO3N0cm9rZS13aWR0aDoyMjtzdHJva2UtbGluZWNhcDpzcXVhcmU7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQoJLnN0M3tmaWxsOiNCRDAwMDA7fQoJLnN0NHtmaWxsOm5vbmU7fQoJLnN0NXtmaWxsOm5vbmU7c3Ryb2tlOiNGRkZGRkY7c3Ryb2tlLXdpZHRoOjM3O3N0cm9rZS1saW5lY2FwOnNxdWFyZTtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9Cgkuc3Q2e2ZpbGw6bm9uZTtzdHJva2U6I0IyM0IyNTtzdHJva2Utd2lkdGg6NTk7c3Ryb2tlLWxpbmVjYXA6c3F1YXJlO3N0cm9rZS1taXRlcmxpbWl0OjEwO30KCS5zdDd7ZmlsbDpub25lO3N0cm9rZTojRkZGRkZGO3N0cm9rZS13aWR0aDo0MjtzdHJva2UtbGluZWNhcDpzcXVhcmU7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQo8L3N0eWxlPjxwb2x5bGluZSBjbGFzcz0ic3Q2IiBwb2ludHM9IjE0Mi43NSwxNDMuNzUgMTQyLjc1LDM1MCAzNDIuNzUsMzUwIDM0Mi43NSwxNDMuNzUgMjQ5LDE0My43NSAyNDksNDUwIDQ5LDQ1MCA0OSw1MCA0NDksNTAgNDQ5LDQ1MAoJMzQyLjc1LDQ1MCAiPjwvcG9seWxpbmU+PC9zdmc+PC9nPjwvZz48ZGVmcz48Y2xpcFBhdGggaWQ9IlN2Z2pzQ2xpcFBhdGgxMTgxIj48cmVjdCB3aWR0aD0iMTAwMCIgaGVpZ2h0PSIxMDAwIiB4PSIwIiB5PSIwIiByeD0iMCIgcnk9IjAiPjwvcmVjdD48L2NsaXBQYXRoPjwvZGVmcz48L3N2Zz4K" alt="" width="28" height="28">
+</a>
 
 <script>
 (function () {

@@ -34,9 +34,17 @@ node build.js && node test.mjs
 
 **1. The page cannot fetch anything from the Pi.** That is the failure case. No
 `styles.css`, no `Caveat.woff2`, no `nest.webp` over the wire. `build.js` inlines
-`bench-cliff.webp`, `stats-press.png` and `favicon.png` as `data:` URIs. The
-press tile and favicon are read from the live frontend so a re-bake is picked
-up on the next build; the illustration is offline-only art and sits here.
+`bench-cliff.webp`, `stats-press.png`, `favicon.png` and `7ml-mark.svg` as
+`data:` URIs. All but the illustration are read from the live frontend, so a
+re-baked press tile or a changed 7ML mark is picked up on the next build; the
+illustration is offline-only art and sits here.
+
+The 7ML mark is bottom-**centre** here rather than the collage's bottom-left,
+because this page is a single centred column and a corner mark would read as
+stray. Same 28px/22px sizing, same `0.8` opacity, same hover lift. Its link out
+to `7ml.in` is the one non-`data:` href on the page — navigation the visitor
+chooses, not a subresource the page loads, which is the distinction `test.mjs`
+now draws.
 
 The illustration is deliberately **not** the collage's empty nest. The nest
 means *no detections heard in this window* — a different fact, and a lie

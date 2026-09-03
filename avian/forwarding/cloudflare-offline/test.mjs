@@ -86,8 +86,21 @@ console.log('\nthe offline response itself');
   check('content-type is html', /text\/html/.test(res.headers.get('content-type') || ''));
   check('carries the recovery marker the page polls for', res.headers.get('x-avian-offline') === '1');
   check('body is the offline page', /Off the air/.test(body) && /an empty bench/.test(body));
-  check('body needs nothing from the station', !/(src|href)="(?!data:)[^"]/.test(body),
-    'a non-data: src/href would 404 during the outage');
+  // Subresources - anything the page LOADS - must be inlined, or they 404
+  // during the outage. An <a href> is navigation the visitor chooses, not a
+  // load, so the 7ML mark's link out to 7ml.in is expected to be external.
+  const srcs  = [...body.matchAll(/\ssrc="([^"]*)"/g)].map((m) => m[1]);
+  const links = [...body.matchAll(/<link\b[^>]*\shref="([^"]*)"/g)].map((m) => m[1]);
+  const external = [...srcs, ...links].filter((u) => !u.startsWith('data:'));
+  check('every subresource is inlined', external.length === 0,
+    `would 404 during the outage: ${external.join(', ')}`);
+  check('the page loads at least the illustration, mark and favicon',
+    srcs.length >= 2 && links.length >= 1, `src=${srcs.length} link=${links.length}`);
+
+  const anchors = [...body.matchAll(/<a\b[^>]*\shref="([^"]*)"/g)].map((m) => m[1]);
+  check('the 7ML mark links out to 7ml.in',
+    anchors.some((h) => h === 'https://7ml.in'), `anchors: ${anchors.join(', ') || 'none'}`);
+  check('no other outbound link', anchors.length === 1, `anchors: ${anchors.join(', ')}`);
 }
 
 console.log(failures ? `\n${failures} FAILED\n` : '\nall checks passed\n');

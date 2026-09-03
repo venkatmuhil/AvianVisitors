@@ -27,6 +27,9 @@ const ASSET_MAP = {
   '{{BENCH_WEBP}}':  { file: path.join(HERE,     'bench-cliff.webp'), mime: 'image/webp' },
   '{{PRESS_PNG}}':   { file: path.join(FRONTEND, 'stats-press.png'), mime: 'image/png'  },
   '{{FAVICON_PNG}}': { file: path.join(ASSETS,   'favicon.png'),     mime: 'image/png'  },
+  // Read from the live frontend rather than hand-copied, so the mark here
+  // can never drift from the one on the collage.
+  '{{MARK_SVG}}':    { file: path.join(FRONTEND, '7ml-mark.svg'),    mime: 'image/svg+xml' },
 };
 
 function dataUri({ file, mime }) {
