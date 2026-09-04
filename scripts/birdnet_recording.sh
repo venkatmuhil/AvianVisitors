@@ -70,7 +70,20 @@ watchdog_ffmpeg(){
   done
 }
 
+# Fork-local guard (see CLAUDE.md). This station's audio stack is PipeWire, where
+# pipewire-pulse already provides the PulseAudio socket that `arecord -D default` records
+# through - but `pulseaudio --check` still exits non-zero, because it only looks for a
+# native PulseAudio daemon. Upstream's unconditional `--start` therefore launches a second,
+# competing daemon that cannot initialise (no working profile, no D-Bus without a $DISPLAY),
+# and arecord then races the two: bind PipeWire and capture is fine, bind the dead daemon
+# and every WAV is pure silence - right size, right cadence, no error in any log, and the
+# service still reporting active. That is an 8h silent outage (2026-09-04), and it is a
+# coin flip on every restart, so leave a working PipeWire stack alone. The upstream path
+# below still applies on a station that really does run PulseAudio.
 ensure_pulseaudio() {
+  if pgrep -x pipewire-pulse > /dev/null 2>&1; then
+    return 0
+  fi
   if ! pulseaudio --check; then
     pulseaudio --start
   fi
