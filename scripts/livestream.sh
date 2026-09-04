@@ -7,6 +7,12 @@ source /etc/birdnet/birdnet.conf
 # that configuring the Xiaomi camera for detection silently began broadcasting the camera's
 # microphone with no separate opt-in. Set LIVESTREAM_SOURCE=rtsp in birdnet.conf to stream
 # the camera instead.
+# Fork-local (2026-09-04): both ffmpeg encoders take -use_wallclock_as_timestamps 1 and the
+# trailing -re is gone. The ALSA demuxer's own timestamps jitter backwards on the shared
+# dsnoop capture device, so the mp3 muxer logged "non monotonically increasing dts" ~30x a
+# minute (31 in a 40s sample; 0 with wallclock stamps) and grew the journal to ~390MB. The
+# -re sat after the output URL, where ffmpeg reports it as a trailing option and ignores it;
+# it would also be wrong for a live input, which is already real time.
 livestream_uses_rtsp() {
   [ "${LIVESTREAM_SOURCE:-mic}" = 'rtsp' ] && [ -n "${RTSP_STREAM:-}" ]
 }
@@ -62,10 +68,10 @@ if livestream_uses_rtsp;then
     SELECTED_RSTP_STREAM=${RSTP_STREAMS_EXPLODED_ARRAY[0]}
   fi
 
-  ffmpeg -nostdin -loglevel $LOGGING_LEVEL -ac ${CHANNELS} -i ${SELECTED_RSTP_STREAM} -acodec libmp3lame \
+  ffmpeg -nostdin -loglevel $LOGGING_LEVEL -ac ${CHANNELS} -use_wallclock_as_timestamps 1 -i ${SELECTED_RSTP_STREAM} -acodec libmp3lame \
     -b:a 320k -ac ${CHANNELS} -content_type 'audio/mpeg' \
     ${FREQSHIFT_OPT} \
-    -f mp3 icecast://source:${ICE_PWD}@localhost:8000/stream -re
+    -f mp3 icecast://source:${ICE_PWD}@localhost:8000/stream
 else
   case "${REC_CARD:-}" in
     hw:*|plughw:*)
@@ -77,8 +83,8 @@ else
       ;;
   esac
   CAPTURE_DEVICE=${REC_CARD:-default}
-	ffmpeg -nostdin -loglevel $LOGGING_LEVEL -ac ${CHANNELS} -f alsa -i "${CAPTURE_DEVICE}" -acodec libmp3lame \
+  ffmpeg -nostdin -loglevel $LOGGING_LEVEL -ac ${CHANNELS} -f alsa -use_wallclock_as_timestamps 1 -i "${CAPTURE_DEVICE}" -acodec libmp3lame \
     -b:a 320k -ac ${CHANNELS} -content_type 'audio/mpeg' \
     ${FREQSHIFT_OPT} \
-    -f mp3 icecast://source:${ICE_PWD}@localhost:8000/stream -re
+    -f mp3 icecast://source:${ICE_PWD}@localhost:8000/stream
 fi
