@@ -6036,7 +6036,10 @@
     // native:true they navigate in-page; otherwise they keep the old
     // open-in-new-tab behavior for the legacy BirdNET-Pi screens.
     var linksHtml = menu.map(menuItemMarkup).join('');
-    if (adminAuthMeta.lan_policy) localAudio = false;
+    // Fork-local: upstream hides the listen button whenever the LAN password policy is on,
+    // because that policy closes the stock Icecast. This station streams from a fork-owned
+    // Icecast instance the policy does not touch (see scripts/livestream.sh), so the button
+    // stays for private-network hosts. Non-local hosts still never get it.
     var liveAudioHtml = localAudio ?
       '<div class="live-audio" id="liveAudio" data-on="false" data-state="idle">'
       + '  <div class="pulse"></div>'

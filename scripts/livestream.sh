@@ -13,6 +13,14 @@ source /etc/birdnet/birdnet.conf
 # minute (31 in a 40s sample; 0 with wallclock stamps) and grew the journal to ~390MB. The
 # -re sat after the output URL, where ffmpeg reports it as a trailing option and ignores it;
 # it would also be wrong for a live input, which is already real time.
+# Fork-local (2026-09-04): the encoder pushes to the fork-owned Icecast instance
+# (icecast2-avian.service, 127.0.0.1:8002), not the stock icecast2 on 8000. Upstream's
+# "Require password on local network" policy stops the stock unit, blocks it from starting
+# and answers /stream with 404 - which took the live stream down with it. The fork instance
+# sits outside that policy, and the Caddy site overlay's /stream route proxies to it with
+# the same LAN-only header checks upstream uses. Override the port in birdnet.conf if needed.
+LIVESTREAM_ICECAST_PORT="${LIVESTREAM_ICECAST_PORT:-8002}"
+
 livestream_uses_rtsp() {
   [ "${LIVESTREAM_SOURCE:-mic}" = 'rtsp' ] && [ -n "${RTSP_STREAM:-}" ]
 }
@@ -71,7 +79,7 @@ if livestream_uses_rtsp;then
   ffmpeg -nostdin -loglevel $LOGGING_LEVEL -ac ${CHANNELS} -use_wallclock_as_timestamps 1 -i ${SELECTED_RSTP_STREAM} -acodec libmp3lame \
     -b:a 320k -ac ${CHANNELS} -content_type 'audio/mpeg' \
     ${FREQSHIFT_OPT} \
-    -f mp3 icecast://source:${ICE_PWD}@localhost:8000/stream
+    -f mp3 icecast://source:${ICE_PWD}@localhost:${LIVESTREAM_ICECAST_PORT}/stream
 else
   case "${REC_CARD:-}" in
     hw:*|plughw:*)
@@ -86,5 +94,5 @@ else
   ffmpeg -nostdin -loglevel $LOGGING_LEVEL -ac ${CHANNELS} -f alsa -use_wallclock_as_timestamps 1 -i "${CAPTURE_DEVICE}" -acodec libmp3lame \
     -b:a 320k -ac ${CHANNELS} -content_type 'audio/mpeg' \
     ${FREQSHIFT_OPT} \
-    -f mp3 icecast://source:${ICE_PWD}@localhost:8000/stream
+    -f mp3 icecast://source:${ICE_PWD}@localhost:${LIVESTREAM_ICECAST_PORT}/stream
 fi
