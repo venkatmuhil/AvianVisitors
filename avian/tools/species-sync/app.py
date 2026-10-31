@@ -277,7 +277,13 @@ async def api_cutout(
     # bare filename stem, so it picks the flight variant up with no change,
     # and cutout.php serves it for ?pose=2.
     out_slug = f"{slug}-2" if pose == 2 else slug
-    out_path = CUTOUTS_DIR / f"{out_slug}.png"
+    # A bundled illustration always beats a photo cutout of the same slug
+    # (build_masks.py and build_webp.py both scan illustrations/ first), so a
+    # replacement written to cutouts/ for one of the ~333 illustrated species
+    # is saved, committed, deployed - and never shown. Replace whichever file
+    # the build actually reads.
+    illus_path = ILLUS_DIR / f"{out_slug}.png"
+    out_path = illus_path if illus_path.is_file() else CUTOUTS_DIR / f"{out_slug}.png"
     out_path.write_bytes(out_bytes)
     return {"slug": out_slug, "pose": pose,
             "path": str(out_path.relative_to(REPO)), "bytes": len(out_bytes)}
