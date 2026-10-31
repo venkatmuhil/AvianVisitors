@@ -11,7 +11,7 @@
   // which moves the number and cannot know what the number now means - so
   // any such note is stale from the next upload onwards. git log is the
   // changelog.
-  var SKETCH_VERSION = 'r54';
+  var SKETCH_VERSION = 'r55';
   // Cache-bust for /api/img - bump whenever a bird gets re-rendered via
   // /api/regen or whenever you need every CF DC to drop its cached copy.
   // Cloudflare keys on the full URL incl. query, so bumping this is
@@ -20,7 +20,7 @@
   // versioned URL is the only reliable way to invalidate everywhere.)
   // Kept in step with SKETCH_VERSION by the same bump, and carrying the same
   // rule: no per-revision annotation here, it goes stale mechanically.
-  var IMG_VERSION = 'r54';
+  var IMG_VERSION = 'r55';
   // Separate from the library-wide versions above: the ?v= on dims.json,
   // masks.json and style-overrides.json - the tables that hold upstream's
   // illustration set plus our photo-cutout-only masks for the Karnataka
