@@ -121,7 +121,7 @@ that cron fires. Always go through commit → push → the deploy button here
 
 Env vars (all optional, defaults match this project's Pi):
 
-- `PI_HOST` — default `192.168.1.53`
+- `PI_HOST` — default `birdnet.local` (the Pi has no DHCP reservation, so its IP changes; set this to the current LAN IP if mDNS stops resolving)
 - `PI_USER` — default `bird-listen`
 - `PI_SSH_KEY` — default `~/.ssh/id_ed25519_birdnet`
 - `VENV` (used by `run.sh` only) — default

@@ -54,7 +54,7 @@ TRACKED_PATHS = ["avian/assets", "avian/frontend/apt.js",
 SCRIPTS_DIR = AVIAN / "scripts"
 LABELS_EN = REPO / "model" / "l18n" / "labels_en.json"
 
-PI_HOST = os.environ.get("PI_HOST", "192.168.1.53")
+PI_HOST = os.environ.get("PI_HOST", "birdnet.local")
 PI_USER = os.environ.get("PI_USER", "bird-listen")
 PI_SSH_KEY = os.environ.get("PI_SSH_KEY", str(Path.home() / ".ssh" / "id_ed25519_birdnet"))
 PI_REPO = "~/BirdNET-Pi"
